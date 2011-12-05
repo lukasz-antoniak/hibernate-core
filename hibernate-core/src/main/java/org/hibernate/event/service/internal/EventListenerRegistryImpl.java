@@ -32,6 +32,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.event.internal.DefaultAutoFlushEventListener;
 import org.hibernate.event.internal.DefaultDeleteEventListener;
 import org.hibernate.event.internal.DefaultDirtyCheckEventListener;
+import org.hibernate.event.internal.DefaultEntityDirtyCheckEventListener;
 import org.hibernate.event.internal.DefaultEvictEventListener;
 import org.hibernate.event.internal.DefaultFlushEntityEventListener;
 import org.hibernate.event.internal.DefaultFlushEventListener;
@@ -56,6 +57,7 @@ import org.hibernate.event.spi.EventType;
 import static org.hibernate.event.spi.EventType.AUTO_FLUSH;
 import static org.hibernate.event.spi.EventType.DELETE;
 import static org.hibernate.event.spi.EventType.DIRTY_CHECK;
+import static org.hibernate.event.spi.EventType.ENTITY_DIRTY_CHECK;
 import static org.hibernate.event.spi.EventType.EVICT;
 import static org.hibernate.event.spi.EventType.FLUSH;
 import static org.hibernate.event.spi.EventType.FLUSH_ENTITY;
@@ -214,6 +216,13 @@ public class EventListenerRegistryImpl implements EventListenerRegistry {
 		prepareListeners(
 				DIRTY_CHECK,
 				new DefaultDirtyCheckEventListener(),
+				workMap
+		);
+
+		// entity-dirty-check listeners
+		prepareListeners(
+				ENTITY_DIRTY_CHECK,
+				new DefaultEntityDirtyCheckEventListener(),
 				workMap
 		);
 

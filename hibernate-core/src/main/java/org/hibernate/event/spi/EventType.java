@@ -69,6 +69,8 @@ public class EventType<T> {
 			= new EventType<AutoFlushEventListener>( "auto-flush", AutoFlushEventListener.class );
 	public static final EventType<DirtyCheckEventListener> DIRTY_CHECK
 			= new EventType<DirtyCheckEventListener>( "dirty-check", DirtyCheckEventListener.class );
+	public static final EventType<EntityDirtyCheckEventListener> ENTITY_DIRTY_CHECK
+			= new EventType<EntityDirtyCheckEventListener>( "entity-dirty-check", EntityDirtyCheckEventListener.class );
 	public static final EventType<FlushEntityEventListener> FLUSH_ENTITY
 			= new EventType<FlushEntityEventListener>( "flush-entity", FlushEntityEventListener.class );
 

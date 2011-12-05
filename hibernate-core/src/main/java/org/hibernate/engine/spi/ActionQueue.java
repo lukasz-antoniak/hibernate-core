@@ -407,6 +407,40 @@ public class ActionQueue {
 	}
 
 	/**
+	 * @param entityName Entity name.
+	 * @param entityId Entity identifier.
+	 * @return {@code true} if any DML operation associated with a given entity is scheduled.
+	 */
+	public boolean hasAnyQueuedActionsForEntity(String entityName, Serializable entityId) {
+		return isActionQueuedForEntity( updates, entityName, entityId ) ||
+				isActionQueuedForEntity( insertions, entityName, entityId ) ||
+				isActionQueuedForEntity( deletions, entityName, entityId ) ||
+				isActionQueuedForEntity( collectionUpdates, entityName, entityId ) ||
+				isActionQueuedForEntity( collectionRemovals, entityName, entityId ) ||
+				isActionQueuedForEntity( collectionCreations, entityName, entityId );
+	}
+
+	private boolean isActionQueuedForEntity(ArrayList list, String entityName, Serializable entityId) {
+		if ( list != null ) {
+			for ( Object o : list ) {
+				if ( o instanceof EntityAction) {
+					EntityAction action = (EntityAction) o;
+					if ( action.getEntityName().equals( entityName ) && action.getId().equals( entityId ) ) {
+						return true;
+					}
+				} else if ( o instanceof CollectionAction ) {
+					CollectionAction action = (CollectionAction) o;
+					EntityEntry ownerEntry = session.getPersistenceContext().getEntry( action.getCollection().getOwner() );
+					if ( ownerEntry.getEntityName().equals( entityName ) && ownerEntry.getId().equals( entityId )) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Used by the owning session to explicitly control serialization of the
 	 * action queue
 	 *

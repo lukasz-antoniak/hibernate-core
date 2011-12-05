@@ -104,7 +104,9 @@ import org.hibernate.event.spi.AutoFlushEventListener;
 import org.hibernate.event.spi.DeleteEvent;
 import org.hibernate.event.spi.DeleteEventListener;
 import org.hibernate.event.spi.DirtyCheckEvent;
+import org.hibernate.event.spi.EntityDirtyCheckEvent;
 import org.hibernate.event.spi.DirtyCheckEventListener;
+import org.hibernate.event.spi.EntityDirtyCheckEventListener;
 import org.hibernate.event.spi.EventSource;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.event.spi.EvictEvent;
@@ -1068,6 +1070,16 @@ public final class SessionImpl extends AbstractSessionImpl implements EventSourc
 		DirtyCheckEvent event = new DirtyCheckEvent( this );
 		for ( DirtyCheckEventListener listener : listeners( EventType.DIRTY_CHECK ) ) {
 			listener.onDirtyCheck( event );
+		}
+		return event.isDirty();
+	}
+
+	public boolean isDirty(Object entity) throws HibernateException {
+		errorIfClosed();
+		checkTransactionSynchStatus();
+		EntityDirtyCheckEvent event = new EntityDirtyCheckEvent( this, entity );
+		for ( EntityDirtyCheckEventListener listener : listeners( EventType.ENTITY_DIRTY_CHECK ) ) {
+			listener.onEntityDirtyCheck( event );
 		}
 		return event.isDirty();
 	}

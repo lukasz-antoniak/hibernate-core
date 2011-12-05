@@ -204,6 +204,17 @@ public interface Session extends SharedSessionContract {
 	public boolean isDirty() throws HibernateException;
 
 	/**
+	 * Does this session contain any changes which must be synchronized with
+	 * the database in context of the given entity?
+	 *
+	 * @param entity Entity object for checking dirtiness.
+	 * @return {@code true} if the session contains pending changes associated
+	 *         with a given entity; {@code false} otherwise.
+	 * @throws HibernateException could not perform dirtying checking
+	 */
+	public boolean isDirty(Object entity) throws HibernateException;
+
+	/**
 	 * Will entities and proxies that are loaded into this session be made 
 	 * read-only by default?
 	 *

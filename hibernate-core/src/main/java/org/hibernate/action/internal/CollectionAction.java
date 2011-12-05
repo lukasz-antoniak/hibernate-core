@@ -66,7 +66,7 @@ public abstract class CollectionAction implements Executable, Serializable, Comp
 		this.collection = collection;
 	}
 
-	protected PersistentCollection getCollection() {
+	public PersistentCollection getCollection() {
 		return collection;
 	}
 
