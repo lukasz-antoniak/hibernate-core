@@ -88,17 +88,17 @@ public class DataChangesDetachedSet extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(SetRefCollEntity.class, coll1_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(SetRefCollEntity.class, coll1_id));
 
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(StrTestEntity.class, str1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(StrTestEntity.class, str1_id));
     }
 
     @Test
     public void testHistoryOfColl1() {
         StrTestEntity str1 = getEntityManager().find(StrTestEntity.class, str1_id);
 
-        SetRefCollEntity rev1 = getAuditReader().find(SetRefCollEntity.class, coll1_id, 1);
-        SetRefCollEntity rev2 = getAuditReader().find(SetRefCollEntity.class, coll1_id, 2);
+        SetRefCollEntity rev1 = getAuditReader().find(SetRefCollEntity.class, coll1_id, 1L);
+        SetRefCollEntity rev2 = getAuditReader().find(SetRefCollEntity.class, coll1_id, 2L);
 
         assert rev1.getCollection().equals(TestTools.makeSet());
         assert rev2.getCollection().equals(TestTools.makeSet(str1));

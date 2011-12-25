@@ -159,14 +159,14 @@ public class DoubleJoinColumnBidirectionalList extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assertEquals(Arrays.asList(1, 2, 4), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id));
-        assertEquals(Arrays.asList(1, 2, 4), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id));
+        assertEquals(Arrays.asList(1L, 2L, 4L), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id));
+        assertEquals(Arrays.asList(1L, 2L, 4L), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id));
 
-        assertEquals(Arrays.asList(1, 3, 4), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_1_id));
-        assertEquals(Arrays.asList(1, 2, 4), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_2_id));
+        assertEquals(Arrays.asList(1L, 3L, 4L), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_1_id));
+        assertEquals(Arrays.asList(1L, 2L, 4L), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_2_id));
 
-        assertEquals(Arrays.asList(1, 4), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_1_id));
-        assertEquals(Arrays.asList(1, 2, 3), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_2_id));
+        assertEquals(Arrays.asList(1L, 4L), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_1_id));
+        assertEquals(Arrays.asList(1L, 2L, 3L), getAuditReader().getRevisions(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_2_id));
     }
 
     @Test
@@ -178,10 +178,10 @@ public class DoubleJoinColumnBidirectionalList extends AbstractEntityTest {
         DoubleListJoinColumnBidirectionalRefEdEntity2 ed2_2_fromRev1 = new DoubleListJoinColumnBidirectionalRefEdEntity2(ed2_2_id, "ed2_2", null);
         DoubleListJoinColumnBidirectionalRefEdEntity2 ed2_2_fromRev3 = new DoubleListJoinColumnBidirectionalRefEdEntity2(ed2_2_id, "ed2_2 bis", null);
 
-        DoubleListJoinColumnBidirectionalRefIngEntity rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 1);
-        DoubleListJoinColumnBidirectionalRefIngEntity rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 2);
-        DoubleListJoinColumnBidirectionalRefIngEntity rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 3);
-        DoubleListJoinColumnBidirectionalRefIngEntity rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 4);
+        DoubleListJoinColumnBidirectionalRefIngEntity rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 1L);
+        DoubleListJoinColumnBidirectionalRefIngEntity rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 2L);
+        DoubleListJoinColumnBidirectionalRefIngEntity rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 3L);
+        DoubleListJoinColumnBidirectionalRefIngEntity rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 4L);
 
         assertTrue(checkList(rev1.getReferences1(), ed1_1_fromRev1));
         assertTrue(checkList(rev2.getReferences1(), ed1_1_fromRev1, ed1_2));
@@ -201,10 +201,10 @@ public class DoubleJoinColumnBidirectionalList extends AbstractEntityTest {
         DoubleListJoinColumnBidirectionalRefEdEntity2 ed2_1 = getEntityManager().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_1_id);
         DoubleListJoinColumnBidirectionalRefEdEntity2 ed2_2_fromRev1 = new DoubleListJoinColumnBidirectionalRefEdEntity2(ed2_2_id, "ed2_2", null);
 
-        DoubleListJoinColumnBidirectionalRefIngEntity rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 1);
-        DoubleListJoinColumnBidirectionalRefIngEntity rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 2);
-        DoubleListJoinColumnBidirectionalRefIngEntity rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 3);
-        DoubleListJoinColumnBidirectionalRefIngEntity rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 4);
+        DoubleListJoinColumnBidirectionalRefIngEntity rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 1L);
+        DoubleListJoinColumnBidirectionalRefIngEntity rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 2L);
+        DoubleListJoinColumnBidirectionalRefIngEntity rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 3L);
+        DoubleListJoinColumnBidirectionalRefIngEntity rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 4L);
 
         assertTrue(checkList(rev1.getReferences1(), ed1_2));
         assertTrue(checkList(rev2.getReferences1()));
@@ -222,10 +222,10 @@ public class DoubleJoinColumnBidirectionalList extends AbstractEntityTest {
         DoubleListJoinColumnBidirectionalRefIngEntity ing1 = getEntityManager().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id);
         DoubleListJoinColumnBidirectionalRefIngEntity ing2 = getEntityManager().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id);
 
-        DoubleListJoinColumnBidirectionalRefEdEntity1 rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_1_id, 1);
-        DoubleListJoinColumnBidirectionalRefEdEntity1 rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_1_id, 2);
-        DoubleListJoinColumnBidirectionalRefEdEntity1 rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_1_id, 3);
-        DoubleListJoinColumnBidirectionalRefEdEntity1 rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_1_id, 4);
+        DoubleListJoinColumnBidirectionalRefEdEntity1 rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_1_id, 1L);
+        DoubleListJoinColumnBidirectionalRefEdEntity1 rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_1_id, 2L);
+        DoubleListJoinColumnBidirectionalRefEdEntity1 rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_1_id, 3L);
+        DoubleListJoinColumnBidirectionalRefEdEntity1 rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_1_id, 4L);
 
         assertTrue(rev1.getOwner().equals(ing1));
         assertTrue(rev2.getOwner().equals(ing1));
@@ -243,10 +243,10 @@ public class DoubleJoinColumnBidirectionalList extends AbstractEntityTest {
         DoubleListJoinColumnBidirectionalRefIngEntity ing1 = getEntityManager().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id);
         DoubleListJoinColumnBidirectionalRefIngEntity ing2 = getEntityManager().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id);
 
-        DoubleListJoinColumnBidirectionalRefEdEntity1 rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_2_id, 1);
-        DoubleListJoinColumnBidirectionalRefEdEntity1 rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_2_id, 2);
-        DoubleListJoinColumnBidirectionalRefEdEntity1 rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_2_id, 3);
-        DoubleListJoinColumnBidirectionalRefEdEntity1 rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_2_id, 4);
+        DoubleListJoinColumnBidirectionalRefEdEntity1 rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_2_id, 1L);
+        DoubleListJoinColumnBidirectionalRefEdEntity1 rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_2_id, 2L);
+        DoubleListJoinColumnBidirectionalRefEdEntity1 rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_2_id, 3L);
+        DoubleListJoinColumnBidirectionalRefEdEntity1 rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity1.class, ed1_2_id, 4L);
 
         assertTrue(rev1.getOwner().equals(ing2));
         assertTrue(rev2.getOwner().equals(ing1));
@@ -264,10 +264,10 @@ public class DoubleJoinColumnBidirectionalList extends AbstractEntityTest {
         DoubleListJoinColumnBidirectionalRefIngEntity ing1 = getEntityManager().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id);
         DoubleListJoinColumnBidirectionalRefIngEntity ing2 = getEntityManager().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id);
 
-        DoubleListJoinColumnBidirectionalRefEdEntity2 rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_1_id, 1);
-        DoubleListJoinColumnBidirectionalRefEdEntity2 rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_1_id, 2);
-        DoubleListJoinColumnBidirectionalRefEdEntity2 rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_1_id, 3);
-        DoubleListJoinColumnBidirectionalRefEdEntity2 rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_1_id, 4);
+        DoubleListJoinColumnBidirectionalRefEdEntity2 rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_1_id, 1L);
+        DoubleListJoinColumnBidirectionalRefEdEntity2 rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_1_id, 2L);
+        DoubleListJoinColumnBidirectionalRefEdEntity2 rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_1_id, 3L);
+        DoubleListJoinColumnBidirectionalRefEdEntity2 rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_1_id, 4L);
 
         assertTrue(rev1.getOwner().equals(ing1));
         assertTrue(rev2.getOwner().equals(ing1));
@@ -285,10 +285,10 @@ public class DoubleJoinColumnBidirectionalList extends AbstractEntityTest {
         DoubleListJoinColumnBidirectionalRefIngEntity ing1 = getEntityManager().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing1_id);
         DoubleListJoinColumnBidirectionalRefIngEntity ing2 = getEntityManager().find(DoubleListJoinColumnBidirectionalRefIngEntity.class, ing2_id);
 
-        DoubleListJoinColumnBidirectionalRefEdEntity2 rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_2_id, 1);
-        DoubleListJoinColumnBidirectionalRefEdEntity2 rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_2_id, 2);
-        DoubleListJoinColumnBidirectionalRefEdEntity2 rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_2_id, 3);
-        DoubleListJoinColumnBidirectionalRefEdEntity2 rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_2_id, 4);
+        DoubleListJoinColumnBidirectionalRefEdEntity2 rev1 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_2_id, 1L);
+        DoubleListJoinColumnBidirectionalRefEdEntity2 rev2 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_2_id, 2L);
+        DoubleListJoinColumnBidirectionalRefEdEntity2 rev3 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_2_id, 3L);
+        DoubleListJoinColumnBidirectionalRefEdEntity2 rev4 = getAuditReader().find(DoubleListJoinColumnBidirectionalRefEdEntity2.class, ed2_2_id, 4L);
 
         assertTrue(rev1.getOwner().equals(ing2));
         assertTrue(rev2.getOwner().equals(ing1));

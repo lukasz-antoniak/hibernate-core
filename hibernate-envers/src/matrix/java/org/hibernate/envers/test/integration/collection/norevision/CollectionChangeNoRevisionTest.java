@@ -8,7 +8,7 @@ public class CollectionChangeNoRevisionTest extends AbstractCollectionChangeTest
     }
 
     @Override
-    protected List<Integer> getExpectedPersonRevisions() {
-        return Arrays.asList(1);
+    protected List<Long> getExpectedPersonRevisions() {
+        return Arrays.asList(1L);
     }
 }

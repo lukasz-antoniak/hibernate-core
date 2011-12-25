@@ -21,7 +21,7 @@ public abstract class AbstractCollectionChangeTest extends AbstractSessionTest {
 
     protected abstract String getCollectionChangeValue();
 
-    protected abstract List<Integer> getExpectedPersonRevisions();
+    protected abstract List<Long> getExpectedPersonRevisions();
 
     @Test
     @Priority(10)

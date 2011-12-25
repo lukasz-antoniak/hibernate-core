@@ -62,7 +62,7 @@ public class DifferentDBSchemaTest extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(StrTestEntity.class, steId));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(StrTestEntity.class, steId));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class DifferentDBSchemaTest extends AbstractEntityTest {
         StrTestEntity ver1 = new StrTestEntity("x", steId);
         StrTestEntity ver2 = new StrTestEntity("y", steId);
 
-        assert getAuditReader().find(StrTestEntity.class, steId, 1).equals(ver1);
-        assert getAuditReader().find(StrTestEntity.class, steId, 2).equals(ver2);
+        assert getAuditReader().find(StrTestEntity.class, steId, 1L).equals(ver1);
+        assert getAuditReader().find(StrTestEntity.class, steId, 2L).equals(ver2);
     }
 }

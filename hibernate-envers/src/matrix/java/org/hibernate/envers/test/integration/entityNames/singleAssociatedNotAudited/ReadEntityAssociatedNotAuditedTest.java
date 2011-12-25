@@ -73,8 +73,8 @@ public class ReadEntityAssociatedNotAuditedTest extends AbstractOneSessionTest {
     	
     	currentCar1 = (Car)getSession().get(Car.class, id_car1);
     	
-    	car1 = getAuditReader().find(Car.class, id_car1, 1);
-    	car2 = getAuditReader().find(Car.class, id_car2, 2);
+    	car1 = getAuditReader().find(Car.class, id_car1, 1L);
+    	car2 = getAuditReader().find(Car.class, id_car2, 2L);
     	
     }
     
@@ -82,7 +82,7 @@ public class ReadEntityAssociatedNotAuditedTest extends AbstractOneSessionTest {
     	
     	String currentCar1EN = getSession().getEntityName(currentCar1);
     	
-    	String car1EN = getAuditReader().getEntityName(id_car1, 1, car1);
+    	String car1EN = getAuditReader().getEntityName(id_car1, 1L, car1);
     	
     	assert (currentCar1EN.equals(car1EN));
     	

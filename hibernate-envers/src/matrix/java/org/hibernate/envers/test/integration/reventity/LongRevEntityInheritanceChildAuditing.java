@@ -43,7 +43,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class LongRevEntityInheritanceChildAuditing extends AbstractEntityTest {
     public void configure(Ejb3Configuration cfg) {
-        cfg.addAnnotatedClass(LongRevNumberRevEntity.class);
+        cfg.addAnnotatedClass(CustomBoxedRevEntity.class);
         cfg.addAnnotatedClass(ChildEntity.class);
         cfg.addAnnotatedClass(ParentEntity.class);
     }

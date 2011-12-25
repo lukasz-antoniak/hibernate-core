@@ -134,14 +134,14 @@ public class VersionsJoinTableRangeComponentNamingTest extends
 
 	@Test
 	public void testRevisionsCounts() {
-		assert Arrays.asList(1, 2).equals(
+		assert Arrays.asList(1L, 2L).equals(
 				getAuditReader().getRevisions(
 						VersionsJoinTableRangeComponentTestEntity.class,
 						vjrcte_id));
-		assert Arrays.asList(2).equals(
+		assert Arrays.asList(2L).equals(
 				getAuditReader().getRevisions(
 						VersionsJoinTableRangeTestEntity.class, vjtrte_id));
-		assert Arrays.asList(2).equals(
+		assert Arrays.asList(2L).equals(
 				getAuditReader().getRevisions(
 						VersionsJoinTableRangeTestAlternateEntity.class,
 						vjtrtae_id1));
@@ -156,9 +156,9 @@ public class VersionsJoinTableRangeComponentNamingTest extends
 						vjtrtae_id1);
 
 		VersionsJoinTableRangeComponentTestEntity rev1 = getAuditReader().find(
-				VersionsJoinTableRangeComponentTestEntity.class, vjrcte_id, 1);
+				VersionsJoinTableRangeComponentTestEntity.class, vjrcte_id, 1L);
 		VersionsJoinTableRangeComponentTestEntity rev2 = getAuditReader().find(
-				VersionsJoinTableRangeComponentTestEntity.class, vjrcte_id, 2);
+				VersionsJoinTableRangeComponentTestEntity.class, vjrcte_id, 2L);
 
 		assert rev1.getComponent1().getRange().size() == 0;
 		assert rev1.getComponent2().getRange().size() == 0;

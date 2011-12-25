@@ -62,10 +62,10 @@ public abstract class AbstractPropertiesAudited2Test extends AbstractEntityTest 
 
 		// levanto las de la revisi�n 1, ninguna debe ser null
 		AuditedImplementor ai_rev1 = getAuditReader().find(
-				AuditedImplementor.class, ai_id, 1);
+				AuditedImplementor.class, ai_id, 1L);
 		assert ai_rev1 != null;
 		SimpleInterface si_rev1 = getAuditReader().find(SimpleInterface.class,
-				ai_id, 1);
+				ai_id, 1L);
 		assert si_rev1 != null;
 
 		// data de las actuales no debe ser null
@@ -93,7 +93,7 @@ public abstract class AbstractPropertiesAudited2Test extends AbstractEntityTest 
 
 		try {
 			// levanto la revision
-			getAuditReader().find(NonAuditedImplementor.class, nai_id, 1);
+			getAuditReader().find(NonAuditedImplementor.class, nai_id, 1L);
 			assert false;
 		} catch (Exception e) {
 			// no es auditable!!!
@@ -103,7 +103,7 @@ public abstract class AbstractPropertiesAudited2Test extends AbstractEntityTest 
 		// levanto la revision que no es auditable pero con la interfaz, el
 		// resultado debe ser null
 		SimpleInterface si_rev1 = getAuditReader().find(SimpleInterface.class,
-				nai_id, 1);
+				nai_id, 1L);
 		assert si_rev1 == null;
 	}
 }

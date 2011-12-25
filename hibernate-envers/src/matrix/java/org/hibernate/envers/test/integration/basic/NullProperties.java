@@ -74,9 +74,9 @@ public class NullProperties extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 3).equals(getAuditReader().getRevisions(BasicTestEntity1.class, id1));
+        assert Arrays.asList(1L, 3L).equals(getAuditReader().getRevisions(BasicTestEntity1.class, id1));
 
-        assert Arrays.asList(2, 4).equals(getAuditReader().getRevisions(BasicTestEntity1.class, id2));
+        assert Arrays.asList(2L, 4L).equals(getAuditReader().getRevisions(BasicTestEntity1.class, id2));
     }
 
     @Test
@@ -84,10 +84,10 @@ public class NullProperties extends AbstractEntityTest {
         BasicTestEntity1 ver1 = new BasicTestEntity1(id1, "x", 1);
         BasicTestEntity1 ver2 = new BasicTestEntity1(id1, null, 1);
 
-        assert getAuditReader().find(BasicTestEntity1.class, id1, 1).equals(ver1);
-        assert getAuditReader().find(BasicTestEntity1.class, id1, 2).equals(ver1);
-        assert getAuditReader().find(BasicTestEntity1.class, id1, 3).equals(ver2);
-        assert getAuditReader().find(BasicTestEntity1.class, id1, 4).equals(ver2);
+        assert getAuditReader().find(BasicTestEntity1.class, id1, 1L).equals(ver1);
+        assert getAuditReader().find(BasicTestEntity1.class, id1, 2L).equals(ver1);
+        assert getAuditReader().find(BasicTestEntity1.class, id1, 3L).equals(ver2);
+        assert getAuditReader().find(BasicTestEntity1.class, id1, 4L).equals(ver2);
     }
 
     @Test
@@ -95,9 +95,9 @@ public class NullProperties extends AbstractEntityTest {
         BasicTestEntity1 ver1 = new BasicTestEntity1(id2, null, 20);
         BasicTestEntity1 ver2 = new BasicTestEntity1(id2, "y2", 20);
 
-        assert getAuditReader().find(BasicTestEntity1.class, id2, 1) == null;
-        assert getAuditReader().find(BasicTestEntity1.class, id2, 2).equals(ver1);
-        assert getAuditReader().find(BasicTestEntity1.class, id2, 3).equals(ver1);
-        assert getAuditReader().find(BasicTestEntity1.class, id2, 4).equals(ver2);
+        assert getAuditReader().find(BasicTestEntity1.class, id2, 1L) == null;
+        assert getAuditReader().find(BasicTestEntity1.class, id2, 2L).equals(ver1);
+        assert getAuditReader().find(BasicTestEntity1.class, id2, 3L).equals(ver1);
+        assert getAuditReader().find(BasicTestEntity1.class, id2, 4L).equals(ver2);
     }
 }

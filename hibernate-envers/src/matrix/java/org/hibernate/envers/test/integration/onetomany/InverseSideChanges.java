@@ -88,21 +88,21 @@ public class InverseSideChanges extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(SetRefEdEntity.class, ed1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(SetRefEdEntity.class, ed1_id));
 
-        assert Arrays.asList(2).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing1_id));
+        assert Arrays.asList(2L).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing1_id));
     }
 
     @Test
     public void testHistoryOfEdId1() {
-        SetRefEdEntity rev1 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 1);
+        SetRefEdEntity rev1 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 1L);
 
         assert rev1.getReffering().equals(Collections.EMPTY_SET);
     }
 
     @Test
     public void testHistoryOfEdIng1() {
-        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 2);
+        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 2L);
 
         assert rev2.getReference() == null;
     }

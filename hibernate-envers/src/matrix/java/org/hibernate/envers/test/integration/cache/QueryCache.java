@@ -68,8 +68,8 @@ public class QueryCache extends AbstractEntityTest {
                 .forRevisionsOfEntity(IntTestEntity.class, true, false)
                 .getResultList();
 
-        IntTestEntity entFromFindRev1 = getAuditReader().find(IntTestEntity.class, id1, 1);
-        IntTestEntity entFromFindRev2 = getAuditReader().find(IntTestEntity.class, id1, 2);
+        IntTestEntity entFromFindRev1 = getAuditReader().find(IntTestEntity.class, id1, 1L);
+        IntTestEntity entFromFindRev2 = getAuditReader().find(IntTestEntity.class, id1, 2L);
 
         assert entFromFindRev1 == entsFromQuery.get(0);
         assert entFromFindRev2 == entsFromQuery.get(1);
@@ -78,10 +78,10 @@ public class QueryCache extends AbstractEntityTest {
     @Test
     public void testCacheFindAfterEntitiesAtRevisionQuery() {
         IntTestEntity entFromQuery = (IntTestEntity) getAuditReader().createQuery()
-                .forEntitiesAtRevision(IntTestEntity.class, 1)
+                .forEntitiesAtRevision(IntTestEntity.class, 1L)
                 .getSingleResult();
 
-        IntTestEntity entFromFind = getAuditReader().find(IntTestEntity.class, id1, 1);
+        IntTestEntity entFromFind = getAuditReader().find(IntTestEntity.class, id1, 1L);
 
         assert entFromFind == entFromQuery;
     }

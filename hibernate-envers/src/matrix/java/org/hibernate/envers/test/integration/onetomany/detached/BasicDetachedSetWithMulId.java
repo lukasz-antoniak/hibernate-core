@@ -110,10 +110,10 @@ public class BasicDetachedSetWithMulId extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2, 3, 4).equals(getAuditReader().getRevisions(SetRefCollEntityMulId.class, coll1_id));
+        assert Arrays.asList(1L, 2L, 3L, 4L).equals(getAuditReader().getRevisions(SetRefCollEntityMulId.class, coll1_id));
 
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(MulIdTestEntity.class, str1_id));
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(MulIdTestEntity.class, str2_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(MulIdTestEntity.class, str1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(MulIdTestEntity.class, str2_id));
     }
 
     @Test
@@ -121,10 +121,10 @@ public class BasicDetachedSetWithMulId extends AbstractEntityTest {
         MulIdTestEntity str1 = getEntityManager().find(MulIdTestEntity.class, str1_id);
         MulIdTestEntity str2 = getEntityManager().find(MulIdTestEntity.class, str2_id);
 
-        SetRefCollEntityMulId rev1 = getAuditReader().find(SetRefCollEntityMulId.class, coll1_id, 1);
-        SetRefCollEntityMulId rev2 = getAuditReader().find(SetRefCollEntityMulId.class, coll1_id, 2);
-        SetRefCollEntityMulId rev3 = getAuditReader().find(SetRefCollEntityMulId.class, coll1_id, 3);
-        SetRefCollEntityMulId rev4 = getAuditReader().find(SetRefCollEntityMulId.class, coll1_id, 4);
+        SetRefCollEntityMulId rev1 = getAuditReader().find(SetRefCollEntityMulId.class, coll1_id, 1L);
+        SetRefCollEntityMulId rev2 = getAuditReader().find(SetRefCollEntityMulId.class, coll1_id, 2L);
+        SetRefCollEntityMulId rev3 = getAuditReader().find(SetRefCollEntityMulId.class, coll1_id, 3L);
+        SetRefCollEntityMulId rev4 = getAuditReader().find(SetRefCollEntityMulId.class, coll1_id, 4L);
 
         assert rev1.getCollection().equals(TestTools.makeSet(str1));
         assert rev2.getCollection().equals(TestTools.makeSet(str1, str2));

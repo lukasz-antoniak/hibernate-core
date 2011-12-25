@@ -126,9 +126,9 @@ public class RelationNotAuditedTarget extends AbstractEntityTest {
 	@Test
 	public void testRevisionsCounts() {
 		List<Number> revisions = getAuditReader().getRevisions(TargetNotAuditedEntity.class, tnae1_id);
-		assert Arrays.asList(1, 2, 4).equals(revisions);
+		assert Arrays.asList(1L, 2l, 4L).equals(revisions);
 		revisions = getAuditReader().getRevisions(TargetNotAuditedEntity.class, tnae2_id);
-		assert Arrays.asList(1, 2, 3, 4).equals(revisions);
+		assert Arrays.asList(1L, 2L, 3L, 4L).equals(revisions);
 	}
 
 	@Test
@@ -139,10 +139,10 @@ public class RelationNotAuditedTarget extends AbstractEntityTest {
 		UnversionedStrTestEntity uste1 = getEntityManager().find(UnversionedStrTestEntity.class, uste1_id);
 		UnversionedStrTestEntity uste2 = getEntityManager().find(UnversionedStrTestEntity.class, uste2_id);
 
-		TargetNotAuditedEntity rev1 = getAuditReader().find(TargetNotAuditedEntity.class, tnae1_id, 1);
-		TargetNotAuditedEntity rev2 = getAuditReader().find(TargetNotAuditedEntity.class, tnae1_id, 2);
-		TargetNotAuditedEntity rev3 = getAuditReader().find(TargetNotAuditedEntity.class, tnae1_id, 3);
-		TargetNotAuditedEntity rev4 = getAuditReader().find(TargetNotAuditedEntity.class, tnae1_id, 4);
+		TargetNotAuditedEntity rev1 = getAuditReader().find(TargetNotAuditedEntity.class, tnae1_id, 1L);
+		TargetNotAuditedEntity rev2 = getAuditReader().find(TargetNotAuditedEntity.class, tnae1_id, 2L);
+		TargetNotAuditedEntity rev3 = getAuditReader().find(TargetNotAuditedEntity.class, tnae1_id, 3L);
+		TargetNotAuditedEntity rev4 = getAuditReader().find(TargetNotAuditedEntity.class, tnae1_id, 4L);
 
 		assert rev1.getReference().equals(uste1);
 		assert rev2.getReference().equals(uste2);
@@ -160,10 +160,10 @@ public class RelationNotAuditedTarget extends AbstractEntityTest {
 		UnversionedStrTestEntity uste1 = getEntityManager().find(UnversionedStrTestEntity.class, uste1_id);
 		UnversionedStrTestEntity uste2 = getEntityManager().find(UnversionedStrTestEntity.class, uste2_id);
 
-		TargetNotAuditedEntity rev1 = getAuditReader().find(TargetNotAuditedEntity.class, tnae2_id, 1);
-		TargetNotAuditedEntity rev2 = getAuditReader().find(TargetNotAuditedEntity.class, tnae2_id, 2);
-		TargetNotAuditedEntity rev3 = getAuditReader().find(TargetNotAuditedEntity.class, tnae2_id, 3);
-		TargetNotAuditedEntity rev4 = getAuditReader().find(TargetNotAuditedEntity.class, tnae2_id, 4);
+		TargetNotAuditedEntity rev1 = getAuditReader().find(TargetNotAuditedEntity.class, tnae2_id, 1L);
+		TargetNotAuditedEntity rev2 = getAuditReader().find(TargetNotAuditedEntity.class, tnae2_id, 2L);
+		TargetNotAuditedEntity rev3 = getAuditReader().find(TargetNotAuditedEntity.class, tnae2_id, 3L);
+		TargetNotAuditedEntity rev4 = getAuditReader().find(TargetNotAuditedEntity.class, tnae2_id, 4L);
 
 		assert rev1.getReference().equals(uste2);
 		assert rev2.getReference().equals(uste1);

@@ -85,32 +85,32 @@ public class NotOwnedBidirectional extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(Contact.class, pc_id));
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(PersonalContact.class, pc_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(Contact.class, pc_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(PersonalContact.class, pc_id));
 
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(Address.class, a1_id));
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(Address.class, a1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(Address.class, a1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(Address.class, a1_id));
 
-        assert Arrays.asList(2).equals(getAuditReader().getRevisions(Address.class, a2_id));
-        assert Arrays.asList(2).equals(getAuditReader().getRevisions(Address.class, a2_id));
+        assert Arrays.asList(2L).equals(getAuditReader().getRevisions(Address.class, a2_id));
+        assert Arrays.asList(2L).equals(getAuditReader().getRevisions(Address.class, a2_id));
     }
 
     @Test
     public void testHistoryOfContact() {
-        assert getAuditReader().find(Contact.class, pc_id, 1).getAddresses().equals(
+        assert getAuditReader().find(Contact.class, pc_id, 1L).getAddresses().equals(
                 TestTools.makeSet(new Address(a1_id, "a1")));
 
-        assert getAuditReader().find(Contact.class, pc_id, 2).getAddresses().equals(
+        assert getAuditReader().find(Contact.class, pc_id, 2L).getAddresses().equals(
                 TestTools.makeSet(new Address(a1_id, "a1"), new Address(a2_id, "a2")));
     }
 
     @Test
     public void testHistoryOfPersonalContact() {
-        System.out.println(getAuditReader().find(PersonalContact.class, pc_id, 1).getAddresses());
-        assert getAuditReader().find(PersonalContact.class, pc_id, 1).getAddresses().equals(
+        System.out.println(getAuditReader().find(PersonalContact.class, pc_id, 1L).getAddresses());
+        assert getAuditReader().find(PersonalContact.class, pc_id, 1L).getAddresses().equals(
                 TestTools.makeSet(new Address(a1_id, "a1")));
 
-        assert getAuditReader().find(PersonalContact.class, pc_id, 2).getAddresses().equals(
+        assert getAuditReader().find(PersonalContact.class, pc_id, 2L).getAddresses().equals(
                 TestTools.makeSet(new Address(a1_id, "a1"), new Address(a2_id, "a2")));
     }
 }

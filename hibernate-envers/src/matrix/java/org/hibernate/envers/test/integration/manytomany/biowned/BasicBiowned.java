@@ -141,11 +141,11 @@ public class BasicBiowned extends AbstractEntityTest {
         // ownly the owning side is notified (because of the bi-owning mapping), a revision is created only for
         // the entity where the collection was directly modified.
 
-        assertEquals(Arrays.asList(1, 2, 3, 5), getAuditReader().getRevisions(ListBiowning1Entity.class, o1_1_id));
-        assertEquals(Arrays.asList(1, 2, 5), getAuditReader().getRevisions(ListBiowning1Entity.class, o1_2_id));
+        assertEquals(Arrays.asList(1L, 2L, 3L, 5L), getAuditReader().getRevisions(ListBiowning1Entity.class, o1_1_id));
+        assertEquals(Arrays.asList(1L, 2L, 5L), getAuditReader().getRevisions(ListBiowning1Entity.class, o1_2_id));
 
-        assertEquals(Arrays.asList(1, 4), getAuditReader().getRevisions(ListBiowning2Entity.class, o2_1_id));
-        assertEquals(Arrays.asList(1, 4), getAuditReader().getRevisions(ListBiowning2Entity.class, o2_2_id));
+        assertEquals(Arrays.asList(1L, 4L), getAuditReader().getRevisions(ListBiowning2Entity.class, o2_1_id));
+        assertEquals(Arrays.asList(1L, 4L), getAuditReader().getRevisions(ListBiowning2Entity.class, o2_2_id));
     }
 
     @Test
@@ -153,11 +153,11 @@ public class BasicBiowned extends AbstractEntityTest {
         ListBiowning2Entity o2_1 = getEntityManager().find(ListBiowning2Entity.class, o2_1_id);
         ListBiowning2Entity o2_2 = getEntityManager().find(ListBiowning2Entity.class, o2_2_id);
 
-        ListBiowning1Entity rev1 = getAuditReader().find(ListBiowning1Entity.class, o1_1_id, 1);
-        ListBiowning1Entity rev2 = getAuditReader().find(ListBiowning1Entity.class, o1_1_id, 2);
-        ListBiowning1Entity rev3 = getAuditReader().find(ListBiowning1Entity.class, o1_1_id, 3);
-        ListBiowning1Entity rev4 = getAuditReader().find(ListBiowning1Entity.class, o1_1_id, 4);
-        ListBiowning1Entity rev5 = getAuditReader().find(ListBiowning1Entity.class, o1_1_id, 5);
+        ListBiowning1Entity rev1 = getAuditReader().find(ListBiowning1Entity.class, o1_1_id, 1L);
+        ListBiowning1Entity rev2 = getAuditReader().find(ListBiowning1Entity.class, o1_1_id, 2L);
+        ListBiowning1Entity rev3 = getAuditReader().find(ListBiowning1Entity.class, o1_1_id, 3L);
+        ListBiowning1Entity rev4 = getAuditReader().find(ListBiowning1Entity.class, o1_1_id, 4L);
+        ListBiowning1Entity rev5 = getAuditReader().find(ListBiowning1Entity.class, o1_1_id, 5L);
 
         assert TestTools.checkList(rev1.getReferences());
         assert TestTools.checkList(rev2.getReferences(), o2_1);
@@ -171,11 +171,11 @@ public class BasicBiowned extends AbstractEntityTest {
         ListBiowning2Entity o2_1 = getEntityManager().find(ListBiowning2Entity.class, o2_1_id);
         ListBiowning2Entity o2_2 = getEntityManager().find(ListBiowning2Entity.class, o2_2_id);
 
-        ListBiowning1Entity rev1 = getAuditReader().find(ListBiowning1Entity.class, o1_2_id, 1);
-        ListBiowning1Entity rev2 = getAuditReader().find(ListBiowning1Entity.class, o1_2_id, 2);
-        ListBiowning1Entity rev3 = getAuditReader().find(ListBiowning1Entity.class, o1_2_id, 3);
-        ListBiowning1Entity rev4 = getAuditReader().find(ListBiowning1Entity.class, o1_2_id, 4);
-        ListBiowning1Entity rev5 = getAuditReader().find(ListBiowning1Entity.class, o1_2_id, 5);
+        ListBiowning1Entity rev1 = getAuditReader().find(ListBiowning1Entity.class, o1_2_id, 1L);
+        ListBiowning1Entity rev2 = getAuditReader().find(ListBiowning1Entity.class, o1_2_id, 2L);
+        ListBiowning1Entity rev3 = getAuditReader().find(ListBiowning1Entity.class, o1_2_id, 3L);
+        ListBiowning1Entity rev4 = getAuditReader().find(ListBiowning1Entity.class, o1_2_id, 4L);
+        ListBiowning1Entity rev5 = getAuditReader().find(ListBiowning1Entity.class, o1_2_id, 5L);
 
         assert TestTools.checkList(rev1.getReferences());
         assert TestTools.checkList(rev2.getReferences(), o2_2);
@@ -190,11 +190,11 @@ public class BasicBiowned extends AbstractEntityTest {
         ListBiowning1Entity o1_1 = getEntityManager().find(ListBiowning1Entity.class, o1_1_id);
         ListBiowning1Entity o1_2 = getEntityManager().find(ListBiowning1Entity.class, o1_2_id);
 
-        ListBiowning2Entity rev1 = getAuditReader().find(ListBiowning2Entity.class, o1_1_id, 1);
-        ListBiowning2Entity rev2 = getAuditReader().find(ListBiowning2Entity.class, o1_1_id, 2);
-        ListBiowning2Entity rev3 = getAuditReader().find(ListBiowning2Entity.class, o1_1_id, 3);
-        ListBiowning2Entity rev4 = getAuditReader().find(ListBiowning2Entity.class, o1_1_id, 4);
-        ListBiowning2Entity rev5 = getAuditReader().find(ListBiowning2Entity.class, o1_1_id, 5);
+        ListBiowning2Entity rev1 = getAuditReader().find(ListBiowning2Entity.class, o1_1_id, 1L);
+        ListBiowning2Entity rev2 = getAuditReader().find(ListBiowning2Entity.class, o1_1_id, 2L);
+        ListBiowning2Entity rev3 = getAuditReader().find(ListBiowning2Entity.class, o1_1_id, 3L);
+        ListBiowning2Entity rev4 = getAuditReader().find(ListBiowning2Entity.class, o1_1_id, 4L);
+        ListBiowning2Entity rev5 = getAuditReader().find(ListBiowning2Entity.class, o1_1_id, 5L);
 
         assert TestTools.checkList(rev1.getReferences());
         assert TestTools.checkList(rev2.getReferences(), o1_1);
@@ -208,11 +208,11 @@ public class BasicBiowned extends AbstractEntityTest {
         ListBiowning1Entity o1_1 = getEntityManager().find(ListBiowning1Entity.class, o1_1_id);
         ListBiowning1Entity o1_2 = getEntityManager().find(ListBiowning1Entity.class, o1_2_id);
 
-        ListBiowning2Entity rev1 = getAuditReader().find(ListBiowning2Entity.class, o1_2_id, 1);
-        ListBiowning2Entity rev2 = getAuditReader().find(ListBiowning2Entity.class, o1_2_id, 2);
-        ListBiowning2Entity rev3 = getAuditReader().find(ListBiowning2Entity.class, o1_2_id, 3);
-        ListBiowning2Entity rev4 = getAuditReader().find(ListBiowning2Entity.class, o1_2_id, 4);
-        ListBiowning2Entity rev5 = getAuditReader().find(ListBiowning2Entity.class, o1_2_id, 5);
+        ListBiowning2Entity rev1 = getAuditReader().find(ListBiowning2Entity.class, o1_2_id, 1L);
+        ListBiowning2Entity rev2 = getAuditReader().find(ListBiowning2Entity.class, o1_2_id, 2L);
+        ListBiowning2Entity rev3 = getAuditReader().find(ListBiowning2Entity.class, o1_2_id, 3L);
+        ListBiowning2Entity rev4 = getAuditReader().find(ListBiowning2Entity.class, o1_2_id, 4L);
+        ListBiowning2Entity rev5 = getAuditReader().find(ListBiowning2Entity.class, o1_2_id, 5L);
 
         assert TestTools.checkList(rev1.getReferences());
         assert TestTools.checkList(rev2.getReferences(), o1_2);

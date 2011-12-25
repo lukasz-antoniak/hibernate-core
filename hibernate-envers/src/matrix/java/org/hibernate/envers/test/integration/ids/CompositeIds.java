@@ -138,17 +138,17 @@ public class CompositeIds extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 3, 4).equals(getAuditReader().getRevisions(EmbIdTestEntity.class, id1));
+        assert Arrays.asList(1L, 3L, 4L).equals(getAuditReader().getRevisions(EmbIdTestEntity.class, id1));
 
-        assert Arrays.asList(2, 3, 4, 5).equals(getAuditReader().getRevisions(EmbIdTestEntity.class, id2));
+        assert Arrays.asList(2L, 3L, 4L, 5L).equals(getAuditReader().getRevisions(EmbIdTestEntity.class, id2));
 
-        assert Arrays.asList(1, 3, 4).equals(getAuditReader().getRevisions(MulIdTestEntity.class, id3));
+        assert Arrays.asList(1L, 3L, 4L).equals(getAuditReader().getRevisions(MulIdTestEntity.class, id3));
 
-        assert Arrays.asList(2, 3).equals(getAuditReader().getRevisions(MulIdTestEntity.class, id4));
+        assert Arrays.asList(2L, 3L).equals(getAuditReader().getRevisions(MulIdTestEntity.class, id4));
 
-        assert Arrays.asList(1, 3, 4).equals(getAuditReader().getRevisions(EmbIdWithCustomTypeTestEntity.class, id5));
+        assert Arrays.asList(1L, 3L, 4L).equals(getAuditReader().getRevisions(EmbIdWithCustomTypeTestEntity.class, id5));
 
-        assert Arrays.asList(2, 3, 4).equals(getAuditReader().getRevisions(EmbIdWithCustomTypeTestEntity.class, id6));
+        assert Arrays.asList(2L, 3L, 4L).equals(getAuditReader().getRevisions(EmbIdWithCustomTypeTestEntity.class, id6));
     }
 
     @Test
@@ -156,11 +156,11 @@ public class CompositeIds extends AbstractEntityTest {
         EmbIdTestEntity ver1 = new EmbIdTestEntity(id1, "x");
         EmbIdTestEntity ver2 = new EmbIdTestEntity(id1, "x2");
 
-        assert getAuditReader().find(EmbIdTestEntity.class, id1, 1).equals(ver1);
-        assert getAuditReader().find(EmbIdTestEntity.class, id1, 2).equals(ver1);
-        assert getAuditReader().find(EmbIdTestEntity.class, id1, 3).equals(ver2);
-        assert getAuditReader().find(EmbIdTestEntity.class, id1, 4) == null;
-        assert getAuditReader().find(EmbIdTestEntity.class, id1, 5) == null;
+        assert getAuditReader().find(EmbIdTestEntity.class, id1, 1L).equals(ver1);
+        assert getAuditReader().find(EmbIdTestEntity.class, id1, 2L).equals(ver1);
+        assert getAuditReader().find(EmbIdTestEntity.class, id1, 3L).equals(ver2);
+        assert getAuditReader().find(EmbIdTestEntity.class, id1, 4L) == null;
+        assert getAuditReader().find(EmbIdTestEntity.class, id1, 5L) == null;
     }
 
     @Test
@@ -169,11 +169,11 @@ public class CompositeIds extends AbstractEntityTest {
         EmbIdTestEntity ver2 = new EmbIdTestEntity(id2, "y2");
         EmbIdTestEntity ver3 = new EmbIdTestEntity(id2, "y3");
 
-        assert getAuditReader().find(EmbIdTestEntity.class, id2, 1) == null;
-        assert getAuditReader().find(EmbIdTestEntity.class, id2, 2).equals(ver1);
-        assert getAuditReader().find(EmbIdTestEntity.class, id2, 3).equals(ver2);
-        assert getAuditReader().find(EmbIdTestEntity.class, id2, 4).equals(ver3);
-        assert getAuditReader().find(EmbIdTestEntity.class, id2, 5) == null;
+        assert getAuditReader().find(EmbIdTestEntity.class, id2, 1L) == null;
+        assert getAuditReader().find(EmbIdTestEntity.class, id2, 2L).equals(ver1);
+        assert getAuditReader().find(EmbIdTestEntity.class, id2, 3L).equals(ver2);
+        assert getAuditReader().find(EmbIdTestEntity.class, id2, 4L).equals(ver3);
+        assert getAuditReader().find(EmbIdTestEntity.class, id2, 5L) == null;
     }
 
     @Test
@@ -181,11 +181,11 @@ public class CompositeIds extends AbstractEntityTest {
         MulIdTestEntity ver1 = new MulIdTestEntity(id3.getId1(), id3.getId2(), "a");
         MulIdTestEntity ver2 = new MulIdTestEntity(id3.getId1(), id3.getId2(), "a2");
 
-        assert getAuditReader().find(MulIdTestEntity.class, id3, 1).equals(ver1);
-        assert getAuditReader().find(MulIdTestEntity.class, id3, 2).equals(ver1);
-        assert getAuditReader().find(MulIdTestEntity.class, id3, 3).equals(ver2);
-        assert getAuditReader().find(MulIdTestEntity.class, id3, 4) == null;
-        assert getAuditReader().find(MulIdTestEntity.class, id3, 5) == null;
+        assert getAuditReader().find(MulIdTestEntity.class, id3, 1L).equals(ver1);
+        assert getAuditReader().find(MulIdTestEntity.class, id3, 2L).equals(ver1);
+        assert getAuditReader().find(MulIdTestEntity.class, id3, 3L).equals(ver2);
+        assert getAuditReader().find(MulIdTestEntity.class, id3, 4L) == null;
+        assert getAuditReader().find(MulIdTestEntity.class, id3, 5L) == null;
     }
 
     @Test
@@ -193,11 +193,11 @@ public class CompositeIds extends AbstractEntityTest {
         MulIdTestEntity ver1 = new MulIdTestEntity(id4.getId1(), id4.getId2(), "b");
         MulIdTestEntity ver2 = new MulIdTestEntity(id4.getId1(), id4.getId2(), "b2");
 
-        assert getAuditReader().find(MulIdTestEntity.class, id4, 1) == null;
-        assert getAuditReader().find(MulIdTestEntity.class, id4, 2).equals(ver1);
-        assert getAuditReader().find(MulIdTestEntity.class, id4, 3).equals(ver2);
-        assert getAuditReader().find(MulIdTestEntity.class, id4, 4).equals(ver2);
-        assert getAuditReader().find(MulIdTestEntity.class, id4, 5).equals(ver2);
+        assert getAuditReader().find(MulIdTestEntity.class, id4, 1L) == null;
+        assert getAuditReader().find(MulIdTestEntity.class, id4, 2L).equals(ver1);
+        assert getAuditReader().find(MulIdTestEntity.class, id4, 3L).equals(ver2);
+        assert getAuditReader().find(MulIdTestEntity.class, id4, 4L).equals(ver2);
+        assert getAuditReader().find(MulIdTestEntity.class, id4, 5L).equals(ver2);
     }
 
     @Test
@@ -206,11 +206,11 @@ public class CompositeIds extends AbstractEntityTest {
         EmbIdWithCustomTypeTestEntity ver2 = new EmbIdWithCustomTypeTestEntity(id5, "c2");
         EmbIdWithCustomTypeTestEntity ver3 = new EmbIdWithCustomTypeTestEntity(id5, "c3");
 
-        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id5, 1).equals(ver1);
-        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id5, 2).equals(ver1);
-        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id5, 3).equals(ver2);
-        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id5, 4).equals(ver3);
-        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id5, 5).equals(ver3);
+        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id5, 1L).equals(ver1);
+        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id5, 2L).equals(ver1);
+        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id5, 3L).equals(ver2);
+        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id5, 4L).equals(ver3);
+        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id5, 5L).equals(ver3);
     }
 
     @Test
@@ -218,10 +218,10 @@ public class CompositeIds extends AbstractEntityTest {
         EmbIdWithCustomTypeTestEntity ver1 = new EmbIdWithCustomTypeTestEntity(id6, "d");
         EmbIdWithCustomTypeTestEntity ver2 = new EmbIdWithCustomTypeTestEntity(id6, "d2");
 
-        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id6, 1) == null;
-        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id6, 2).equals(ver1);
-        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id6, 3).equals(ver2);
-        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id6, 4) == null;
-        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id6, 5) == null;
+        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id6, 1L) == null;
+        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id6, 2L).equals(ver1);
+        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id6, 3L).equals(ver2);
+        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id6, 4L) == null;
+        assert getAuditReader().find(EmbIdWithCustomTypeTestEntity.class, id6, 5L) == null;
     }
 }

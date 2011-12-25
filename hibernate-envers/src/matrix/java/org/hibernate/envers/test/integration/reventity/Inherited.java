@@ -95,8 +95,8 @@ public class Inherited extends AbstractEntityTest {
     @Test
     public void testDatesForRevisions() {
         AuditReader vr = getAuditReader();
-        assert vr.getRevisionNumberForDate(vr.getRevisionDate(1)).intValue() == 1;
-        assert vr.getRevisionNumberForDate(vr.getRevisionDate(2)).intValue() == 2;
+        assert vr.getRevisionNumberForDate(vr.getRevisionDate(1L)).intValue() == 1;
+        assert vr.getRevisionNumberForDate(vr.getRevisionDate(2L)).intValue() == 2;
     }
 
     @Test
@@ -104,7 +104,7 @@ public class Inherited extends AbstractEntityTest {
         AuditReader vr = getAuditReader();
 
         assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp2))).getTime() <= timestamp2;
-        assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp2)).intValue()+1).getTime() > timestamp2;
+        assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp2)).longValue()+1L).getTime() > timestamp2;
 
         assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp3))).getTime() <= timestamp3;
     }
@@ -113,11 +113,11 @@ public class Inherited extends AbstractEntityTest {
     public void testFindRevision() {
         AuditReader vr = getAuditReader();
 
-        long rev1Timestamp = vr.findRevision(InheritedRevEntity.class, 1).getTimestamp();
+        long rev1Timestamp = vr.findRevision(InheritedRevEntity.class, 1L).getTimestamp();
         assert rev1Timestamp > timestamp1;
         assert rev1Timestamp <= timestamp2;
 
-        long rev2Timestamp = vr.findRevision(InheritedRevEntity.class, 2).getTimestamp();
+        long rev2Timestamp = vr.findRevision(InheritedRevEntity.class, 2L).getTimestamp();
         assert rev2Timestamp > timestamp2;
         assert rev2Timestamp <= timestamp3;
     }
@@ -127,18 +127,18 @@ public class Inherited extends AbstractEntityTest {
         AuditReader vr = getAuditReader();
 
         Set<Number> revNumbers = new HashSet<Number>();
-        revNumbers.add(1);
-        revNumbers.add(2);
+        revNumbers.add(1L);
+        revNumbers.add(2L);
         
         Map<Number, InheritedRevEntity> revisionMap = vr.findRevisions(InheritedRevEntity.class, revNumbers);
         assert(revisionMap.size() == 2);
-        assert(revisionMap.get(1).equals(vr.findRevision(InheritedRevEntity.class, 1)));
-        assert(revisionMap.get(2).equals(vr.findRevision(InheritedRevEntity.class, 2)));
+        assert(revisionMap.get(1L).equals(vr.findRevision(InheritedRevEntity.class, 1L)));
+        assert(revisionMap.get(2L).equals(vr.findRevision(InheritedRevEntity.class, 2L)));
     }
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(StrTestEntity.class, id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(StrTestEntity.class, id));
     }
 
     @Test
@@ -146,7 +146,7 @@ public class Inherited extends AbstractEntityTest {
         StrTestEntity ver1 = new StrTestEntity("x", id);
         StrTestEntity ver2 = new StrTestEntity("y", id);
 
-        assert getAuditReader().find(StrTestEntity.class, id, 1).equals(ver1);
-        assert getAuditReader().find(StrTestEntity.class, id, 2).equals(ver2);
+        assert getAuditReader().find(StrTestEntity.class, id, 1L).equals(ver1);
+        assert getAuditReader().find(StrTestEntity.class, id, 2L).equals(ver2);
     }
 }

@@ -128,13 +128,13 @@ public class BasicSetWithNullsDelete extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2, 3, 4, 5).equals(getAuditReader().getRevisions(SetRefEdEntity.class, ed1_id));
-        assert Arrays.asList(1, 4).equals(getAuditReader().getRevisions(SetRefEdEntity.class, ed2_id));
+        assert Arrays.asList(1L, 2L, 3L, 4L, 5L).equals(getAuditReader().getRevisions(SetRefEdEntity.class, ed1_id));
+        assert Arrays.asList(1L, 4L).equals(getAuditReader().getRevisions(SetRefEdEntity.class, ed2_id));
 
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing1_id));
-        assert Arrays.asList(1, 3).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing2_id));
-        assert Arrays.asList(1, 4).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing3_id));
-        assert Arrays.asList(1, 5).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing4_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing1_id));
+        assert Arrays.asList(1L, 3L).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing2_id));
+        assert Arrays.asList(1L, 4L).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing3_id));
+        assert Arrays.asList(1L, 5L).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing4_id));
     }
 
     private <T> Set<T> makeSet(T... objects) {
@@ -151,11 +151,11 @@ public class BasicSetWithNullsDelete extends AbstractEntityTest {
         SetRefIngEntity ing3 = getEntityManager().find(SetRefIngEntity.class, ing3_id);
         SetRefIngEntity ing4 = getEntityManager().find(SetRefIngEntity.class, ing4_id);
 
-        SetRefEdEntity rev1 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 1);
-        SetRefEdEntity rev2 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 2);
-        SetRefEdEntity rev3 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 3);
-        SetRefEdEntity rev4 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 4);
-        SetRefEdEntity rev5 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 5);
+        SetRefEdEntity rev1 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 1L);
+        SetRefEdEntity rev2 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 2L);
+        SetRefEdEntity rev3 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 3L);
+        SetRefEdEntity rev4 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 4l);
+        SetRefEdEntity rev5 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 5L);
 
         assert rev1.getReffering().equals(makeSet(ing1, ing2, ing3, ing4));
         assert rev2.getReffering().equals(makeSet(ing2, ing3, ing4));
@@ -168,11 +168,11 @@ public class BasicSetWithNullsDelete extends AbstractEntityTest {
     public void testHistoryOfEdId2() {
         SetRefIngEntity ing3 = getEntityManager().find(SetRefIngEntity.class, ing3_id);
 
-        SetRefEdEntity rev1 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 1);
-        SetRefEdEntity rev2 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 2);
-        SetRefEdEntity rev3 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 3);
-        SetRefEdEntity rev4 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 4);
-        SetRefEdEntity rev5 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 5);
+        SetRefEdEntity rev1 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 1L);
+        SetRefEdEntity rev2 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 2L);
+        SetRefEdEntity rev3 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 3L);
+        SetRefEdEntity rev4 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 4L);
+        SetRefEdEntity rev5 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 5L);
 
         assert rev1.getReffering().equals(Collections.EMPTY_SET);
         assert rev2.getReffering().equals(Collections.EMPTY_SET);
@@ -185,11 +185,11 @@ public class BasicSetWithNullsDelete extends AbstractEntityTest {
     public void testHistoryOfEdIng1() {
         SetRefEdEntity ed1 = new SetRefEdEntity(1, "data_ed_1");
 
-        SetRefIngEntity rev1 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 1);
-        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 2);
-        SetRefIngEntity rev3 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 3);
-        SetRefIngEntity rev4 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 4);
-        SetRefIngEntity rev5 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 5);
+        SetRefIngEntity rev1 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 1L);
+        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 2L);
+        SetRefIngEntity rev3 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 3L);
+        SetRefIngEntity rev4 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 4L);
+        SetRefIngEntity rev5 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 5L);
 
         assert rev1.getReference().equals(ed1);
         assert rev2.getReference() == null;
@@ -202,11 +202,11 @@ public class BasicSetWithNullsDelete extends AbstractEntityTest {
     public void testHistoryOfEdIng2() {
         SetRefEdEntity ed1 = new SetRefEdEntity(1, "data_ed_1");
 
-        SetRefIngEntity rev1 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 1);
-        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 2);
-        SetRefIngEntity rev3 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 3);
-        SetRefIngEntity rev4 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 4);
-        SetRefIngEntity rev5 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 5);
+        SetRefIngEntity rev1 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 1L);
+        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 2L);
+        SetRefIngEntity rev3 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 3L);
+        SetRefIngEntity rev4 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 4L);
+        SetRefIngEntity rev5 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 5L);
 
         assert rev1.getReference().equals(ed1);
         assert rev2.getReference().equals(ed1);
@@ -220,11 +220,11 @@ public class BasicSetWithNullsDelete extends AbstractEntityTest {
         SetRefEdEntity ed1 = new SetRefEdEntity(1, "data_ed_1");
         SetRefEdEntity ed2 = new SetRefEdEntity(2, "data_ed_2");
         
-        SetRefIngEntity rev1 = getAuditReader().find(SetRefIngEntity.class, ing3_id, 1);
-        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing3_id, 2);
-        SetRefIngEntity rev3 = getAuditReader().find(SetRefIngEntity.class, ing3_id, 3);
-        SetRefIngEntity rev4 = getAuditReader().find(SetRefIngEntity.class, ing3_id, 4);
-        SetRefIngEntity rev5 = getAuditReader().find(SetRefIngEntity.class, ing3_id, 5);
+        SetRefIngEntity rev1 = getAuditReader().find(SetRefIngEntity.class, ing3_id, 1L);
+        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing3_id, 2L);
+        SetRefIngEntity rev3 = getAuditReader().find(SetRefIngEntity.class, ing3_id, 3L);
+        SetRefIngEntity rev4 = getAuditReader().find(SetRefIngEntity.class, ing3_id, 4L);
+        SetRefIngEntity rev5 = getAuditReader().find(SetRefIngEntity.class, ing3_id, 5L);
 
         assert rev1.getReference().equals(ed1);
         assert rev2.getReference().equals(ed1);
@@ -237,11 +237,11 @@ public class BasicSetWithNullsDelete extends AbstractEntityTest {
     public void testHistoryOfEdIng4() {
         SetRefEdEntity ed1 = new SetRefEdEntity(1, "data_ed_1");
 
-        SetRefIngEntity rev1 = getAuditReader().find(SetRefIngEntity.class, ing4_id, 1);
-        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing4_id, 2);
-        SetRefIngEntity rev3 = getAuditReader().find(SetRefIngEntity.class, ing4_id, 3);
-        SetRefIngEntity rev4 = getAuditReader().find(SetRefIngEntity.class, ing4_id, 4);
-        SetRefIngEntity rev5 = getAuditReader().find(SetRefIngEntity.class, ing4_id, 5);
+        SetRefIngEntity rev1 = getAuditReader().find(SetRefIngEntity.class, ing4_id, 1L);
+        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing4_id, 2L);
+        SetRefIngEntity rev3 = getAuditReader().find(SetRefIngEntity.class, ing4_id, 3L);
+        SetRefIngEntity rev4 = getAuditReader().find(SetRefIngEntity.class, ing4_id, 4L);
+        SetRefIngEntity rev5 = getAuditReader().find(SetRefIngEntity.class, ing4_id, 5L);
 
         assert rev1.getReference().equals(ed1);
         assert rev2.getReference().equals(ed1);

@@ -86,18 +86,18 @@ public class EmbIdBidirectional extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(BiEmbIdRefEdEntity.class, ed1_id));
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(BiEmbIdRefEdEntity.class, ed2_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(BiEmbIdRefEdEntity.class, ed1_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(BiEmbIdRefEdEntity.class, ed2_id));
 
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(BiEmbIdRefIngEntity.class, ing1_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(BiEmbIdRefIngEntity.class, ing1_id));
     }
 
     @Test
     public void testHistoryOfEdId1() {
         BiEmbIdRefIngEntity ing1 = getEntityManager().find(BiEmbIdRefIngEntity.class, ing1_id);
 
-        BiEmbIdRefEdEntity rev1 = getAuditReader().find(BiEmbIdRefEdEntity.class, ed1_id, 1);
-        BiEmbIdRefEdEntity rev2 = getAuditReader().find(BiEmbIdRefEdEntity.class, ed1_id, 2);
+        BiEmbIdRefEdEntity rev1 = getAuditReader().find(BiEmbIdRefEdEntity.class, ed1_id, 1L);
+        BiEmbIdRefEdEntity rev2 = getAuditReader().find(BiEmbIdRefEdEntity.class, ed1_id, 2L);
 
         assert rev1.getReferencing().equals(ing1);
         assert rev2.getReferencing() == null;
@@ -107,8 +107,8 @@ public class EmbIdBidirectional extends AbstractEntityTest {
     public void testHistoryOfEdId2() {
         BiEmbIdRefIngEntity ing1 = getEntityManager().find(BiEmbIdRefIngEntity.class, ing1_id);
 
-        BiEmbIdRefEdEntity rev1 = getAuditReader().find(BiEmbIdRefEdEntity.class, ed2_id, 1);
-        BiEmbIdRefEdEntity rev2 = getAuditReader().find(BiEmbIdRefEdEntity.class, ed2_id, 2);
+        BiEmbIdRefEdEntity rev1 = getAuditReader().find(BiEmbIdRefEdEntity.class, ed2_id, 1L);
+        BiEmbIdRefEdEntity rev2 = getAuditReader().find(BiEmbIdRefEdEntity.class, ed2_id, 2L);
 
         assert rev1.getReferencing() == null;
         assert rev2.getReferencing().equals(ing1);
@@ -119,8 +119,8 @@ public class EmbIdBidirectional extends AbstractEntityTest {
         BiEmbIdRefEdEntity ed1 = getEntityManager().find(BiEmbIdRefEdEntity.class, ed1_id);
         BiEmbIdRefEdEntity ed2 = getEntityManager().find(BiEmbIdRefEdEntity.class, ed2_id);
 
-        BiEmbIdRefIngEntity rev1 = getAuditReader().find(BiEmbIdRefIngEntity.class, ing1_id, 1);
-        BiEmbIdRefIngEntity rev2 = getAuditReader().find(BiEmbIdRefIngEntity.class, ing1_id, 2);
+        BiEmbIdRefIngEntity rev1 = getAuditReader().find(BiEmbIdRefIngEntity.class, ing1_id, 1L);
+        BiEmbIdRefIngEntity rev2 = getAuditReader().find(BiEmbIdRefIngEntity.class, ing1_id, 2L);
 
         assert rev1.getReference().equals(ed1);
         assert rev2.getReference().equals(ed2);

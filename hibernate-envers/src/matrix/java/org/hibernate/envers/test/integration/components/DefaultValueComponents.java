@@ -155,31 +155,31 @@ public class DefaultValueComponents extends AbstractEntityTest {
         log.error(getAuditReader().getRevisions(
 				DefaultValueComponentTestEntity.class, id6).toString());
 
-		assert Arrays.asList(1, 2).equals(
+		assert Arrays.asList(1L, 2L).equals(
 				getAuditReader().getRevisions(
 						DefaultValueComponentTestEntity.class, id0));
 
-		assert Arrays.asList(1, 2).equals(
+		assert Arrays.asList(1L, 2L).equals(
 				getAuditReader().getRevisions(
 						DefaultValueComponentTestEntity.class, id1));
 
-		assert Arrays.asList(1, 2).equals(
+		assert Arrays.asList(1L, 2L).equals(
 				getAuditReader().getRevisions(
 						DefaultValueComponentTestEntity.class, id2));
 
-		assert Arrays.asList(1, 2).equals(
+		assert Arrays.asList(1L, 2L).equals(
 				getAuditReader().getRevisions(
 						DefaultValueComponentTestEntity.class, id3));
 
-		assert Arrays.asList(1, 2).equals(
+		assert Arrays.asList(1L, 2L).equals(
 				getAuditReader().getRevisions(
 						DefaultValueComponentTestEntity.class, id4));
 
-		assert Arrays.asList(1, 2).equals(
+		assert Arrays.asList(1L, 2L).equals(
 				getAuditReader().getRevisions(
 						DefaultValueComponentTestEntity.class, id5));
 
-		assert Arrays.asList(1, 2).equals(
+		assert Arrays.asList(1L, 2L).equals(
 				getAuditReader().getRevisions(
 						DefaultValueComponentTestEntity.class, id6));
 	}
@@ -188,9 +188,9 @@ public class DefaultValueComponents extends AbstractEntityTest {
 	public void testHistoryOfId0() {
 
 		DefaultValueComponentTestEntity ent1 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id0, 1);
+				DefaultValueComponentTestEntity.class, id0, 1L);
 		DefaultValueComponentTestEntity ent2 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id0, 2);
+				DefaultValueComponentTestEntity.class, id0, 2L);
 
         log.error("------------ id0 -------------");
         log.error(ent1.toString());
@@ -211,9 +211,9 @@ public class DefaultValueComponents extends AbstractEntityTest {
 	public void testHistoryOfId1() {
 
 		DefaultValueComponentTestEntity ent1 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id1, 1);
+				DefaultValueComponentTestEntity.class, id1, 1L);
 		DefaultValueComponentTestEntity ent2 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id1, 2);
+				DefaultValueComponentTestEntity.class, id1, 2L);
 
         log.error("------------ id1 -------------");
         log.error(ent1.toString());
@@ -235,9 +235,9 @@ public class DefaultValueComponents extends AbstractEntityTest {
 	public void testHistoryOfId2() {
 
 		DefaultValueComponentTestEntity ent1 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id2, 1);
+				DefaultValueComponentTestEntity.class, id2, 1L);
 		DefaultValueComponentTestEntity ent2 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id2, 2);
+				DefaultValueComponentTestEntity.class, id2, 2L);
 
         log.error("------------ id2 -------------");
         log.error(ent1.toString());
@@ -258,9 +258,9 @@ public class DefaultValueComponents extends AbstractEntityTest {
 	public void testHistoryOfId3() {
 
 		DefaultValueComponentTestEntity ent1 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id3, 1);
+				DefaultValueComponentTestEntity.class, id3, 1L);
 		DefaultValueComponentTestEntity ent2 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id3, 2);
+				DefaultValueComponentTestEntity.class, id3, 2L);
 
         log.error("------------ id3 -------------");
         log.error(ent1.toString());
@@ -281,9 +281,9 @@ public class DefaultValueComponents extends AbstractEntityTest {
 	public void testHistoryOfId4() {
 
 		DefaultValueComponentTestEntity ent1 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id4, 1);
+				DefaultValueComponentTestEntity.class, id4, 1L);
 		DefaultValueComponentTestEntity ent2 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id4, 2);
+				DefaultValueComponentTestEntity.class, id4, 2L);
 
         log.error("------------ id4 -------------");
         log.error(ent1.toString());
@@ -304,9 +304,9 @@ public class DefaultValueComponents extends AbstractEntityTest {
 	public void testHistoryOfId5() {
 
 		DefaultValueComponentTestEntity ent1 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id5, 1);
+				DefaultValueComponentTestEntity.class, id5, 1L);
 		DefaultValueComponentTestEntity ent2 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id5, 2);
+				DefaultValueComponentTestEntity.class, id5, 2L);
 
         log.error("------------ id5 -------------");
         log.error(ent1.toString());
@@ -327,9 +327,9 @@ public class DefaultValueComponents extends AbstractEntityTest {
 	public void testHistoryOfId6() {
 
 		DefaultValueComponentTestEntity ent1 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id6, 1);
+				DefaultValueComponentTestEntity.class, id6, 1L);
 		DefaultValueComponentTestEntity ent2 = getAuditReader().find(
-				DefaultValueComponentTestEntity.class, id6, 2);
+				DefaultValueComponentTestEntity.class, id6, 2L);
 
         log.error("------------ id6 -------------");
         log.error(ent1.toString());

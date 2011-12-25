@@ -92,7 +92,7 @@ public class ComponentMapKey extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(ComponentMapKeyEntity.class, cmke_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(ComponentMapKeyEntity.class, cmke_id));
     }
 
     @Test
@@ -104,8 +104,8 @@ public class ComponentMapKey extends AbstractEntityTest {
         cte1.setComp2(null);
         cte2.setComp2(null);
 
-        ComponentMapKeyEntity rev1 = getAuditReader().find(ComponentMapKeyEntity.class, cmke_id, 1);
-        ComponentMapKeyEntity rev2 = getAuditReader().find(ComponentMapKeyEntity.class, cmke_id, 2);
+        ComponentMapKeyEntity rev1 = getAuditReader().find(ComponentMapKeyEntity.class, cmke_id, 1L);
+        ComponentMapKeyEntity rev2 = getAuditReader().find(ComponentMapKeyEntity.class, cmke_id, 2L);
 
         assert rev1.getIdmap().equals(TestTools.makeMap(cte1.getComp1(), cte1));
         assert rev2.getIdmap().equals(TestTools.makeMap(cte1.getComp1(), cte1, cte2.getComp1(), cte2));

@@ -79,15 +79,15 @@ public class DoubleFlushModDel extends AbstractFlushTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(StrTestEntity.class, id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(StrTestEntity.class, id));
     }
 
     @Test
     public void testHistoryOfId() {
         StrTestEntity ver1 = new StrTestEntity("x", id);
 
-        assert getAuditReader().find(StrTestEntity.class, id, 1).equals(ver1);
-        assert getAuditReader().find(StrTestEntity.class, id, 2) == null;
+        assert getAuditReader().find(StrTestEntity.class, id, 1L).equals(ver1);
+        assert getAuditReader().find(StrTestEntity.class, id, 2L) == null;
     }
 
     @Test

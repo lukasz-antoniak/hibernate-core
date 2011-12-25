@@ -135,12 +135,12 @@ public class InheritanceIndexedJoinColumnBidirectionalList extends AbstractEntit
 
     @Test
     public void testRevisionsCounts() {
-        assertEquals(Arrays.asList(1, 2, 3, 4), getAuditReader().getRevisions(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id));
-        assertEquals(Arrays.asList(1, 2, 4), getAuditReader().getRevisions(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing2_id));
+        assertEquals(Arrays.asList(1L, 2L, 3L, 4L), getAuditReader().getRevisions(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id));
+        assertEquals(Arrays.asList(1L, 2L, 4L), getAuditReader().getRevisions(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing2_id));
 
-        assertEquals(Arrays.asList(1, 3, 4), getAuditReader().getRevisions(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed1_id));
-        assertEquals(Arrays.asList(1, 2, 4), getAuditReader().getRevisions(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id));
-        assertEquals(Arrays.asList(1, 2, 3, 4), getAuditReader().getRevisions(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed3_id));
+        assertEquals(Arrays.asList(1L, 3L, 4L), getAuditReader().getRevisions(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed1_id));
+        assertEquals(Arrays.asList(1L, 2L, 4L), getAuditReader().getRevisions(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id));
+        assertEquals(Arrays.asList(1L, 2L, 3L, 4L), getAuditReader().getRevisions(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed3_id));
     }
 
     @Test
@@ -149,10 +149,10 @@ public class InheritanceIndexedJoinColumnBidirectionalList extends AbstractEntit
         ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity ed2 = getEntityManager().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id);
         ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity ed3 = getEntityManager().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed3_id);
 
-        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev1 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 1);
-        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev2 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 2);
-        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev3 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 3);
-        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev4 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 4);
+        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev1 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 1L);
+        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev2 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 2L);
+        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev3 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 3L);
+        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev4 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id, 4L);
 
         assertEquals(rev1.getReferences().size(), 3);
         assertEquals(rev1.getReferences().get(0), ed1);
@@ -177,10 +177,10 @@ public class InheritanceIndexedJoinColumnBidirectionalList extends AbstractEntit
     public void testHistoryOfIng2() {
         ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity ed2 = getEntityManager().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id);
 
-        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev1 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 1);
-        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev2 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 2);
-        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev3 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 3);
-        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev4 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 4);
+        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev1 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 1L);
+        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev2 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 2L);
+        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev3 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 3L);
+        ChildIndexedListJoinColumnBidirectionalRefIngEntity rev4 = getAuditReader().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing2_id, 4L);
 
         assertEquals(rev1.getReferences().size(), 0);
 
@@ -197,10 +197,10 @@ public class InheritanceIndexedJoinColumnBidirectionalList extends AbstractEntit
     public void testHistoryOfEd1() {
         ChildIndexedListJoinColumnBidirectionalRefIngEntity ing1 = getEntityManager().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id);
 
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev1 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed1_id, 1);
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev2 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed1_id, 2);
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev3 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed1_id, 3);
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev4 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed1_id, 4);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev1 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed1_id, 1L);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev2 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed1_id, 2L);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev3 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed1_id, 3L);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev4 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed1_id, 4L);
 
         assertTrue(rev1.getOwner().equals(ing1));
         assertTrue(rev2.getOwner().equals(ing1));
@@ -218,10 +218,10 @@ public class InheritanceIndexedJoinColumnBidirectionalList extends AbstractEntit
         ChildIndexedListJoinColumnBidirectionalRefIngEntity ing1 = getEntityManager().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id);
         ChildIndexedListJoinColumnBidirectionalRefIngEntity ing2 = getEntityManager().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing2_id);
 
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev1 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id, 1);
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev2 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id, 2);
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev3 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id, 3);
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev4 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id, 4);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev1 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id, 1l);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev2 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id, 2L);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev3 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id, 3L);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev4 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed2_id, 4L);
 
         assertTrue(rev1.getOwner().equals(ing1));
         assertTrue(rev2.getOwner().equals(ing2));
@@ -238,10 +238,10 @@ public class InheritanceIndexedJoinColumnBidirectionalList extends AbstractEntit
     public void testHistoryOfEd3() {
         ChildIndexedListJoinColumnBidirectionalRefIngEntity ing1 = getEntityManager().find(ChildIndexedListJoinColumnBidirectionalRefIngEntity.class, ing1_id);
 
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev1 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed3_id, 1);
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev2 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed3_id, 2);
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev3 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed3_id, 3);
-        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev4 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed3_id, 4);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev1 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed3_id, 1L);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev2 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed3_id, 2L);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev3 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed3_id, 3L);
+        ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity rev4 = getAuditReader().find(ParentOwnedIndexedListJoinColumnBidirectionalRefEdEntity.class, ed3_id, 4L);
 
         assertTrue(rev1.getOwner().equals(ing1));
         assertTrue(rev2.getOwner().equals(ing1));

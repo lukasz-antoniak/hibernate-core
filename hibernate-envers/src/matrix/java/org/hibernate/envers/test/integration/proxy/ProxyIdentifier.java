@@ -70,7 +70,7 @@ public class ProxyIdentifier extends AbstractEntityTest {
 
     @Test
     public void testProxyIdentifier() {
-        TargetNotAuditedEntity rev1 = getAuditReader().find(TargetNotAuditedEntity.class, tnae1.getId(), 1);
+        TargetNotAuditedEntity rev1 = getAuditReader().find(TargetNotAuditedEntity.class, tnae1.getId(), 1L);
 
         assert rev1.getReference() instanceof HibernateProxy;
 

@@ -49,12 +49,12 @@ public class AddDelTest extends AbstractSessionTest {
     @Test
     public void testRevisionsCountOfGivenIdStrEntity() {
         // Revision 2 has not changed entity's state.
-        Assert.assertEquals(Arrays.asList(1, 3), getAuditReader().getRevisions(GivenIdStrEntity.class, 1));
+        Assert.assertEquals(Arrays.asList(1L, 3L), getAuditReader().getRevisions(GivenIdStrEntity.class, 1));
     }
 
     @Test
     public void testHistoryOfGivenIdStrEntity() {
-        Assert.assertEquals(new GivenIdStrEntity(1, "data"), getAuditReader().find(GivenIdStrEntity.class, 1, 1));
-        Assert.assertEquals(new GivenIdStrEntity(1, "modified data"), getAuditReader().find(GivenIdStrEntity.class, 1, 3));
+        Assert.assertEquals(new GivenIdStrEntity(1, "data"), getAuditReader().find(GivenIdStrEntity.class, 1, 1L));
+        Assert.assertEquals(new GivenIdStrEntity(1, "modified data"), getAuditReader().find(GivenIdStrEntity.class, 1, 3L));
     }
 }

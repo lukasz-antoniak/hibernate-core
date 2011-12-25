@@ -131,13 +131,13 @@ public class BasicWhereJoinTable extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assertEquals(Arrays.asList(1, 2, 4), getAuditReader().getRevisions(WhereJoinTableEntity.class, wjte1_id));
-        assertEquals(Arrays.asList(1, 3, 4), getAuditReader().getRevisions(WhereJoinTableEntity.class, wjte2_id));
+        assertEquals(Arrays.asList(1L, 2L, 4L), getAuditReader().getRevisions(WhereJoinTableEntity.class, wjte1_id));
+        assertEquals(Arrays.asList(1L, 3L, 4L), getAuditReader().getRevisions(WhereJoinTableEntity.class, wjte2_id));
 
-        assertEquals(Arrays.asList(1), getAuditReader().getRevisions(IntNoAutoIdTestEntity.class, ite1_1_id));
-        assertEquals(Arrays.asList(1), getAuditReader().getRevisions(IntNoAutoIdTestEntity.class, ite1_2_id));
-        assertEquals(Arrays.asList(1), getAuditReader().getRevisions(IntNoAutoIdTestEntity.class, ite2_1_id));
-        assertEquals(Arrays.asList(1), getAuditReader().getRevisions(IntNoAutoIdTestEntity.class, ite2_2_id));
+        assertEquals(Arrays.asList(1L), getAuditReader().getRevisions(IntNoAutoIdTestEntity.class, ite1_1_id));
+        assertEquals(Arrays.asList(1L), getAuditReader().getRevisions(IntNoAutoIdTestEntity.class, ite1_2_id));
+        assertEquals(Arrays.asList(1L), getAuditReader().getRevisions(IntNoAutoIdTestEntity.class, ite2_1_id));
+        assertEquals(Arrays.asList(1L), getAuditReader().getRevisions(IntNoAutoIdTestEntity.class, ite2_2_id));
     }
 
     @Test
@@ -145,10 +145,10 @@ public class BasicWhereJoinTable extends AbstractEntityTest {
         IntNoAutoIdTestEntity ite1_1 = getEntityManager().find(IntNoAutoIdTestEntity.class, ite1_1_id);
         IntNoAutoIdTestEntity ite2_1 = getEntityManager().find(IntNoAutoIdTestEntity.class, ite2_1_id);
 
-        WhereJoinTableEntity rev1 = getAuditReader().find(WhereJoinTableEntity.class, wjte1_id, 1);
-        WhereJoinTableEntity rev2 = getAuditReader().find(WhereJoinTableEntity.class, wjte1_id, 2);
-        WhereJoinTableEntity rev3 = getAuditReader().find(WhereJoinTableEntity.class, wjte1_id, 3);
-        WhereJoinTableEntity rev4 = getAuditReader().find(WhereJoinTableEntity.class, wjte1_id, 4);
+        WhereJoinTableEntity rev1 = getAuditReader().find(WhereJoinTableEntity.class, wjte1_id, 1L);
+        WhereJoinTableEntity rev2 = getAuditReader().find(WhereJoinTableEntity.class, wjte1_id, 2L);
+        WhereJoinTableEntity rev3 = getAuditReader().find(WhereJoinTableEntity.class, wjte1_id, 3L);
+        WhereJoinTableEntity rev4 = getAuditReader().find(WhereJoinTableEntity.class, wjte1_id, 4L);
 
         // Checking 1st list
         assert TestTools.checkList(rev1.getReferences1());
@@ -169,10 +169,10 @@ public class BasicWhereJoinTable extends AbstractEntityTest {
         IntNoAutoIdTestEntity ite1_2 = getEntityManager().find(IntNoAutoIdTestEntity.class, ite1_2_id);
         IntNoAutoIdTestEntity ite2_2 = getEntityManager().find(IntNoAutoIdTestEntity.class, ite2_2_id);
 
-        WhereJoinTableEntity rev1 = getAuditReader().find(WhereJoinTableEntity.class, wjte2_id, 1);
-        WhereJoinTableEntity rev2 = getAuditReader().find(WhereJoinTableEntity.class, wjte2_id, 2);
-        WhereJoinTableEntity rev3 = getAuditReader().find(WhereJoinTableEntity.class, wjte2_id, 3);
-        WhereJoinTableEntity rev4 = getAuditReader().find(WhereJoinTableEntity.class, wjte2_id, 4);
+        WhereJoinTableEntity rev1 = getAuditReader().find(WhereJoinTableEntity.class, wjte2_id, 1L);
+        WhereJoinTableEntity rev2 = getAuditReader().find(WhereJoinTableEntity.class, wjte2_id, 2L);
+        WhereJoinTableEntity rev3 = getAuditReader().find(WhereJoinTableEntity.class, wjte2_id, 3L);
+        WhereJoinTableEntity rev4 = getAuditReader().find(WhereJoinTableEntity.class, wjte2_id, 4L);
 
         // Checking 1st list
         assert TestTools.checkList(rev1.getReferences1());

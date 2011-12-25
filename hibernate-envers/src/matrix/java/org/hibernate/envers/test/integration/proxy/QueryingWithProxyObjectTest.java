@@ -45,19 +45,19 @@ public class QueryingWithProxyObjectTest extends AbstractSessionTest {
 
         Assert.assertTrue(getAuditReader().isEntityClassAudited(proxySte.getClass()));
 
-        StrTestEntity ste = getAuditReader().find(proxySte.getClass(), proxySte.getId(), 1);
+        StrTestEntity ste = getAuditReader().find(proxySte.getClass(), proxySte.getId(), 1L);
         Assert.assertEquals(originalSte, ste);
 
         List<Number> revisions = getAuditReader().getRevisions(proxySte.getClass(), proxySte.getId());
-        Assert.assertEquals(Arrays.asList(1), revisions);
+        Assert.assertEquals(Arrays.asList(1L), revisions);
 
-        List<StrTestEntity> entities = getAuditReader().createQuery().forEntitiesAtRevision(proxySte.getClass(), 1).getResultList();
+        List<StrTestEntity> entities = getAuditReader().createQuery().forEntitiesAtRevision(proxySte.getClass(), 1L).getResultList();
         Assert.assertEquals(Arrays.asList(originalSte), entities);
 
         ste = (StrTestEntity) getAuditReader().createQuery().forRevisionsOfEntity(proxySte.getClass(), true, false).getSingleResult();
         Assert.assertEquals(originalSte, ste);
 
-        ste = (StrTestEntity) getAuditReader().createQuery().forEntitiesModifiedAtRevision(proxySte.getClass(), 1).getSingleResult();
+        ste = (StrTestEntity) getAuditReader().createQuery().forEntitiesModifiedAtRevision(proxySte.getClass(), 1L).getSingleResult();
         Assert.assertEquals(originalSte, ste);
     }
 }

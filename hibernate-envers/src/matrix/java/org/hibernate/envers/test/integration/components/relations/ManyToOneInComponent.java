@@ -92,7 +92,7 @@ public class ManyToOneInComponent extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(2, 3).equals(getAuditReader().getRevisions(ManyToOneComponentTestEntity.class, mtocte_id1));
+        assert Arrays.asList(2L, 3L).equals(getAuditReader().getRevisions(ManyToOneComponentTestEntity.class, mtocte_id1));
     }
 
     @Test
@@ -103,8 +103,8 @@ public class ManyToOneInComponent extends AbstractEntityTest {
         ManyToOneComponentTestEntity ver2 = new ManyToOneComponentTestEntity(mtocte_id1, new ManyToOneComponent(ste1, "data1"));
 		ManyToOneComponentTestEntity ver3 = new ManyToOneComponentTestEntity(mtocte_id1, new ManyToOneComponent(ste2, "data1"));
 
-        assert getAuditReader().find(ManyToOneComponentTestEntity.class, mtocte_id1, 1) == null;
-        assert getAuditReader().find(ManyToOneComponentTestEntity.class, mtocte_id1, 2).equals(ver2);
-        assert getAuditReader().find(ManyToOneComponentTestEntity.class, mtocte_id1, 3).equals(ver3);
+        assert getAuditReader().find(ManyToOneComponentTestEntity.class, mtocte_id1, 1L) == null;
+        assert getAuditReader().find(ManyToOneComponentTestEntity.class, mtocte_id1, 2L).equals(ver2);
+        assert getAuditReader().find(ManyToOneComponentTestEntity.class, mtocte_id1, 3L).equals(ver3);
     }
 }

@@ -60,7 +60,7 @@ public class PropertyAccessType extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(PropertyAccessTypeEntity.class, id1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(PropertyAccessTypeEntity.class, id1));
     }
 
     @Test
@@ -68,8 +68,8 @@ public class PropertyAccessType extends AbstractEntityTest {
         PropertyAccessTypeEntity ver1 = new PropertyAccessTypeEntity(id1, "data");
         PropertyAccessTypeEntity ver2 = new PropertyAccessTypeEntity(id1, "data2");
 
-        PropertyAccessTypeEntity rev1 = getAuditReader().find(PropertyAccessTypeEntity.class, id1, 1);
-        PropertyAccessTypeEntity rev2 = getAuditReader().find(PropertyAccessTypeEntity.class, id1, 2);
+        PropertyAccessTypeEntity rev1 = getAuditReader().find(PropertyAccessTypeEntity.class, id1, 1L);
+        PropertyAccessTypeEntity rev2 = getAuditReader().find(PropertyAccessTypeEntity.class, id1, 2L);
 
         assert rev1.isIdSet();
         assert rev2.isIdSet();

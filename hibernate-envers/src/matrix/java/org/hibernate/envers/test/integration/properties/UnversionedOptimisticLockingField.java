@@ -65,7 +65,7 @@ public class UnversionedOptimisticLockingField extends AbstractEntityTest {
 
 	@Test
 	public void testRevisionCounts() {
-		assert Arrays.asList(1, 2).equals(
+		assert Arrays.asList(1L, 2L).equals(
 				getAuditReader().getRevisions(UnversionedOptimisticLockingFieldEntity.class,
 						id1));
 	}
@@ -75,9 +75,9 @@ public class UnversionedOptimisticLockingField extends AbstractEntityTest {
 		UnversionedOptimisticLockingFieldEntity ver1 = new UnversionedOptimisticLockingFieldEntity(id1, "x");
 		UnversionedOptimisticLockingFieldEntity ver2 = new UnversionedOptimisticLockingFieldEntity(id1, "y");
 		
-		assert getAuditReader().find(UnversionedOptimisticLockingFieldEntity.class, id1, 1)
+		assert getAuditReader().find(UnversionedOptimisticLockingFieldEntity.class, id1, 1L)
 				.equals(ver1);
-		assert getAuditReader().find(UnversionedOptimisticLockingFieldEntity.class, id1, 2)
+		assert getAuditReader().find(UnversionedOptimisticLockingFieldEntity.class, id1, 2L)
 				.equals(ver2);
 	}
 	

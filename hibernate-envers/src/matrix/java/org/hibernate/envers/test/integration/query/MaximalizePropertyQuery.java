@@ -108,7 +108,7 @@ public class MaximalizePropertyQuery extends AbstractEntityTest {
                     .add(AuditEntity.id().eq(id2)))
                 .getResultList();
 
-        assert Arrays.asList(2, 3, 4).equals(revs_id1);
+        assert Arrays.asList(2L, 3L, 4L).equals(revs_id1);
     }
 
     @Test
@@ -120,7 +120,7 @@ public class MaximalizePropertyQuery extends AbstractEntityTest {
                     .add(AuditEntity.property("str1").eq("a")))
                 .getResultList();
 
-        assert Arrays.asList(1).equals(result);
+        assert Arrays.asList(1L).equals(result);
     }
 
     @Test
@@ -133,6 +133,6 @@ public class MaximalizePropertyQuery extends AbstractEntityTest {
                 .getResultList();
 
         System.out.println(result);
-        assert Arrays.asList(2).equals(result);
+        assert Arrays.asList(2L).equals(result);
     }
 }

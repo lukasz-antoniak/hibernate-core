@@ -50,17 +50,17 @@ public class ParentReferencingChildTest extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        Assert.assertEquals(Arrays.asList(1), getAuditReader().getRevisions(Person.class, expLukaszRev1.getId()));
-        Assert.assertEquals(Arrays.asList(1), getAuditReader().getRevisions(RightsSubject.class, expLukaszRev1.getId()));
+        Assert.assertEquals(Arrays.asList(1L), getAuditReader().getRevisions(Person.class, expLukaszRev1.getId()));
+        Assert.assertEquals(Arrays.asList(1L), getAuditReader().getRevisions(RightsSubject.class, expLukaszRev1.getId()));
 
-        Assert.assertEquals(Arrays.asList(1), getAuditReader().getRevisions(Role.class, expAdminRev1.getId()));
-        Assert.assertEquals(Arrays.asList(1), getAuditReader().getRevisions(RightsSubject.class, expAdminRev1.getId()));
+        Assert.assertEquals(Arrays.asList(1L), getAuditReader().getRevisions(Role.class, expAdminRev1.getId()));
+        Assert.assertEquals(Arrays.asList(1L), getAuditReader().getRevisions(RightsSubject.class, expAdminRev1.getId()));
     }
 
     @Test
     public void testHistoryOfLukasz() {
-        Person lukaszRev1 = getAuditReader().find(Person.class, expLukaszRev1.getId(), 1);
-        RightsSubject rightsSubjectLukaszRev1 = getAuditReader().find(RightsSubject.class, expLukaszRev1.getId(), 1);
+        Person lukaszRev1 = getAuditReader().find(Person.class, expLukaszRev1.getId(), 1L);
+        RightsSubject rightsSubjectLukaszRev1 = getAuditReader().find(RightsSubject.class, expLukaszRev1.getId(), 1L);
 
         Assert.assertEquals(expLukaszRev1, lukaszRev1);
         Assert.assertEquals(TestTools.makeSet(expAdminRev1), lukaszRev1.getRoles());
@@ -69,7 +69,7 @@ public class ParentReferencingChildTest extends AbstractEntityTest {
 
     @Test
     public void testHistoryOfAdmin() {
-        Role adminRev1 = getAuditReader().find(Role.class, expAdminRev1.getId(), 1);
+        Role adminRev1 = getAuditReader().find(Role.class, expAdminRev1.getId(), 1L);
 
         Assert.assertEquals(expAdminRev1, adminRev1);
         Assert.assertEquals(TestTools.makeSet(expLukaszRev1), adminRev1.getMembers());

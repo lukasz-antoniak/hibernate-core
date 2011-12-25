@@ -81,7 +81,7 @@ public class RevisionInfoConfiguration {
         modifiedEntityNamesData = new PropertyData("modifiedEntityNames", "modifiedEntityNames", "field", null);
         revisionInfoTimestampType = new LongType();
 
-        revisionPropType = "integer";
+        revisionPropType = "long";
     }
 
     private Document generateDefaultRevisionInfoXmlMapping() {
@@ -173,13 +173,13 @@ public class RevisionInfoConfiguration {
                         reflectionManager.equals(revisionNumberClass, Integer.TYPE)) {
                     revisionInfoIdData = new PropertyData(property.getName(), property.getName(), accessType, null);
                     revisionNumberFound.set();
+
+                    // The default is long
+                    revisionPropType = "integer";
                 } else if (reflectionManager.equals(revisionNumberClass, Long.class) ||
                         reflectionManager.equals(revisionNumberClass, Long.TYPE)) {
                     revisionInfoIdData = new PropertyData(property.getName(), property.getName(), accessType, null);
                     revisionNumberFound.set();
-
-                    // The default is integer
-                    revisionPropType = "long";
                 } else {
                     throw new MappingException("The field annotated with @RevisionNumber must be of type " +
                             "int, Integer, long or Long");

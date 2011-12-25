@@ -65,7 +65,7 @@ public class NullPropertyQuery extends AbstractEntityTest {
     @Test
     public void testSimplePropertyIsNullQuery() {
         StrIntTestEntity ver = (StrIntTestEntity) getAuditReader().createQuery()
-                .forEntitiesAtRevision(StrIntTestEntity.class, 1)
+                .forEntitiesAtRevision(StrIntTestEntity.class, 1L)
                 .add(AuditEntity.property("str1").isNull())
                 .getSingleResult();
 
@@ -75,7 +75,7 @@ public class NullPropertyQuery extends AbstractEntityTest {
     @Test
     public void testSimplePropertyIsNotNullQuery() {
         StrIntTestEntity ver = (StrIntTestEntity) getAuditReader().createQuery()
-                .forEntitiesAtRevision(StrIntTestEntity.class, 1)
+                .forEntitiesAtRevision(StrIntTestEntity.class, 1L)
                 .add(AuditEntity.property("str1").isNotNull())
                 .getSingleResult();
 
@@ -85,7 +85,7 @@ public class NullPropertyQuery extends AbstractEntityTest {
     @Test
     public void testReferenceMulticolumnPropertyIsNullQuery() {
         SetRefIngEmbIdEntity ver = (SetRefIngEmbIdEntity) getAuditReader().createQuery()
-                .forEntitiesAtRevision(SetRefIngEmbIdEntity.class, 2)
+                .forEntitiesAtRevision(SetRefIngEmbIdEntity.class, 2L)
                 .add(AuditEntity.property("reference").isNull())
                 .getSingleResult();
 
@@ -95,7 +95,7 @@ public class NullPropertyQuery extends AbstractEntityTest {
     @Test
     public void testReferencePropertyIsNotNullQuery() {
         CollectionRefIngEntity ver = (CollectionRefIngEntity) getAuditReader().createQuery()
-                .forEntitiesAtRevision(CollectionRefIngEntity.class, 3)
+                .forEntitiesAtRevision(CollectionRefIngEntity.class, 3L)
                 .add(AuditEntity.property("reference").isNotNull())
                 .getSingleResult();
 

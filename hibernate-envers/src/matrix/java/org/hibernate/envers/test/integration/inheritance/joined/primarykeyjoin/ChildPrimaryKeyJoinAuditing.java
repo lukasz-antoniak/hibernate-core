@@ -70,7 +70,7 @@ public class ChildPrimaryKeyJoinAuditing extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(ChildPrimaryKeyJoinEntity.class, id1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(ChildPrimaryKeyJoinEntity.class, id1));
     }
 
     @Test
@@ -78,21 +78,21 @@ public class ChildPrimaryKeyJoinAuditing extends AbstractEntityTest {
         ChildPrimaryKeyJoinEntity ver1 = new ChildPrimaryKeyJoinEntity(id1, "x", 1l);
         ChildPrimaryKeyJoinEntity ver2 = new ChildPrimaryKeyJoinEntity(id1, "y", 2l);
 
-        assert getAuditReader().find(ChildPrimaryKeyJoinEntity.class, id1, 1).equals(ver1);
-        assert getAuditReader().find(ChildPrimaryKeyJoinEntity.class, id1, 2).equals(ver2);
+        assert getAuditReader().find(ChildPrimaryKeyJoinEntity.class, id1, 1L).equals(ver1);
+        assert getAuditReader().find(ChildPrimaryKeyJoinEntity.class, id1, 2L).equals(ver2);
 
-        assert getAuditReader().find(ParentEntity.class, id1, 1).equals(ver1);
-        assert getAuditReader().find(ParentEntity.class, id1, 2).equals(ver2);
+        assert getAuditReader().find(ParentEntity.class, id1, 1L).equals(ver1);
+        assert getAuditReader().find(ParentEntity.class, id1, 2L).equals(ver2);
     }
 
     @Test
     public void testPolymorphicQuery() {
         ChildPrimaryKeyJoinEntity childVer1 = new ChildPrimaryKeyJoinEntity(id1, "x", 1l);
 
-        assert getAuditReader().createQuery().forEntitiesAtRevision(ChildPrimaryKeyJoinEntity.class, 1).getSingleResult()
+        assert getAuditReader().createQuery().forEntitiesAtRevision(ChildPrimaryKeyJoinEntity.class, 1L).getSingleResult()
                 .equals(childVer1);
 
-        assert getAuditReader().createQuery().forEntitiesAtRevision(ParentEntity.class, 1).getSingleResult()
+        assert getAuditReader().createQuery().forEntitiesAtRevision(ParentEntity.class, 1L).getSingleResult()
                 .equals(childVer1);
     }
 

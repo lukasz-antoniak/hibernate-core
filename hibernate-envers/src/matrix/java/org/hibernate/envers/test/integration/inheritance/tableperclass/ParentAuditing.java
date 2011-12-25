@@ -66,13 +66,13 @@ public class ParentAuditing extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(ParentEntity.class, id1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(ParentEntity.class, id1));
     }
 
     @Test
     public void testHistoryOfChildId1() {
-        assert getAuditReader().find(ChildEntity.class, id1, 1) == null;
-        assert getAuditReader().find(ChildEntity.class, id1, 2) == null;
+        assert getAuditReader().find(ChildEntity.class, id1, 1L) == null;
+        assert getAuditReader().find(ChildEntity.class, id1, 2L) == null;
     }
 
     @Test
@@ -80,17 +80,17 @@ public class ParentAuditing extends AbstractEntityTest {
         ParentEntity ver1 = new ParentEntity(id1, "x");
         ParentEntity ver2 = new ParentEntity(id1, "y");
 
-        assert getAuditReader().find(ParentEntity.class, id1, 1).equals(ver1);
-        assert getAuditReader().find(ParentEntity.class, id1, 2).equals(ver2);
+        assert getAuditReader().find(ParentEntity.class, id1, 1L).equals(ver1);
+        assert getAuditReader().find(ParentEntity.class, id1, 2L).equals(ver2);
     }
 
     @Test
     public void testPolymorphicQuery() {
         ParentEntity parentVer1 = new ParentEntity(id1, "x");
 
-        assert getAuditReader().createQuery().forEntitiesAtRevision(ParentEntity.class, 1).getSingleResult()
+        assert getAuditReader().createQuery().forEntitiesAtRevision(ParentEntity.class, 1L).getSingleResult()
                 .equals(parentVer1);
-        assert getAuditReader().createQuery().forEntitiesAtRevision(ChildEntity.class, 1)
+        assert getAuditReader().createQuery().forEntitiesAtRevision(ChildEntity.class, 1L)
                 .getResultList().size() == 0;
     }
 }

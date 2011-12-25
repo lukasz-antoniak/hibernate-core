@@ -22,6 +22,7 @@
  * Boston, MA  02110-1301  USA
  */
 package org.hibernate.envers.test.integration.reventity;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -39,24 +40,25 @@ public class CustomBoxedRevEntity {
     @Id
     @GeneratedValue
     @RevisionNumber
-    private Integer customId;
+    @Column(columnDefinition = "int")
+    private Long customId;
 
     @RevisionTimestamp
-    private Long customTimestamp;
+    private long customTimestamp;
 
-    public Integer getCustomId() {
+    public Long getCustomId() {
         return customId;
     }
 
-    public void setCustomId(Integer customId) {
+    public void setCustomId(Long customId) {
         this.customId = customId;
     }
 
-    public Long getCustomTimestamp() {
+    public long getCustomTimestamp() {
         return customTimestamp;
     }
 
-    public void setCustomTimestamp(Long customTimestamp) {
+    public void setCustomTimestamp(long customTimestamp) {
         this.customTimestamp = customTimestamp;
     }
 
@@ -66,17 +68,16 @@ public class CustomBoxedRevEntity {
 
         CustomBoxedRevEntity that = (CustomBoxedRevEntity) o;
 
-        if (customId != null ? !customId.equals(that.customId) : that.customId != null) return false;
-        if (customTimestamp != null ? !customTimestamp.equals(that.customTimestamp) : that.customTimestamp != null)
-            return false;
+        if (customId != that.customId) return false;
+        if (customTimestamp != that.customTimestamp) return false;
 
         return true;
     }
 
+    @Override
     public int hashCode() {
-        int result;
-        result = (customId != null ? customId.hashCode() : 0);
-        result = 31 * result + (customTimestamp != null ? customTimestamp.hashCode() : 0);
+        int result = customId != null ? customId.hashCode() : 0;
+        result = 31 * result + (int) (customTimestamp ^ (customTimestamp >>> 32));
         return result;
     }
 }

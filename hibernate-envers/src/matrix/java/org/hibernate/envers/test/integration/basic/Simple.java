@@ -61,7 +61,7 @@ public class Simple extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(IntTestEntity.class, id1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(IntTestEntity.class, id1));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class Simple extends AbstractEntityTest {
         IntTestEntity ver1 = new IntTestEntity(10, id1);
         IntTestEntity ver2 = new IntTestEntity(20, id1);
 
-        assert getAuditReader().find(IntTestEntity.class, id1, 1).equals(ver1);
-        assert getAuditReader().find(IntTestEntity.class, id1, 2).equals(ver2);
+        assert getAuditReader().find(IntTestEntity.class, id1, 1L).equals(ver1);
+        assert getAuditReader().find(IntTestEntity.class, id1, 2L).equals(ver2);
     }
 }

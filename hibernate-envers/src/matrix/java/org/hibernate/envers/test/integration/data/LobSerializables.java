@@ -58,7 +58,7 @@ public class LobSerializables extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(LobSerializableTestEntity.class, id1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(LobSerializableTestEntity.class, id1));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class LobSerializables extends AbstractEntityTest {
         LobSerializableTestEntity ver1 = new LobSerializableTestEntity(id1, new SerObject("d1"));
         LobSerializableTestEntity ver2 = new LobSerializableTestEntity(id1, new SerObject("d2"));
 
-        assert getAuditReader().find(LobSerializableTestEntity.class, id1, 1).equals(ver1);
-        assert getAuditReader().find(LobSerializableTestEntity.class, id1, 2).equals(ver2);
+        assert getAuditReader().find(LobSerializableTestEntity.class, id1, 1L).equals(ver1);
+        assert getAuditReader().find(LobSerializableTestEntity.class, id1, 2L).equals(ver2);
     }
 }

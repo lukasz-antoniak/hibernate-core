@@ -122,11 +122,11 @@ public class CustomComparatorEntityTest extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assertEquals(Arrays.asList(1, 2, 3, 4, 5), getAuditReader().getRevisions(SortedSetEntity.class, 1));
-        assertEquals(Arrays.asList(2), getAuditReader().getRevisions(StrTestEntity.class, id1));
-        assertEquals(Arrays.asList(3), getAuditReader().getRevisions(StrTestEntity.class, id2));
-        assertEquals(Arrays.asList(4), getAuditReader().getRevisions(StrTestEntity.class, id3));
-        assertEquals(Arrays.asList(5), getAuditReader().getRevisions(StrTestEntity.class, id4));
+        assertEquals(Arrays.asList(1L, 2L, 3L, 4L, 5L), getAuditReader().getRevisions(SortedSetEntity.class, 1));
+        assertEquals(Arrays.asList(2L), getAuditReader().getRevisions(StrTestEntity.class, id1));
+        assertEquals(Arrays.asList(3L), getAuditReader().getRevisions(StrTestEntity.class, id2));
+        assertEquals(Arrays.asList(4L), getAuditReader().getRevisions(StrTestEntity.class, id3));
+        assertEquals(Arrays.asList(5L), getAuditReader().getRevisions(StrTestEntity.class, id4));
     }
 
     @Test
@@ -168,7 +168,7 @@ public class CustomComparatorEntityTest extends AbstractEntityTest {
 
     @Test
     public void testHistoryOfEntity1() throws Exception {
-        SortedSetEntity entity1 = getAuditReader().find(SortedSetEntity.class, 1, 1);
+        SortedSetEntity entity1 = getAuditReader().find(SortedSetEntity.class, 1, 1L);
 
         assertEquals("sortedEntity1", entity1.getData());
         assertEquals(Integer.valueOf(1), entity1.getId());
@@ -181,7 +181,7 @@ public class CustomComparatorEntityTest extends AbstractEntityTest {
         assertEquals(StrTestEntityComparator.class, sortedMap.comparator().getClass());
         assertEquals(0, sortedMap.size());
 
-        entity1 = getAuditReader().find(SortedSetEntity.class, 1, 2);
+        entity1 = getAuditReader().find(SortedSetEntity.class, 1, 2L);
 
         assertEquals("sortedEntity1", entity1.getData());
         assertEquals(Integer.valueOf(1), entity1.getId());
@@ -201,7 +201,7 @@ public class CustomComparatorEntityTest extends AbstractEntityTest {
 	    mapIterator = sortedMap.entrySet().iterator();
         assertEquals(mapIterator.next().getValue(), "abc");
 
-        entity1 = getAuditReader().find(SortedSetEntity.class, 1, 3);
+        entity1 = getAuditReader().find(SortedSetEntity.class, 1, 3L);
 
         assertEquals("sortedEntity1", entity1.getData());
         assertEquals(Integer.valueOf(1), entity1.getId());
@@ -224,7 +224,7 @@ public class CustomComparatorEntityTest extends AbstractEntityTest {
         assertEquals(mapIterator.next().getValue(), "aaa");
         assertEquals(mapIterator.next().getValue(), "abc");
 
-        entity1 = getAuditReader().find(SortedSetEntity.class, 1, 4);
+        entity1 = getAuditReader().find(SortedSetEntity.class, 1, 4L);
 
         assertEquals("sortedEntity1", entity1.getData());
         assertEquals(Integer.valueOf(1), entity1.getId());
@@ -250,7 +250,7 @@ public class CustomComparatorEntityTest extends AbstractEntityTest {
         assertEquals(mapIterator.next().getValue(), "aba");
         assertEquals(mapIterator.next().getValue(), "abc");
 
-        entity1 = getAuditReader().find(SortedSetEntity.class, 1, 5);
+        entity1 = getAuditReader().find(SortedSetEntity.class, 1, 5L);
 
         assertEquals("sortedEntity1", entity1.getData());
         assertEquals(Integer.valueOf(1), entity1.getId());

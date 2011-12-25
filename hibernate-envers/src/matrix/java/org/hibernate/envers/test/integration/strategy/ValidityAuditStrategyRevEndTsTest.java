@@ -197,7 +197,7 @@ public class ValidityAuditStrategyRevEndTsTest extends AbstractEntityTest {
 		c2_2_id = c2_2.getId();
 
 		Set<Number> revisionNumbers = new HashSet<Number>();
-		revisionNumbers.addAll(Arrays.asList(1, 2, 3, 4, 5));
+		revisionNumbers.addAll(Arrays.asList(1L, 2L, 3L, 4L, 5L));
 		revisions = getAuditReader().findRevisions(DefaultRevisionEntity.class,
 				revisionNumbers);
 
@@ -206,19 +206,19 @@ public class ValidityAuditStrategyRevEndTsTest extends AbstractEntityTest {
 
 	@Test
 	public void testRevisionsCounts() {
-		assert Arrays.asList(1, 2, 3, 4).equals(
+		assert Arrays.asList(1L, 2L, 3L, 4L).equals(
 				getAuditReader().getRevisions(ParentEntity.class, p1_id));
-		assert Arrays.asList(1, 2, 3, 4).equals(
+		assert Arrays.asList(1L, 2L, 3L, 4L).equals(
 				getAuditReader().getRevisions(ParentEntity.class, p2_id));
 
-		assert Arrays.asList(1).equals(
+		assert Arrays.asList(1L).equals(
 				getAuditReader().getRevisions(Child1Entity.class, c1_1_id));
-		assert Arrays.asList(1, 5).equals(
+		assert Arrays.asList(1L, 5L).equals(
 				getAuditReader().getRevisions(Child1Entity.class, c1_2_id));
 
-		assert Arrays.asList(1).equals(
+		assert Arrays.asList(1L).equals(
 				getAuditReader().getRevisions(Child2Entity.class, c2_1_id));
-		assert Arrays.asList(1, 5).equals(
+		assert Arrays.asList(1L, 5L).equals(
 				getAuditReader().getRevisions(Child2Entity.class, c2_2_id));
 	}
 
@@ -256,11 +256,11 @@ public class ValidityAuditStrategyRevEndTsTest extends AbstractEntityTest {
 		Child2Entity c2_2 = getEntityManager()
 				.find(Child2Entity.class, c2_2_id);
 
-		ParentEntity rev1 = getAuditReader().find(ParentEntity.class, p1_id, 1);
-		ParentEntity rev2 = getAuditReader().find(ParentEntity.class, p1_id, 2);
-		ParentEntity rev3 = getAuditReader().find(ParentEntity.class, p1_id, 3);
-		ParentEntity rev4 = getAuditReader().find(ParentEntity.class, p1_id, 4);
-		ParentEntity rev5 = getAuditReader().find(ParentEntity.class, p1_id, 5);
+		ParentEntity rev1 = getAuditReader().find(ParentEntity.class, p1_id, 1L);
+		ParentEntity rev2 = getAuditReader().find(ParentEntity.class, p1_id, 2L);
+		ParentEntity rev3 = getAuditReader().find(ParentEntity.class, p1_id, 3L);
+		ParentEntity rev4 = getAuditReader().find(ParentEntity.class, p1_id, 4L);
+		ParentEntity rev5 = getAuditReader().find(ParentEntity.class, p1_id, 5L);
 
 		assert TestTools.checkList(rev1.getChildren1());
 		assert TestTools.checkList(rev2.getChildren1(), c1_1);
@@ -284,11 +284,11 @@ public class ValidityAuditStrategyRevEndTsTest extends AbstractEntityTest {
 		Child2Entity c2_2 = getEntityManager()
 				.find(Child2Entity.class, c2_2_id);
 
-		ParentEntity rev1 = getAuditReader().find(ParentEntity.class, p2_id, 1);
-		ParentEntity rev2 = getAuditReader().find(ParentEntity.class, p2_id, 2);
-		ParentEntity rev3 = getAuditReader().find(ParentEntity.class, p2_id, 3);
-		ParentEntity rev4 = getAuditReader().find(ParentEntity.class, p2_id, 4);
-		ParentEntity rev5 = getAuditReader().find(ParentEntity.class, p2_id, 5);
+		ParentEntity rev1 = getAuditReader().find(ParentEntity.class, p2_id, 1L);
+		ParentEntity rev2 = getAuditReader().find(ParentEntity.class, p2_id, 2L);
+		ParentEntity rev3 = getAuditReader().find(ParentEntity.class, p2_id, 3L);
+		ParentEntity rev4 = getAuditReader().find(ParentEntity.class, p2_id, 4L);
+		ParentEntity rev5 = getAuditReader().find(ParentEntity.class, p2_id, 5L);
 
 		assert TestTools.checkList(rev1.getChildren1());
 		assert TestTools.checkList(rev2.getChildren1());
@@ -309,15 +309,15 @@ public class ValidityAuditStrategyRevEndTsTest extends AbstractEntityTest {
 		ParentEntity p2 = getEntityManager().find(ParentEntity.class, p2_id);
 
 		Child1Entity rev1 = getAuditReader().find(Child1Entity.class, c1_1_id,
-				1);
+				1L);
 		Child1Entity rev2 = getAuditReader().find(Child1Entity.class, c1_1_id,
-				2);
+				2L);
 		Child1Entity rev3 = getAuditReader().find(Child1Entity.class, c1_1_id,
-				3);
+				3L);
 		Child1Entity rev4 = getAuditReader().find(Child1Entity.class, c1_1_id,
-				4);
+				4L);
 		Child1Entity rev5 = getAuditReader().find(Child1Entity.class, c1_1_id,
-				5);
+				5L);
 
 		assert TestTools.checkList(rev1.getParents());
 		assert TestTools.checkList(rev2.getParents(), p1);
@@ -332,15 +332,15 @@ public class ValidityAuditStrategyRevEndTsTest extends AbstractEntityTest {
 		ParentEntity p1 = getEntityManager().find(ParentEntity.class, p1_id);
 
 		Child1Entity rev1 = getAuditReader().find(Child1Entity.class, c1_2_id,
-				1);
+				1L);
 		Child1Entity rev2 = getAuditReader().find(Child1Entity.class, c1_2_id,
-				2);
+				2L);
 		Child1Entity rev3 = getAuditReader().find(Child1Entity.class, c1_2_id,
-				3);
+				3L);
 		Child1Entity rev4 = getAuditReader().find(Child1Entity.class, c1_2_id,
-				4);
+				4L);
 		Child1Entity rev5 = getAuditReader().find(Child1Entity.class, c1_2_id,
-				5);
+				5L);
 
 		assert TestTools.checkList(rev1.getParents());
 		assert TestTools.checkList(rev2.getParents());
@@ -354,15 +354,15 @@ public class ValidityAuditStrategyRevEndTsTest extends AbstractEntityTest {
 		ParentEntity p2 = getEntityManager().find(ParentEntity.class, p2_id);
 
 		Child2Entity rev1 = getAuditReader().find(Child2Entity.class, c2_1_id,
-				1);
+				1L);
 		Child2Entity rev2 = getAuditReader().find(Child2Entity.class, c2_1_id,
-				2);
+				2L);
 		Child2Entity rev3 = getAuditReader().find(Child2Entity.class, c2_1_id,
-				3);
+				3L);
 		Child2Entity rev4 = getAuditReader().find(Child2Entity.class, c2_1_id,
-				4);
+				4L);
 		Child2Entity rev5 = getAuditReader().find(Child2Entity.class, c2_1_id,
-				5);
+				5L);
 
 		assert TestTools.checkList(rev1.getParents());
 		assert TestTools.checkList(rev2.getParents(), p2);
@@ -377,15 +377,15 @@ public class ValidityAuditStrategyRevEndTsTest extends AbstractEntityTest {
 		ParentEntity p2 = getEntityManager().find(ParentEntity.class, p2_id);
 
 		Child2Entity rev1 = getAuditReader().find(Child2Entity.class, c2_2_id,
-				1);
+				1L);
 		Child2Entity rev2 = getAuditReader().find(Child2Entity.class, c2_2_id,
-				2);
+				2L);
 		Child2Entity rev3 = getAuditReader().find(Child2Entity.class, c2_2_id,
-				3);
+				3L);
 		Child2Entity rev4 = getAuditReader().find(Child2Entity.class, c2_2_id,
-				4);
+				4L);
 		Child2Entity rev5 = getAuditReader().find(Child2Entity.class, c2_2_id,
-				5);
+				5L);
 
 		assert TestTools.checkList(rev1.getParents());
 		assert TestTools.checkList(rev2.getParents());

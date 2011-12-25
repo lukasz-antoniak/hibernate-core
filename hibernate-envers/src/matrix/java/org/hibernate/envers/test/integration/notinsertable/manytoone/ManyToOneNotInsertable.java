@@ -59,17 +59,17 @@ public class ManyToOneNotInsertable extends AbstractEntityTest {
 
     @Test
     public void testRevisionCounts() {
-		assert Arrays.asList(1).equals(getAuditReader().getRevisions(NotInsertableEntityType.class, type_id1));
-		assert Arrays.asList(1).equals(getAuditReader().getRevisions(NotInsertableEntityType.class, type_id2));
+		assert Arrays.asList(1L).equals(getAuditReader().getRevisions(NotInsertableEntityType.class, type_id1));
+		assert Arrays.asList(1L).equals(getAuditReader().getRevisions(NotInsertableEntityType.class, type_id2));
 
-        assert Arrays.asList(2, 3).equals(getAuditReader().getRevisions(ManyToOneNotInsertableEntity.class, mto_id1));        
+        assert Arrays.asList(2L, 3L).equals(getAuditReader().getRevisions(ManyToOneNotInsertableEntity.class, mto_id1));
     }
 
     @Test
     public void testNotInsertableEntity() {
-        ManyToOneNotInsertableEntity ver1 = getAuditReader().find(ManyToOneNotInsertableEntity.class, mto_id1, 1);
-		ManyToOneNotInsertableEntity ver2 = getAuditReader().find(ManyToOneNotInsertableEntity.class, mto_id1, 2);
-		ManyToOneNotInsertableEntity ver3 = getAuditReader().find(ManyToOneNotInsertableEntity.class, mto_id1, 3);
+        ManyToOneNotInsertableEntity ver1 = getAuditReader().find(ManyToOneNotInsertableEntity.class, mto_id1, 1L);
+		ManyToOneNotInsertableEntity ver2 = getAuditReader().find(ManyToOneNotInsertableEntity.class, mto_id1, 2L);
+		ManyToOneNotInsertableEntity ver3 = getAuditReader().find(ManyToOneNotInsertableEntity.class, mto_id1, 3L);
 
 		NotInsertableEntityType type1 = getEntityManager().find(NotInsertableEntityType.class, type_id1);
 		NotInsertableEntityType type2 = getEntityManager().find(NotInsertableEntityType.class, type_id2);

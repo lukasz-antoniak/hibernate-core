@@ -104,11 +104,11 @@ public class BasicSetWithMulId extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2, 3).equals(getAuditReader().getRevisions(SetRefEdMulIdEntity.class, ed1_id));
-        assert Arrays.asList(1, 2, 3).equals(getAuditReader().getRevisions(SetRefEdMulIdEntity.class, ed2_id));
+        assert Arrays.asList(1L, 2L, 3L).equals(getAuditReader().getRevisions(SetRefEdMulIdEntity.class, ed1_id));
+        assert Arrays.asList(1L, 2L, 3L).equals(getAuditReader().getRevisions(SetRefEdMulIdEntity.class, ed2_id));
 
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(SetRefIngMulIdEntity.class, ing1_id));
-        assert Arrays.asList(1, 3).equals(getAuditReader().getRevisions(SetRefIngMulIdEntity.class, ing2_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(SetRefIngMulIdEntity.class, ing1_id));
+        assert Arrays.asList(1L, 3L).equals(getAuditReader().getRevisions(SetRefIngMulIdEntity.class, ing2_id));
     }
 
     private <T> Set<T> makeSet(T... objects) {
@@ -123,9 +123,9 @@ public class BasicSetWithMulId extends AbstractEntityTest {
         SetRefIngMulIdEntity ing1 = getEntityManager().find(SetRefIngMulIdEntity.class, ing1_id);
         SetRefIngMulIdEntity ing2 = getEntityManager().find(SetRefIngMulIdEntity.class, ing2_id);
 
-        SetRefEdMulIdEntity rev1 = getAuditReader().find(SetRefEdMulIdEntity.class, ed1_id, 1);
-        SetRefEdMulIdEntity rev2 = getAuditReader().find(SetRefEdMulIdEntity.class, ed1_id, 2);
-        SetRefEdMulIdEntity rev3 = getAuditReader().find(SetRefEdMulIdEntity.class, ed1_id, 3);
+        SetRefEdMulIdEntity rev1 = getAuditReader().find(SetRefEdMulIdEntity.class, ed1_id, 1L);
+        SetRefEdMulIdEntity rev2 = getAuditReader().find(SetRefEdMulIdEntity.class, ed1_id, 2L);
+        SetRefEdMulIdEntity rev3 = getAuditReader().find(SetRefEdMulIdEntity.class, ed1_id, 3L);
 
         assert rev1.getReffering().equals(makeSet(ing1, ing2));
         assert rev2.getReffering().equals(makeSet(ing2));
@@ -137,9 +137,9 @@ public class BasicSetWithMulId extends AbstractEntityTest {
         SetRefIngMulIdEntity ing1 = getEntityManager().find(SetRefIngMulIdEntity.class, ing1_id);
         SetRefIngMulIdEntity ing2 = getEntityManager().find(SetRefIngMulIdEntity.class, ing2_id);
 
-        SetRefEdMulIdEntity rev1 = getAuditReader().find(SetRefEdMulIdEntity.class, ed2_id, 1);
-        SetRefEdMulIdEntity rev2 = getAuditReader().find(SetRefEdMulIdEntity.class, ed2_id, 2);
-        SetRefEdMulIdEntity rev3 = getAuditReader().find(SetRefEdMulIdEntity.class, ed2_id, 3);
+        SetRefEdMulIdEntity rev1 = getAuditReader().find(SetRefEdMulIdEntity.class, ed2_id, 1L);
+        SetRefEdMulIdEntity rev2 = getAuditReader().find(SetRefEdMulIdEntity.class, ed2_id, 2L);
+        SetRefEdMulIdEntity rev3 = getAuditReader().find(SetRefEdMulIdEntity.class, ed2_id, 3L);
 
         assert rev1.getReffering().equals(Collections.EMPTY_SET);
         assert rev2.getReffering().equals(makeSet(ing1));
@@ -151,9 +151,9 @@ public class BasicSetWithMulId extends AbstractEntityTest {
         SetRefEdMulIdEntity ed1 = getEntityManager().find(SetRefEdMulIdEntity.class, ed1_id);
         SetRefEdMulIdEntity ed2 = getEntityManager().find(SetRefEdMulIdEntity.class, ed2_id);
 
-        SetRefIngMulIdEntity rev1 = getAuditReader().find(SetRefIngMulIdEntity.class, ing1_id, 1);
-        SetRefIngMulIdEntity rev2 = getAuditReader().find(SetRefIngMulIdEntity.class, ing1_id, 2);
-        SetRefIngMulIdEntity rev3 = getAuditReader().find(SetRefIngMulIdEntity.class, ing1_id, 3);
+        SetRefIngMulIdEntity rev1 = getAuditReader().find(SetRefIngMulIdEntity.class, ing1_id, 1L);
+        SetRefIngMulIdEntity rev2 = getAuditReader().find(SetRefIngMulIdEntity.class, ing1_id, 2L);
+        SetRefIngMulIdEntity rev3 = getAuditReader().find(SetRefIngMulIdEntity.class, ing1_id, 3L);
 
         assert rev1.getReference().equals(ed1);
         assert rev2.getReference().equals(ed2);
@@ -165,9 +165,9 @@ public class BasicSetWithMulId extends AbstractEntityTest {
         SetRefEdMulIdEntity ed1 = getEntityManager().find(SetRefEdMulIdEntity.class, ed1_id);
         SetRefEdMulIdEntity ed2 = getEntityManager().find(SetRefEdMulIdEntity.class, ed2_id);
 
-        SetRefIngMulIdEntity rev1 = getAuditReader().find(SetRefIngMulIdEntity.class, ing2_id, 1);
-        SetRefIngMulIdEntity rev2 = getAuditReader().find(SetRefIngMulIdEntity.class, ing2_id, 2);
-        SetRefIngMulIdEntity rev3 = getAuditReader().find(SetRefIngMulIdEntity.class, ing2_id, 3);
+        SetRefIngMulIdEntity rev1 = getAuditReader().find(SetRefIngMulIdEntity.class, ing2_id, 1L);
+        SetRefIngMulIdEntity rev2 = getAuditReader().find(SetRefIngMulIdEntity.class, ing2_id, 2L);
+        SetRefIngMulIdEntity rev3 = getAuditReader().find(SetRefIngMulIdEntity.class, ing2_id, 3L);
 
         assert rev1.getReference().equals(ed1);
         assert rev2.getReference().equals(ed1);

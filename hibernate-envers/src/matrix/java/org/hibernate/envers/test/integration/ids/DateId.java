@@ -71,7 +71,7 @@ public class DateId extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(DateIdTestEntity.class, id1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(DateIdTestEntity.class, id1));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class DateId extends AbstractEntityTest {
         DateIdTestEntity ver1 = new DateIdTestEntity(id1, "x");
         DateIdTestEntity ver2 = new DateIdTestEntity(id1, "y");
 
-        assert getAuditReader().find(DateIdTestEntity.class, id1, 1).getStr1().equals("x");
-        assert getAuditReader().find(DateIdTestEntity.class, id1, 2).getStr1().equals("y");
+        assert getAuditReader().find(DateIdTestEntity.class, id1, 1L).getStr1().equals("x");
+        assert getAuditReader().find(DateIdTestEntity.class, id1, 2L).getStr1().equals("y");
     }
 }

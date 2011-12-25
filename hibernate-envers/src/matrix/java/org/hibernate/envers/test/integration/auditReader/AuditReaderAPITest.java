@@ -69,7 +69,7 @@ public class AuditReaderAPITest extends AbstractEntityTest {
     public void testIsEntityClassAuditedForAuditedEntity() {
         assert getAuditReader().isEntityClassAudited(AuditedTestEntity.class);
         
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(AuditedTestEntity.class, 1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(AuditedTestEntity.class, 1));
     }
 
     @Test

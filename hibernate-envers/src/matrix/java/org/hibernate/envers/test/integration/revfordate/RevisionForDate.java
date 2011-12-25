@@ -101,9 +101,9 @@ public class RevisionForDate extends AbstractEntityTest {
     @Test
     public void testDatesForRevisions() {
         AuditReader vr = getAuditReader();
-        assert vr.getRevisionNumberForDate(vr.getRevisionDate(1)).intValue() == 1;
-        assert vr.getRevisionNumberForDate(vr.getRevisionDate(2)).intValue() == 2;
-        assert vr.getRevisionNumberForDate(vr.getRevisionDate(3)).intValue() == 3;
+        assert vr.getRevisionNumberForDate(vr.getRevisionDate(1L)).intValue() == 1;
+        assert vr.getRevisionNumberForDate(vr.getRevisionDate(2L)).intValue() == 2;
+        assert vr.getRevisionNumberForDate(vr.getRevisionDate(3L)).intValue() == 3;
     }
 
     @Test
@@ -111,10 +111,10 @@ public class RevisionForDate extends AbstractEntityTest {
         AuditReader vr = getAuditReader();
 
         assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp2))).getTime() <= timestamp2;
-        assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp2)).intValue()+1).getTime() > timestamp2;
+        assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp2)).longValue()+1L).getTime() > timestamp2;
 
         assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp3))).getTime() <= timestamp3;
-        assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp3)).intValue()+1).getTime() > timestamp3;
+        assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp3)).longValue()+1L).getTime() > timestamp3;
 
         assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp4))).getTime() <= timestamp4;
     }

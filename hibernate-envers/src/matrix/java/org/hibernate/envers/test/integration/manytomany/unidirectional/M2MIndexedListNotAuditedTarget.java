@@ -92,17 +92,17 @@ public class M2MIndexedListNotAuditedTarget extends AbstractEntityTest {
 	@Test
 	public void testRevisionsCounts() {
 		List<Number> revisions = getAuditReader().getRevisions(M2MIndexedListTargetNotAuditedEntity.class, itnae1_id);
-		assertEquals(revisions, Arrays.asList(1, 3));
+		assertEquals(revisions, Arrays.asList(1L, 3L));
 
 		revisions = getAuditReader().getRevisions(M2MIndexedListTargetNotAuditedEntity.class, itnae2_id);
-        assertEquals(revisions, Arrays.asList(2));
+        assertEquals(revisions, Arrays.asList(2L));
 	}
 
     @Test
     public void testHistory1() throws Exception {
-        M2MIndexedListTargetNotAuditedEntity rev1 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae1_id, 1);
-        M2MIndexedListTargetNotAuditedEntity rev2 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae1_id, 2);
-        M2MIndexedListTargetNotAuditedEntity rev3 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae1_id, 3);
+        M2MIndexedListTargetNotAuditedEntity rev1 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae1_id, 1L);
+        M2MIndexedListTargetNotAuditedEntity rev2 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae1_id, 2L);
+        M2MIndexedListTargetNotAuditedEntity rev3 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae1_id, 3L);
 
         assertTrue(checkList(rev1.getReferences(), uste1, uste2));
         assertTrue(checkList(rev2.getReferences(), uste1, uste2));
@@ -111,9 +111,9 @@ public class M2MIndexedListNotAuditedTarget extends AbstractEntityTest {
 
     @Test
     public void testHistory2() throws Exception {
-        M2MIndexedListTargetNotAuditedEntity rev1 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae2_id, 1);
-        M2MIndexedListTargetNotAuditedEntity rev2 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae2_id, 2);
-        M2MIndexedListTargetNotAuditedEntity rev3 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae2_id, 3);
+        M2MIndexedListTargetNotAuditedEntity rev1 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae2_id, 1L);
+        M2MIndexedListTargetNotAuditedEntity rev2 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae2_id, 2L);
+        M2MIndexedListTargetNotAuditedEntity rev3 = getAuditReader().find(M2MIndexedListTargetNotAuditedEntity.class, itnae2_id, 3L);
 
         assertNull(rev1);
         assertTrue(checkList(rev2.getReferences(), uste2));

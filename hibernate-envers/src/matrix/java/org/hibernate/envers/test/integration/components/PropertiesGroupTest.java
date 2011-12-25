@@ -71,11 +71,11 @@ public class PropertiesGroupTest extends AbstractSessionTest {
 
     @Test
     public void testHistoryOfUniquePropsEntity() {
-        Assert.assertEquals(entityRev1, getAuditReader().find(UniquePropsEntity.class, entityRev1.getId(), 1));
+        Assert.assertEquals(entityRev1, getAuditReader().find(UniquePropsEntity.class, entityRev1.getId(), 1L));
     }
 
     @Test
     public void testHistoryOfUniquePropsNotAuditedEntity() {
-        Assert.assertEquals(entityNotAuditedRev2, getAuditReader().find(UniquePropsNotAuditedEntity.class, entityNotAuditedRev2.getId(), 2));
+        Assert.assertEquals(entityNotAuditedRev2, getAuditReader().find(UniquePropsNotAuditedEntity.class, entityNotAuditedRev2.getId(), 2L));
     }
 }

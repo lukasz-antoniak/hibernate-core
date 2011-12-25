@@ -82,7 +82,7 @@ public class DoubleFlushAddMod extends AbstractFlushTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(StrTestEntity.class, id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(StrTestEntity.class, id));
     }
 
     @Test
@@ -90,8 +90,8 @@ public class DoubleFlushAddMod extends AbstractFlushTest {
         StrTestEntity ver1 = new StrTestEntity("y", id);
         StrTestEntity ver2 = new StrTestEntity("z", id);
 
-        assert getAuditReader().find(StrTestEntity.class, id, 1).equals(ver1);
-        assert getAuditReader().find(StrTestEntity.class, id, 2).equals(ver2);
+        assert getAuditReader().find(StrTestEntity.class, id, 1L).equals(ver1);
+        assert getAuditReader().find(StrTestEntity.class, id, 2L).equals(ver2);
     }
 
     @Test

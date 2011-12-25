@@ -93,7 +93,7 @@ public class OneToManyInComponent extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(2, 3).equals(getAuditReader().getRevisions(OneToManyComponentTestEntity.class, otmcte_id1));
+        assert Arrays.asList(2L, 3L).equals(getAuditReader().getRevisions(OneToManyComponentTestEntity.class, otmcte_id1));
     }
 
     @Test
@@ -107,8 +107,8 @@ public class OneToManyInComponent extends AbstractEntityTest {
 		ver3.getComp1().getEntities().add(ste1);
 		ver3.getComp1().getEntities().add(ste2);
 
-        assert getAuditReader().find(OneToManyComponentTestEntity.class, otmcte_id1, 1) == null;
-        assert getAuditReader().find(OneToManyComponentTestEntity.class, otmcte_id1, 2).equals(ver2);
-        assert getAuditReader().find(OneToManyComponentTestEntity.class, otmcte_id1, 3).equals(ver3);
+        assert getAuditReader().find(OneToManyComponentTestEntity.class, otmcte_id1, 1L) == null;
+        assert getAuditReader().find(OneToManyComponentTestEntity.class, otmcte_id1, 2L).equals(ver2);
+        assert getAuditReader().find(OneToManyComponentTestEntity.class, otmcte_id1, 3L).equals(ver3);
     }
 }

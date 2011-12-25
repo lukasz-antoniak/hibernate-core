@@ -11,6 +11,6 @@ public class OverrideDefaultRevListenerTest extends GloballyConfiguredRevListene
     @Override
     public void configure(Ejb3Configuration cfg) {
         super.configure(cfg);
-        cfg.addAnnotatedClass(LongRevNumberRevEntity.class);
+        cfg.addAnnotatedClass(CustomBoxedRevEntity.class);
     }
 }

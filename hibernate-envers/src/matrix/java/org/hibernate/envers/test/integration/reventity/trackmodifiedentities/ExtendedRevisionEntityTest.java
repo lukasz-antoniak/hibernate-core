@@ -21,7 +21,7 @@ public class ExtendedRevisionEntityTest extends DefaultTrackingEntitiesTest {
 
     @Test
     public void testCommentPropertyValue() {
-        ExtendedRevisionEntity ere = getAuditReader().findRevision(ExtendedRevisionEntity.class, 1);
+        ExtendedRevisionEntity ere = getAuditReader().findRevision(ExtendedRevisionEntity.class, 1L);
 
         assert ExtendedRevisionListener.COMMENT_VALUE.equals(ere.getComment());
     }

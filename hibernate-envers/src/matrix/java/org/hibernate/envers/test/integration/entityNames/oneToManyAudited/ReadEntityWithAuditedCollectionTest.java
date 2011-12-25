@@ -78,9 +78,9 @@ public class ReadEntityWithAuditedCollectionTest extends AbstractOneSessionTest{
     	currentCar1 = (Car)getSession().get(Car.class, id_car1);
     	currentPerson1 = (Person)getSession().get("Personaje", id_pers1);
     	
-    	person1_1 = getAuditReader().find(Person.class,"Personaje", id_pers1, 1);
-    	car1_1 = getAuditReader().find(Car.class, id_car1, 2);
-    	Car car2 = getAuditReader().find(Car.class, id_car2, 2);
+    	person1_1 = getAuditReader().find(Person.class,"Personaje", id_pers1, 1L);
+    	car1_1 = getAuditReader().find(Car.class, id_car1, 2L);
+    	Car car2 = getAuditReader().find(Car.class, id_car2, 2L);
 
     	for (Person owner : car1_1.getOwners()) {
     		owner.getName(); 
@@ -96,10 +96,10 @@ public class ReadEntityWithAuditedCollectionTest extends AbstractOneSessionTest{
 		String currCar1EN = getSession().getEntityName(currentCar1);
     	String currPerson1EN = getSession().getEntityName(currentPerson1);
     	
-    	String car1_1EN = getAuditReader().getEntityName(id_car1, 2, car1_1);
+    	String car1_1EN = getAuditReader().getEntityName(id_car1, 2L, car1_1);
     	assert(currCar1EN.equals(car1_1EN));
     	
-    	String person1_1EN = getAuditReader().getEntityName(id_pers1, 1, person1_1);
+    	String person1_1EN = getAuditReader().getEntityName(id_pers1, 1L, person1_1);
     	assert(currPerson1EN.equals(person1_1EN));
 	}        
 	

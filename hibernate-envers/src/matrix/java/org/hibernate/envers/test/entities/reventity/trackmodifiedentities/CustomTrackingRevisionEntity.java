@@ -22,7 +22,7 @@ public class CustomTrackingRevisionEntity {
     @Id
     @GeneratedValue
     @RevisionNumber
-    private int customId;
+    private long customId;
 
     @RevisionTimestamp
     private long customTimestamp;
@@ -30,11 +30,11 @@ public class CustomTrackingRevisionEntity {
     @OneToMany(mappedBy="revision", cascade={CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<ModifiedEntityTypeEntity> modifiedEntityTypes = new HashSet<ModifiedEntityTypeEntity>();
 
-    public int getCustomId() {
+    public long getCustomId() {
         return customId;
     }
 
-    public void setCustomId(int customId) {
+    public void setCustomId(long customId) {
         this.customId = customId;
     }
 
@@ -71,7 +71,7 @@ public class CustomTrackingRevisionEntity {
     }
 
     public int hashCode() {
-        int result = customId;
+        int result = (int) (customId ^ (customId >>> 32));
         result = 31 * result + (int) (customTimestamp ^ (customTimestamp >>> 32));
         return result;
     }

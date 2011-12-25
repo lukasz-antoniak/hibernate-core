@@ -78,7 +78,7 @@ public class MappedSubclassingAllAuditedTest extends AbstractEntityTest {
 
 	@Test
 	public void testRevisionsCountsForAudited() {
-		assert Arrays.asList(1, 2).equals(
+		assert Arrays.asList(1L, 2L).equals(
 				getAuditReader().getRevisions(AuditedAllSubclassEntity.class, id1_1));
 	}
 	
@@ -98,8 +98,8 @@ public class MappedSubclassingAllAuditedTest extends AbstractEntityTest {
 		AuditedAllSubclassEntity ver1 = new AuditedAllSubclassEntity(id1_1, "ae", "super str", "audited str");
 		AuditedAllSubclassEntity ver2 = new AuditedAllSubclassEntity(id1_1, "ae new", "super str", "audited str new");
 
-		AuditedAllSubclassEntity rev1 = getAuditReader().find(AuditedAllSubclassEntity.class, id1_1, 1);
-		AuditedAllSubclassEntity rev2 = getAuditReader().find(AuditedAllSubclassEntity.class, id1_1, 2);
+		AuditedAllSubclassEntity rev1 = getAuditReader().find(AuditedAllSubclassEntity.class, id1_1, 1L);
+		AuditedAllSubclassEntity rev2 = getAuditReader().find(AuditedAllSubclassEntity.class, id1_1, 2L);
 		
 		assert(rev1.getOtherStr() != null);
 		assert(rev2.getOtherStr() != null);
@@ -111,7 +111,7 @@ public class MappedSubclassingAllAuditedTest extends AbstractEntityTest {
 	@Test(expected=NotAuditedException.class)
 	public void testHistoryOfNotAudited() {
 		try {
-			getAuditReader().find(NotAuditedSubclassEntity.class, id2_1, 1);
+			getAuditReader().find(NotAuditedSubclassEntity.class, id2_1, 1L);
 			assert(false);
 		} catch (NotAuditedException nae) {
 			throw nae;

@@ -71,7 +71,7 @@ public class TransitiveAuditParentsTest extends AbstractEntityTest {
     public void testImplicitTransitiveAuditParents() {
         // expectedChild.notAudited shall be null, because it is not audited.
         ImplicitTransitiveChildEntity expectedChild = new ImplicitTransitiveChildEntity(childImpTransId, "grandparent 1", null, "parent 1", "child 1");
-        ImplicitTransitiveChildEntity child = getAuditReader().find(ImplicitTransitiveChildEntity.class, childImpTransId, 1);
+        ImplicitTransitiveChildEntity child = getAuditReader().find(ImplicitTransitiveChildEntity.class, childImpTransId, 1L);
         Assert.assertEquals(expectedChild, child);
     }
 
@@ -79,7 +79,7 @@ public class TransitiveAuditParentsTest extends AbstractEntityTest {
     public void testExplicitTransitiveAuditParents() {
         // expectedChild.notAudited shall be null, because it is not audited.
         ExplicitTransitiveChildEntity expectedChild = new ExplicitTransitiveChildEntity(childExpTransId, "grandparent 2", null, "parent 2", "child 2");
-        ExplicitTransitiveChildEntity child = getAuditReader().find(ExplicitTransitiveChildEntity.class, childExpTransId, 2);
+        ExplicitTransitiveChildEntity child = getAuditReader().find(ExplicitTransitiveChildEntity.class, childExpTransId, 2L);
         Assert.assertEquals(expectedChild, child);
     }
 }

@@ -97,15 +97,15 @@ public class StringSet extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(StringSetEntity.class, sse1_id));
-        assert Arrays.asList(1, 3).equals(getAuditReader().getRevisions(StringSetEntity.class, sse2_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(StringSetEntity.class, sse1_id));
+        assert Arrays.asList(1L, 3L).equals(getAuditReader().getRevisions(StringSetEntity.class, sse2_id));
     }
 
     @Test
     public void testHistoryOfSse1() {
-        StringSetEntity rev1 = getAuditReader().find(StringSetEntity.class, sse1_id, 1);
-        StringSetEntity rev2 = getAuditReader().find(StringSetEntity.class, sse1_id, 2);
-        StringSetEntity rev3 = getAuditReader().find(StringSetEntity.class, sse1_id, 3);
+        StringSetEntity rev1 = getAuditReader().find(StringSetEntity.class, sse1_id, 1L);
+        StringSetEntity rev2 = getAuditReader().find(StringSetEntity.class, sse1_id, 2L);
+        StringSetEntity rev3 = getAuditReader().find(StringSetEntity.class, sse1_id, 3L);
 
         assert rev1.getStrings().equals(Collections.EMPTY_SET);
         assert rev2.getStrings().equals(TestTools.makeSet("sse1_string1", "sse1_string2"));
@@ -114,9 +114,9 @@ public class StringSet extends AbstractEntityTest {
 
     @Test
     public void testHistoryOfSse2() {
-        StringSetEntity rev1 = getAuditReader().find(StringSetEntity.class, sse2_id, 1);
-        StringSetEntity rev2 = getAuditReader().find(StringSetEntity.class, sse2_id, 2);
-        StringSetEntity rev3 = getAuditReader().find(StringSetEntity.class, sse2_id, 3);
+        StringSetEntity rev1 = getAuditReader().find(StringSetEntity.class, sse2_id, 1L);
+        StringSetEntity rev2 = getAuditReader().find(StringSetEntity.class, sse2_id, 2L);
+        StringSetEntity rev3 = getAuditReader().find(StringSetEntity.class, sse2_id, 3L);
 
         assert rev1.getStrings().equals(TestTools.makeSet("sse2_string1", "sse2_string2"));
         assert rev2.getStrings().equals(TestTools.makeSet("sse2_string1", "sse2_string2"));

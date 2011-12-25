@@ -69,7 +69,7 @@ public class CustomTrackingEntitiesTest extends AbstractEntityTest {
         ModifiedEntityTypeEntity steDescriptor = new ModifiedEntityTypeEntity(StrTestEntity.class.getName());
         ModifiedEntityTypeEntity siteDescriptor = new ModifiedEntityTypeEntity(StrIntTestEntity.class.getName());
 
-        CustomTrackingRevisionEntity ctre = getAuditReader().findRevision(CustomTrackingRevisionEntity.class, 1);
+        CustomTrackingRevisionEntity ctre = getAuditReader().findRevision(CustomTrackingRevisionEntity.class, 1L);
 
         assert ctre.getModifiedEntityTypes() != null;
         assert ctre.getModifiedEntityTypes().size() == 2;
@@ -80,7 +80,7 @@ public class CustomTrackingEntitiesTest extends AbstractEntityTest {
     public void testTrackModifiedEntities() {
         ModifiedEntityTypeEntity siteDescriptor = new ModifiedEntityTypeEntity(StrIntTestEntity.class.getName());
 
-        CustomTrackingRevisionEntity ctre = getAuditReader().findRevision(CustomTrackingRevisionEntity.class, 2);
+        CustomTrackingRevisionEntity ctre = getAuditReader().findRevision(CustomTrackingRevisionEntity.class, 2L);
 
         assert ctre.getModifiedEntityTypes() != null;
         assert ctre.getModifiedEntityTypes().size() == 1;
@@ -92,7 +92,7 @@ public class CustomTrackingEntitiesTest extends AbstractEntityTest {
         ModifiedEntityTypeEntity steDescriptor = new ModifiedEntityTypeEntity(StrTestEntity.class.getName());
         ModifiedEntityTypeEntity siteDescriptor = new ModifiedEntityTypeEntity(StrIntTestEntity.class.getName());
 
-        CustomTrackingRevisionEntity ctre = getAuditReader().findRevision(CustomTrackingRevisionEntity.class, 3);
+        CustomTrackingRevisionEntity ctre = getAuditReader().findRevision(CustomTrackingRevisionEntity.class, 3L);
 
         assert ctre.getModifiedEntityTypes() != null;
         assert ctre.getModifiedEntityTypes().size() == 2;

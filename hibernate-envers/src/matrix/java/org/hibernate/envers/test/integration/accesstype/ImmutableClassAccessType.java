@@ -33,7 +33,7 @@ public class ImmutableClassAccessType extends AbstractEntityTest {
 
 	@Test
 	public void testRevisionsCounts() {
-		assert Arrays.asList(1)
+		assert Arrays.asList(1L)
 				.equals(
 						getAuditReader().getRevisions(Country.class,
 								country.getCode()));
@@ -45,7 +45,7 @@ public class ImmutableClassAccessType extends AbstractEntityTest {
 				country.getCode());
 		assertEquals(country1, country);
 
-		Country history = getAuditReader().find(Country.class, country1.getCode(), 1);
+		Country history = getAuditReader().find(Country.class, country1.getCode(), 1L);
 		assertEquals(country, history);
 	}
 

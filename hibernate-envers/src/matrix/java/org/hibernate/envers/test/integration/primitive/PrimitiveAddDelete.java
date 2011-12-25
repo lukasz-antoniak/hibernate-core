@@ -72,7 +72,7 @@ public class PrimitiveAddDelete extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2, 3).equals(getAuditReader().getRevisions(PrimitiveTestEntity.class, id1));
+        assert Arrays.asList(1L, 2L, 3L).equals(getAuditReader().getRevisions(PrimitiveTestEntity.class, id1));
     }
 
     @Test
@@ -80,9 +80,9 @@ public class PrimitiveAddDelete extends AbstractEntityTest {
         PrimitiveTestEntity ver1 = new PrimitiveTestEntity(id1, 10, 0);
         PrimitiveTestEntity ver2 = new PrimitiveTestEntity(id1, 20, 0);
 
-        assert getAuditReader().find(PrimitiveTestEntity.class, id1, 1).equals(ver1);
-        assert getAuditReader().find(PrimitiveTestEntity.class, id1, 2).equals(ver2);
-        assert getAuditReader().find(PrimitiveTestEntity.class, id1, 3) == null;
+        assert getAuditReader().find(PrimitiveTestEntity.class, id1, 1L).equals(ver1);
+        assert getAuditReader().find(PrimitiveTestEntity.class, id1, 2L).equals(ver2);
+        assert getAuditReader().find(PrimitiveTestEntity.class, id1, 3L) == null;
     }
 
 	@Test

@@ -102,20 +102,20 @@ public class UnidirectionalWithNulls extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed1_id));
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed2_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed2_id));
 
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(UniRefIngEntity.class, ing1_id));
-        assert Arrays.asList(1, 3).equals(getAuditReader().getRevisions(UniRefIngEntity.class, ing2_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(UniRefIngEntity.class, ing1_id));
+        assert Arrays.asList(1L, 3L).equals(getAuditReader().getRevisions(UniRefIngEntity.class, ing2_id));
     }
 
     @Test
     public void testHistoryOfIngId1() {
         UniRefEdEntity ed1 = getEntityManager().find(UniRefEdEntity.class, ed1_id);
 
-        UniRefIngEntity rev1 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 1);
-        UniRefIngEntity rev2 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 2);
-        UniRefIngEntity rev3 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 3);
+        UniRefIngEntity rev1 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 1L);
+        UniRefIngEntity rev2 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 2L);
+        UniRefIngEntity rev3 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 3L);
 
         assert rev1.getReference().equals(ed1);
         assert rev2.getReference() == null;
@@ -126,9 +126,9 @@ public class UnidirectionalWithNulls extends AbstractEntityTest {
     public void testHistoryOfIngId2() {
         UniRefEdEntity ed2 = getEntityManager().find(UniRefEdEntity.class, ed2_id);
 
-        UniRefIngEntity rev1 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 1);
-        UniRefIngEntity rev2 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 2);
-        UniRefIngEntity rev3 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 3);
+        UniRefIngEntity rev1 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 1L);
+        UniRefIngEntity rev2 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 2L);
+        UniRefIngEntity rev3 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 3L);
 
         assert rev1.getReference() == null;
         assert rev2.getReference() == null;

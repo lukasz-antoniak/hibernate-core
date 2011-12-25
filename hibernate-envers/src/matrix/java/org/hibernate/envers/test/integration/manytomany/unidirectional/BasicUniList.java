@@ -133,11 +133,11 @@ public class BasicUniList extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(StrTestEntity.class, ed1_id));
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(StrTestEntity.class, ed2_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(StrTestEntity.class, ed1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(StrTestEntity.class, ed2_id));
 
-        assert Arrays.asList(1, 2, 3, 4, 5).equals(getAuditReader().getRevisions(ListUniEntity.class, ing1_id));
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(ListUniEntity.class, ing2_id));
+        assert Arrays.asList(1L, 2L, 3L, 4L, 5L).equals(getAuditReader().getRevisions(ListUniEntity.class, ing1_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(ListUniEntity.class, ing2_id));
     }
 
     @Test
@@ -145,11 +145,11 @@ public class BasicUniList extends AbstractEntityTest {
         StrTestEntity ed1 = getEntityManager().find(StrTestEntity.class, ed1_id);
         StrTestEntity ed2 = getEntityManager().find(StrTestEntity.class, ed2_id);
 
-        ListUniEntity rev1 = getAuditReader().find(ListUniEntity.class, ing1_id, 1);
-        ListUniEntity rev2 = getAuditReader().find(ListUniEntity.class, ing1_id, 2);
-        ListUniEntity rev3 = getAuditReader().find(ListUniEntity.class, ing1_id, 3);
-        ListUniEntity rev4 = getAuditReader().find(ListUniEntity.class, ing1_id, 4);
-        ListUniEntity rev5 = getAuditReader().find(ListUniEntity.class, ing1_id, 5);
+        ListUniEntity rev1 = getAuditReader().find(ListUniEntity.class, ing1_id, 1L);
+        ListUniEntity rev2 = getAuditReader().find(ListUniEntity.class, ing1_id, 2L);
+        ListUniEntity rev3 = getAuditReader().find(ListUniEntity.class, ing1_id, 3L);
+        ListUniEntity rev4 = getAuditReader().find(ListUniEntity.class, ing1_id, 4L);
+        ListUniEntity rev5 = getAuditReader().find(ListUniEntity.class, ing1_id, 5L);
 
         assert rev1.getReferences().equals(Collections.EMPTY_LIST);
         assert TestTools.checkList(rev2.getReferences(), ed1);
@@ -163,11 +163,11 @@ public class BasicUniList extends AbstractEntityTest {
         StrTestEntity ed1 = getEntityManager().find(StrTestEntity.class, ed1_id);
         StrTestEntity ed2 = getEntityManager().find(StrTestEntity.class, ed2_id);
 
-        ListUniEntity rev1 = getAuditReader().find(ListUniEntity.class, ing2_id, 1);
-        ListUniEntity rev2 = getAuditReader().find(ListUniEntity.class, ing2_id, 2);
-        ListUniEntity rev3 = getAuditReader().find(ListUniEntity.class, ing2_id, 3);
-        ListUniEntity rev4 = getAuditReader().find(ListUniEntity.class, ing2_id, 4);
-        ListUniEntity rev5 = getAuditReader().find(ListUniEntity.class, ing2_id, 5);
+        ListUniEntity rev1 = getAuditReader().find(ListUniEntity.class, ing2_id, 1L);
+        ListUniEntity rev2 = getAuditReader().find(ListUniEntity.class, ing2_id, 2L);
+        ListUniEntity rev3 = getAuditReader().find(ListUniEntity.class, ing2_id, 3L);
+        ListUniEntity rev4 = getAuditReader().find(ListUniEntity.class, ing2_id, 4L);
+        ListUniEntity rev5 = getAuditReader().find(ListUniEntity.class, ing2_id, 5L);
 
         assert rev1.getReferences().equals(Collections.EMPTY_LIST);
         assert TestTools.checkList(rev2.getReferences(), ed1, ed2);

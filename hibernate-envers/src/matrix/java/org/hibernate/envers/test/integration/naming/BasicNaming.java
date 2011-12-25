@@ -82,9 +82,9 @@ public class BasicNaming extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(NamingTestEntity1.class, id1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(NamingTestEntity1.class, id1));
 
-        assert Arrays.asList(1, 3).equals(getAuditReader().getRevisions(NamingTestEntity1.class, id2));
+        assert Arrays.asList(1L, 3L).equals(getAuditReader().getRevisions(NamingTestEntity1.class, id2));
     }
 
     @Test
@@ -92,9 +92,9 @@ public class BasicNaming extends AbstractEntityTest {
         NamingTestEntity1 ver1 = new NamingTestEntity1(id1, "data1");
         NamingTestEntity1 ver2 = new NamingTestEntity1(id1, "data1'");
 
-        assert getAuditReader().find(NamingTestEntity1.class, id1, 1).equals(ver1);
-        assert getAuditReader().find(NamingTestEntity1.class, id1, 2).equals(ver2);
-        assert getAuditReader().find(NamingTestEntity1.class, id1, 3).equals(ver2);
+        assert getAuditReader().find(NamingTestEntity1.class, id1, 1L).equals(ver1);
+        assert getAuditReader().find(NamingTestEntity1.class, id1, 2L).equals(ver2);
+        assert getAuditReader().find(NamingTestEntity1.class, id1, 3L).equals(ver2);
     }
 
     @Test
@@ -102,9 +102,9 @@ public class BasicNaming extends AbstractEntityTest {
         NamingTestEntity1 ver1 = new NamingTestEntity1(id2, "data2");
         NamingTestEntity1 ver2 = new NamingTestEntity1(id2, "data2'");
 
-        assert getAuditReader().find(NamingTestEntity1.class, id2, 1).equals(ver1);
-        assert getAuditReader().find(NamingTestEntity1.class, id2, 2).equals(ver1);
-        assert getAuditReader().find(NamingTestEntity1.class, id2, 3).equals(ver2);
+        assert getAuditReader().find(NamingTestEntity1.class, id2, 1L).equals(ver1);
+        assert getAuditReader().find(NamingTestEntity1.class, id2, 2L).equals(ver1);
+        assert getAuditReader().find(NamingTestEntity1.class, id2, 3L).equals(ver2);
     }
 
     @Test

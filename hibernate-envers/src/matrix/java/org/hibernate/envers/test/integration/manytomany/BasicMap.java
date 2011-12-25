@@ -125,11 +125,11 @@ public class BasicMap extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2, 3).equals(getAuditReader().getRevisions(MapOwnedEntity.class, ed1_id));
-        assert Arrays.asList(1, 2, 3).equals(getAuditReader().getRevisions(MapOwnedEntity.class, ed2_id));
+        assert Arrays.asList(1L, 2L, 3L).equals(getAuditReader().getRevisions(MapOwnedEntity.class, ed1_id));
+        assert Arrays.asList(1L, 2L, 3L).equals(getAuditReader().getRevisions(MapOwnedEntity.class, ed2_id));
 
-        assert Arrays.asList(1, 2, 3).equals(getAuditReader().getRevisions(MapOwningEntity.class, ing1_id));
-        assert Arrays.asList(1, 2, 3).equals(getAuditReader().getRevisions(MapOwningEntity.class, ing2_id));
+        assert Arrays.asList(1L, 2L, 3L).equals(getAuditReader().getRevisions(MapOwningEntity.class, ing1_id));
+        assert Arrays.asList(1L, 2L, 3L).equals(getAuditReader().getRevisions(MapOwningEntity.class, ing2_id));
     }
 
     @Test
@@ -137,9 +137,9 @@ public class BasicMap extends AbstractEntityTest {
         MapOwningEntity ing1 = getEntityManager().find(MapOwningEntity.class, ing1_id);
         MapOwningEntity ing2 = getEntityManager().find(MapOwningEntity.class, ing2_id);
 
-        MapOwnedEntity rev1 = getAuditReader().find(MapOwnedEntity.class, ed1_id, 1);
-        MapOwnedEntity rev2 = getAuditReader().find(MapOwnedEntity.class, ed1_id, 2);
-        MapOwnedEntity rev3 = getAuditReader().find(MapOwnedEntity.class, ed1_id, 3);
+        MapOwnedEntity rev1 = getAuditReader().find(MapOwnedEntity.class, ed1_id, 1L);
+        MapOwnedEntity rev2 = getAuditReader().find(MapOwnedEntity.class, ed1_id, 2L);
+        MapOwnedEntity rev3 = getAuditReader().find(MapOwnedEntity.class, ed1_id, 3L);
 
         assert rev1.getReferencing().equals(Collections.EMPTY_SET);
         assert rev2.getReferencing().equals(TestTools.makeSet(ing1, ing2));
@@ -150,9 +150,9 @@ public class BasicMap extends AbstractEntityTest {
     public void testHistoryOfEdId2() {
         MapOwningEntity ing2 = getEntityManager().find(MapOwningEntity.class, ing2_id);
 
-        MapOwnedEntity rev1 = getAuditReader().find(MapOwnedEntity.class, ed2_id, 1);
-        MapOwnedEntity rev2 = getAuditReader().find(MapOwnedEntity.class, ed2_id, 2);
-        MapOwnedEntity rev3 = getAuditReader().find(MapOwnedEntity.class, ed2_id, 3);
+        MapOwnedEntity rev1 = getAuditReader().find(MapOwnedEntity.class, ed2_id, 1L);
+        MapOwnedEntity rev2 = getAuditReader().find(MapOwnedEntity.class, ed2_id, 2L);
+        MapOwnedEntity rev3 = getAuditReader().find(MapOwnedEntity.class, ed2_id, 3L);
 
         assert rev1.getReferencing().equals(TestTools.makeSet(ing2));
         assert rev2.getReferencing().equals(Collections.EMPTY_SET);
@@ -163,9 +163,9 @@ public class BasicMap extends AbstractEntityTest {
     public void testHistoryOfEdIng1() {
         MapOwnedEntity ed1 = getEntityManager().find(MapOwnedEntity.class, ed1_id);
 
-        MapOwningEntity rev1 = getAuditReader().find(MapOwningEntity.class, ing1_id, 1);
-        MapOwningEntity rev2 = getAuditReader().find(MapOwningEntity.class, ing1_id, 2);
-        MapOwningEntity rev3 = getAuditReader().find(MapOwningEntity.class, ing1_id, 3);
+        MapOwningEntity rev1 = getAuditReader().find(MapOwningEntity.class, ing1_id, 1L);
+        MapOwningEntity rev2 = getAuditReader().find(MapOwningEntity.class, ing1_id, 2L);
+        MapOwningEntity rev3 = getAuditReader().find(MapOwningEntity.class, ing1_id, 3L);
 
         assert rev1.getReferences().equals(Collections.EMPTY_MAP);
         assert rev2.getReferences().equals(TestTools.makeMap("1", ed1, "2", ed1));
@@ -177,9 +177,9 @@ public class BasicMap extends AbstractEntityTest {
         MapOwnedEntity ed1 = getEntityManager().find(MapOwnedEntity.class, ed1_id);
         MapOwnedEntity ed2 = getEntityManager().find(MapOwnedEntity.class, ed2_id);
 
-        MapOwningEntity rev1 = getAuditReader().find(MapOwningEntity.class, ing2_id, 1);
-        MapOwningEntity rev2 = getAuditReader().find(MapOwningEntity.class, ing2_id, 2);
-        MapOwningEntity rev3 = getAuditReader().find(MapOwningEntity.class, ing2_id, 3);
+        MapOwningEntity rev1 = getAuditReader().find(MapOwningEntity.class, ing2_id, 1L);
+        MapOwningEntity rev2 = getAuditReader().find(MapOwningEntity.class, ing2_id, 2L);
+        MapOwningEntity rev3 = getAuditReader().find(MapOwningEntity.class, ing2_id, 3L);
 
         assert rev1.getReferences().equals(TestTools.makeMap("2", ed2));
         assert rev2.getReferences().equals(TestTools.makeMap("2", ed1));

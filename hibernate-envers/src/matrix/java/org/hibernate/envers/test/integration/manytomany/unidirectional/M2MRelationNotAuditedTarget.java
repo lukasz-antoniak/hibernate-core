@@ -130,9 +130,9 @@ public class M2MRelationNotAuditedTarget extends AbstractEntityTest {
 	@Test
 	public void testRevisionsCounts() {
 		List<Number> revisions = getAuditReader().getRevisions(M2MTargetNotAuditedEntity.class, tnae1_id);
-		assert Arrays.asList(1, 2, 4).equals(revisions);
+		assert Arrays.asList(1L, 2L, 4L).equals(revisions);
 		revisions = getAuditReader().getRevisions(M2MTargetNotAuditedEntity.class, tnae2_id);
-		assert Arrays.asList(1, 2, 3, 4).equals(revisions);
+		assert Arrays.asList(1L, 2L, 3l, 4L).equals(revisions);
 	}
 
 	@Test
@@ -140,10 +140,10 @@ public class M2MRelationNotAuditedTarget extends AbstractEntityTest {
 		UnversionedStrTestEntity uste1 = getEntityManager().find(UnversionedStrTestEntity.class, uste1_id);
 		UnversionedStrTestEntity uste2 = getEntityManager().find(UnversionedStrTestEntity.class, uste2_id);
 
-		M2MTargetNotAuditedEntity rev1 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae1_id, 1);
-		M2MTargetNotAuditedEntity rev2 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae1_id, 2);
-		M2MTargetNotAuditedEntity rev3 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae1_id, 3);
-		M2MTargetNotAuditedEntity rev4 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae1_id, 4);
+		M2MTargetNotAuditedEntity rev1 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae1_id, 1L);
+		M2MTargetNotAuditedEntity rev2 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae1_id, 2L);
+		M2MTargetNotAuditedEntity rev3 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae1_id, 3L);
+		M2MTargetNotAuditedEntity rev4 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae1_id, 4L);
 
 		assertTrue(checkList(rev1.getReferences()));
 		assertTrue(checkList(rev2.getReferences(), uste1));
@@ -156,10 +156,10 @@ public class M2MRelationNotAuditedTarget extends AbstractEntityTest {
 		UnversionedStrTestEntity uste1 = getEntityManager().find(UnversionedStrTestEntity.class, uste1_id);
 		UnversionedStrTestEntity uste2 = getEntityManager().find(UnversionedStrTestEntity.class, uste2_id);
 
-		M2MTargetNotAuditedEntity rev1 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae2_id, 1);
-		M2MTargetNotAuditedEntity rev2 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae2_id, 2);
-		M2MTargetNotAuditedEntity rev3 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae2_id, 3);
-		M2MTargetNotAuditedEntity rev4 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae2_id, 4);
+		M2MTargetNotAuditedEntity rev1 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae2_id, 1L);
+		M2MTargetNotAuditedEntity rev2 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae2_id, 2L);
+		M2MTargetNotAuditedEntity rev3 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae2_id, 3L);
+		M2MTargetNotAuditedEntity rev4 = getAuditReader().find(M2MTargetNotAuditedEntity.class, tnae2_id, 4L);
 
 		assertTrue(checkList(rev1.getReferences(), uste1, uste2));
 		assertTrue(checkList(rev2.getReferences(), uste2));

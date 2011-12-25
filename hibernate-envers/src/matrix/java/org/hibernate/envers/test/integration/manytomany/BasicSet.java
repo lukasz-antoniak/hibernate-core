@@ -133,11 +133,11 @@ public class BasicSet extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2, 4).equals(getAuditReader().getRevisions(SetOwnedEntity.class, ed1_id));
-        assert Arrays.asList(1, 2, 3, 5).equals(getAuditReader().getRevisions(SetOwnedEntity.class, ed2_id));
+        assert Arrays.asList(1L, 2L, 4L).equals(getAuditReader().getRevisions(SetOwnedEntity.class, ed1_id));
+        assert Arrays.asList(1L, 2L, 3L, 5L).equals(getAuditReader().getRevisions(SetOwnedEntity.class, ed2_id));
 
-        assert Arrays.asList(1, 2, 3, 4, 5).equals(getAuditReader().getRevisions(SetOwningEntity.class, ing1_id));
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(SetOwningEntity.class, ing2_id));
+        assert Arrays.asList(1L, 2L, 3L, 4L, 5L).equals(getAuditReader().getRevisions(SetOwningEntity.class, ing1_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(SetOwningEntity.class, ing2_id));
     }
 
     @Test
@@ -145,11 +145,11 @@ public class BasicSet extends AbstractEntityTest {
         SetOwningEntity ing1 = getEntityManager().find(SetOwningEntity.class, ing1_id);
         SetOwningEntity ing2 = getEntityManager().find(SetOwningEntity.class, ing2_id);
 
-        SetOwnedEntity rev1 = getAuditReader().find(SetOwnedEntity.class, ed1_id, 1);
-        SetOwnedEntity rev2 = getAuditReader().find(SetOwnedEntity.class, ed1_id, 2);
-        SetOwnedEntity rev3 = getAuditReader().find(SetOwnedEntity.class, ed1_id, 3);
-        SetOwnedEntity rev4 = getAuditReader().find(SetOwnedEntity.class, ed1_id, 4);
-        SetOwnedEntity rev5 = getAuditReader().find(SetOwnedEntity.class, ed1_id, 5);
+        SetOwnedEntity rev1 = getAuditReader().find(SetOwnedEntity.class, ed1_id, 1L);
+        SetOwnedEntity rev2 = getAuditReader().find(SetOwnedEntity.class, ed1_id, 2L);
+        SetOwnedEntity rev3 = getAuditReader().find(SetOwnedEntity.class, ed1_id, 3L);
+        SetOwnedEntity rev4 = getAuditReader().find(SetOwnedEntity.class, ed1_id, 4L);
+        SetOwnedEntity rev5 = getAuditReader().find(SetOwnedEntity.class, ed1_id, 5L);
 
         assert rev1.getReferencing().equals(Collections.EMPTY_SET);
         assert rev2.getReferencing().equals(TestTools.makeSet(ing1, ing2));
@@ -163,11 +163,11 @@ public class BasicSet extends AbstractEntityTest {
         SetOwningEntity ing1 = getEntityManager().find(SetOwningEntity.class, ing1_id);
         SetOwningEntity ing2 = getEntityManager().find(SetOwningEntity.class, ing2_id);
 
-        SetOwnedEntity rev1 = getAuditReader().find(SetOwnedEntity.class, ed2_id, 1);
-        SetOwnedEntity rev2 = getAuditReader().find(SetOwnedEntity.class, ed2_id, 2);
-        SetOwnedEntity rev3 = getAuditReader().find(SetOwnedEntity.class, ed2_id, 3);
-        SetOwnedEntity rev4 = getAuditReader().find(SetOwnedEntity.class, ed2_id, 4);
-        SetOwnedEntity rev5 = getAuditReader().find(SetOwnedEntity.class, ed2_id, 5);
+        SetOwnedEntity rev1 = getAuditReader().find(SetOwnedEntity.class, ed2_id, 1L);
+        SetOwnedEntity rev2 = getAuditReader().find(SetOwnedEntity.class, ed2_id, 2L);
+        SetOwnedEntity rev3 = getAuditReader().find(SetOwnedEntity.class, ed2_id, 3L);
+        SetOwnedEntity rev4 = getAuditReader().find(SetOwnedEntity.class, ed2_id, 4L);
+        SetOwnedEntity rev5 = getAuditReader().find(SetOwnedEntity.class, ed2_id, 5L);
 
         assert rev1.getReferencing().equals(Collections.EMPTY_SET);
         assert rev2.getReferencing().equals(TestTools.makeSet(ing2));
@@ -181,11 +181,11 @@ public class BasicSet extends AbstractEntityTest {
         SetOwnedEntity ed1 = getEntityManager().find(SetOwnedEntity.class, ed1_id);
         SetOwnedEntity ed2 = getEntityManager().find(SetOwnedEntity.class, ed2_id);
 
-        SetOwningEntity rev1 = getAuditReader().find(SetOwningEntity.class, ing1_id, 1);
-        SetOwningEntity rev2 = getAuditReader().find(SetOwningEntity.class, ing1_id, 2);
-        SetOwningEntity rev3 = getAuditReader().find(SetOwningEntity.class, ing1_id, 3);
-        SetOwningEntity rev4 = getAuditReader().find(SetOwningEntity.class, ing1_id, 4);
-        SetOwningEntity rev5 = getAuditReader().find(SetOwningEntity.class, ing1_id, 5);
+        SetOwningEntity rev1 = getAuditReader().find(SetOwningEntity.class, ing1_id, 1L);
+        SetOwningEntity rev2 = getAuditReader().find(SetOwningEntity.class, ing1_id, 2L);
+        SetOwningEntity rev3 = getAuditReader().find(SetOwningEntity.class, ing1_id, 3L);
+        SetOwningEntity rev4 = getAuditReader().find(SetOwningEntity.class, ing1_id, 4L);
+        SetOwningEntity rev5 = getAuditReader().find(SetOwningEntity.class, ing1_id, 5L);
 
         assert rev1.getReferences().equals(Collections.EMPTY_SET);
         assert rev2.getReferences().equals(TestTools.makeSet(ed1));
@@ -199,11 +199,11 @@ public class BasicSet extends AbstractEntityTest {
         SetOwnedEntity ed1 = getEntityManager().find(SetOwnedEntity.class, ed1_id);
         SetOwnedEntity ed2 = getEntityManager().find(SetOwnedEntity.class, ed2_id);
 
-        SetOwningEntity rev1 = getAuditReader().find(SetOwningEntity.class, ing2_id, 1);
-        SetOwningEntity rev2 = getAuditReader().find(SetOwningEntity.class, ing2_id, 2);
-        SetOwningEntity rev3 = getAuditReader().find(SetOwningEntity.class, ing2_id, 3);
-        SetOwningEntity rev4 = getAuditReader().find(SetOwningEntity.class, ing2_id, 4);
-        SetOwningEntity rev5 = getAuditReader().find(SetOwningEntity.class, ing2_id, 5);
+        SetOwningEntity rev1 = getAuditReader().find(SetOwningEntity.class, ing2_id, 1L);
+        SetOwningEntity rev2 = getAuditReader().find(SetOwningEntity.class, ing2_id, 2L);
+        SetOwningEntity rev3 = getAuditReader().find(SetOwningEntity.class, ing2_id, 3L);
+        SetOwningEntity rev4 = getAuditReader().find(SetOwningEntity.class, ing2_id, 4L);
+        SetOwningEntity rev5 = getAuditReader().find(SetOwningEntity.class, ing2_id, 5L);
 
         assert rev1.getReferences().equals(Collections.EMPTY_SET);
         assert rev2.getReferences().equals(TestTools.makeSet(ed1, ed2));

@@ -75,13 +75,13 @@ public class ParametrizedCustom extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(ParametrizedCustomTypeEntity.class, pcte_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(ParametrizedCustomTypeEntity.class, pcte_id));
     }
 
     @Test
     public void testHistoryOfCcte() {
-        ParametrizedCustomTypeEntity rev1 = getAuditReader().find(ParametrizedCustomTypeEntity.class, pcte_id, 1);
-        ParametrizedCustomTypeEntity rev2 = getAuditReader().find(ParametrizedCustomTypeEntity.class, pcte_id, 2);
+        ParametrizedCustomTypeEntity rev1 = getAuditReader().find(ParametrizedCustomTypeEntity.class, pcte_id, 1L);
+        ParametrizedCustomTypeEntity rev2 = getAuditReader().find(ParametrizedCustomTypeEntity.class, pcte_id, 2L);
 
         assert "xUy".equals(rev1.getStr());
         assert "xVy".equals(rev2.getStr());

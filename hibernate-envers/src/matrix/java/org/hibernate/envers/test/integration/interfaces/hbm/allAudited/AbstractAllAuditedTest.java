@@ -62,7 +62,7 @@ public abstract class AbstractAllAuditedTest extends AbstractEntityTest {
 
     @Test
     public void testRevisions() {
-        Assert.assertEquals(getAuditReader().getRevisions(AuditedImplementor.class, ai_id), Arrays.asList(1, 2));
+        Assert.assertEquals(getAuditReader().getRevisions(AuditedImplementor.class, ai_id), Arrays.asList(1L, 2L));
     }
 
     @Test
@@ -74,14 +74,14 @@ public abstract class AbstractAllAuditedTest extends AbstractEntityTest {
     	assert si != null;
 
     	// levanto las de la revisi�n 1, ninguna debe ser null
-    	AuditedImplementor ai_rev1 = getAuditReader().find(AuditedImplementor.class, ai_id, 1);
+    	AuditedImplementor ai_rev1 = getAuditReader().find(AuditedImplementor.class, ai_id, 1L);
     	assert ai_rev1 != null;
-    	SimpleInterface si_rev1 = getAuditReader().find(SimpleInterface.class, ai_id, 1);
+    	SimpleInterface si_rev1 = getAuditReader().find(SimpleInterface.class, ai_id, 1L);
     	assert si_rev1 != null;
 
-        AuditedImplementor ai_rev2 = getAuditReader().find(AuditedImplementor.class, ai_id, 2);
+        AuditedImplementor ai_rev2 = getAuditReader().find(AuditedImplementor.class, ai_id, 2L);
     	assert ai_rev2 != null;
-    	SimpleInterface si_rev2 = getAuditReader().find(SimpleInterface.class, ai_id, 2);
+    	SimpleInterface si_rev2 = getAuditReader().find(SimpleInterface.class, ai_id, 2L);
     	assert si_rev2 != null;
     		
     	// data de las actuales no debe ser null
@@ -107,7 +107,7 @@ public abstract class AbstractAllAuditedTest extends AbstractEntityTest {
 
     	try {
     		// levanto la revision  
-    		getAuditReader().find(NonAuditedImplementor.class, nai_id, 1);
+    		getAuditReader().find(NonAuditedImplementor.class, nai_id, 1L);
     		assert false;
     	} catch (Exception e) {
     		// no es auditable!!!
@@ -115,7 +115,7 @@ public abstract class AbstractAllAuditedTest extends AbstractEntityTest {
 		}
     	
     	// levanto la revision que no es auditable pero con la interfaz, el resultado debe ser null
-   		SimpleInterface si_rev1 = getAuditReader().find(SimpleInterface.class, nai_id, 1);
+   		SimpleInterface si_rev1 = getAuditReader().find(SimpleInterface.class, nai_id, 1L);
    		assert si_rev1 == null;
    		
     }    

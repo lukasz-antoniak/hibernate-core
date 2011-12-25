@@ -116,8 +116,8 @@ public class ValidityAuditStrategyManyToManyTest extends AbstractEntityTest {
 
     @Test
 	public void testRevisionsCounts() {
-		assertEquals(getAuditReader().getRevisions(SetOwningEntity.class, ing_id), Arrays.asList(1, 2, 3, 4, 5));
-		assertEquals(getAuditReader().getRevisions(SetOwnedEntity.class, ed_id), Arrays.asList(1, 2, 3, 4, 5));
+		assertEquals(getAuditReader().getRevisions(SetOwningEntity.class, ing_id), Arrays.asList(1L, 2L, 3L, 4L, 5L));
+		assertEquals(getAuditReader().getRevisions(SetOwnedEntity.class, ed_id), Arrays.asList(1L, 2L, 3L, 4L, 5L));
 	}
 
 	@Test
@@ -125,11 +125,11 @@ public class ValidityAuditStrategyManyToManyTest extends AbstractEntityTest {
 		SetOwningEntity ver_empty = createOwningEntity();
 		SetOwningEntity ver_child = createOwningEntity(new SetOwnedEntity(ed_id, "child"));
 
-        assertEquals(getAuditReader().find(SetOwningEntity.class, ing_id, 1), ver_empty);
-        assertEquals(getAuditReader().find(SetOwningEntity.class, ing_id, 2), ver_child);
-        assertEquals(getAuditReader().find(SetOwningEntity.class, ing_id, 3), ver_empty);
-        assertEquals(getAuditReader().find(SetOwningEntity.class, ing_id, 4), ver_child);
-        assertEquals(getAuditReader().find(SetOwningEntity.class, ing_id, 5), ver_empty);
+        assertEquals(getAuditReader().find(SetOwningEntity.class, ing_id, 1L), ver_empty);
+        assertEquals(getAuditReader().find(SetOwningEntity.class, ing_id, 2L), ver_child);
+        assertEquals(getAuditReader().find(SetOwningEntity.class, ing_id, 3L), ver_empty);
+        assertEquals(getAuditReader().find(SetOwningEntity.class, ing_id, 4L), ver_child);
+        assertEquals(getAuditReader().find(SetOwningEntity.class, ing_id, 5L), ver_empty);
 	}
 
     @Test
@@ -137,11 +137,11 @@ public class ValidityAuditStrategyManyToManyTest extends AbstractEntityTest {
 		SetOwnedEntity ver_empty = createOwnedEntity();
 		SetOwnedEntity ver_child = createOwnedEntity(new SetOwningEntity(ing_id, "parent"));
 
-        assertEquals(getAuditReader().find(SetOwnedEntity.class, ed_id, 1), ver_empty);
-        assertEquals(getAuditReader().find(SetOwnedEntity.class, ed_id, 2), ver_child);
-        assertEquals(getAuditReader().find(SetOwnedEntity.class, ed_id, 3), ver_empty);
-        assertEquals(getAuditReader().find(SetOwnedEntity.class, ed_id, 4), ver_child);
-        assertEquals(getAuditReader().find(SetOwnedEntity.class, ed_id, 5), ver_empty);
+        assertEquals(getAuditReader().find(SetOwnedEntity.class, ed_id, 1L), ver_empty);
+        assertEquals(getAuditReader().find(SetOwnedEntity.class, ed_id, 2L), ver_child);
+        assertEquals(getAuditReader().find(SetOwnedEntity.class, ed_id, 3L), ver_empty);
+        assertEquals(getAuditReader().find(SetOwnedEntity.class, ed_id, 4L), ver_child);
+        assertEquals(getAuditReader().find(SetOwnedEntity.class, ed_id, 5L), ver_empty);
 	}
 
     private SetOwningEntity createOwningEntity(SetOwnedEntity... owned) {

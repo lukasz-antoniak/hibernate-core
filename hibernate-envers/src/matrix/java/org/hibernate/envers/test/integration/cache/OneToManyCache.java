@@ -97,10 +97,10 @@ public class OneToManyCache extends AbstractEntityTest {
 
     @Test
     public void testCacheReferenceAccessAfterFind() {
-        SetRefEdEntity ed1_rev1 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 1);
+        SetRefEdEntity ed1_rev1 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 1L);
 
-        SetRefIngEntity ing1_rev1 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 1);
-        SetRefIngEntity ing2_rev1 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 1);
+        SetRefIngEntity ing1_rev1 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 1L);
+        SetRefIngEntity ing2_rev1 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 1L);
 
         // It should be exactly the same object
         assert ing1_rev1.getReference() == ed1_rev1;
@@ -109,7 +109,7 @@ public class OneToManyCache extends AbstractEntityTest {
 
     @Test
     public void testCacheReferenceAccessAfterCollectionAccessRev1() {
-        SetRefEdEntity ed1_rev1 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 1);
+        SetRefEdEntity ed1_rev1 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 1L);
 
         // It should be exactly the same object
         assert ed1_rev1.getReffering().size() == 2;
@@ -120,7 +120,7 @@ public class OneToManyCache extends AbstractEntityTest {
 
     @Test
     public void testCacheReferenceAccessAfterCollectionAccessRev2() {
-        SetRefEdEntity ed2_rev2 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 2);
+        SetRefEdEntity ed2_rev2 = getAuditReader().find(SetRefEdEntity.class, ed2_id, 2L);
 
         assert ed2_rev2.getReffering().size() == 2;
         for (SetRefIngEntity setRefIngEntity : ed2_rev2.getReffering()) {
@@ -130,13 +130,13 @@ public class OneToManyCache extends AbstractEntityTest {
 
     @Test
     public void testCacheFindAfterCollectionAccessRev1() {
-        SetRefEdEntity ed1_rev1 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 1);
+        SetRefEdEntity ed1_rev1 = getAuditReader().find(SetRefEdEntity.class, ed1_id, 1L);
 
         // Reading the collection
         assert ed1_rev1.getReffering().size() == 2;
 
-        SetRefIngEntity ing1_rev1 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 1);
-        SetRefIngEntity ing2_rev1 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 1);
+        SetRefIngEntity ing1_rev1 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 1L);
+        SetRefIngEntity ing2_rev1 = getAuditReader().find(SetRefIngEntity.class, ing2_id, 1L);
 
         for (SetRefIngEntity setRefIngEntity : ed1_rev1.getReffering()) {
             assert setRefIngEntity == ing1_rev1 || setRefIngEntity == ing2_rev1;

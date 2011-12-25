@@ -80,7 +80,7 @@ public class InterfacesComponents extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2, 3).equals(getAuditReader().getRevisions(ComponentTestEntity.class, id1));
+        assert Arrays.asList(1L, 2L, 3L).equals(getAuditReader().getRevisions(ComponentTestEntity.class, id1));
     }
 
     @Test
@@ -89,8 +89,8 @@ public class InterfacesComponents extends AbstractEntityTest {
 		ComponentTestEntity ver2 = new ComponentTestEntity(id1, new Component1("b"));
 		ComponentTestEntity ver3 = new ComponentTestEntity(id1, new Component1("c"));
 
-        assert getAuditReader().find(ComponentTestEntity.class, id1, 1).equals(ver1);
-        assert getAuditReader().find(ComponentTestEntity.class, id1, 2).equals(ver2);
-        assert getAuditReader().find(ComponentTestEntity.class, id1, 3).equals(ver3);
+        assert getAuditReader().find(ComponentTestEntity.class, id1, 1L).equals(ver1);
+        assert getAuditReader().find(ComponentTestEntity.class, id1, 2L).equals(ver2);
+        assert getAuditReader().find(ComponentTestEntity.class, id1, 3L).equals(ver3);
     }
 }

@@ -54,8 +54,8 @@ public class QuotedFieldsTest extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(QuotedFieldsEntity.class, qfeId1));
-        assert Arrays.asList(1, 3).equals(getAuditReader().getRevisions(QuotedFieldsEntity.class, qfeId2));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(QuotedFieldsEntity.class, qfeId1));
+        assert Arrays.asList(1L, 3L).equals(getAuditReader().getRevisions(QuotedFieldsEntity.class, qfeId2));
     }
 
     @Test
@@ -63,9 +63,9 @@ public class QuotedFieldsTest extends AbstractEntityTest {
         QuotedFieldsEntity ver1 = new QuotedFieldsEntity(qfeId1, "data1", 1);
         QuotedFieldsEntity ver2 = new QuotedFieldsEntity(qfeId1, "data1 changed", 1);
 
-        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId1, 1).equals(ver1);
-        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId1, 2).equals(ver2);
-        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId1, 3).equals(ver2);
+        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId1, 1L).equals(ver1);
+        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId1, 2L).equals(ver2);
+        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId1, 3L).equals(ver2);
     }
 
     @Test
@@ -73,9 +73,9 @@ public class QuotedFieldsTest extends AbstractEntityTest {
         QuotedFieldsEntity ver1 = new QuotedFieldsEntity(qfeId2, "data2", 2);
         QuotedFieldsEntity ver2 = new QuotedFieldsEntity(qfeId2, "data2", 3);
 
-        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId2, 1).equals(ver1);
-        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId2, 2).equals(ver1);
-        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId2, 3).equals(ver2);
+        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId2, 1L).equals(ver1);
+        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId2, 2L).equals(ver1);
+        assert getAuditReader().find(QuotedFieldsEntity.class, qfeId2, 3L).equals(ver2);
     }
 
     @Test

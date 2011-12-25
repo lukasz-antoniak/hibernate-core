@@ -49,9 +49,9 @@ public class SingleDomainObjectToMultipleTablesTest extends AbstractOneSessionTe
     @Test
     @TestForIssue(jiraKey="HHH-4648")
     public void testSingleDomainObjectToMultipleTablesMapping() {
-        Car carVer1 = getAuditReader().find(Car.class, carId, 1);
-        Person ownerVer1 = getAuditReader().find(Person.class, "Personaje", ownerId, 1);
-        Person driverVer1 = getAuditReader().find(Person.class, "Driveraje", driverId, 1);
+        Car carVer1 = getAuditReader().find(Car.class, carId, 1L);
+        Person ownerVer1 = getAuditReader().find(Person.class, "Personaje", ownerId, 1L);
+        Person driverVer1 = getAuditReader().find(Person.class, "Driveraje", driverId, 1L);
 
         /* Check ids. */
         Assert.assertEquals(ownerVer1.getId(), carVer1.getOwner().getId());

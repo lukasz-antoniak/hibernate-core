@@ -71,15 +71,15 @@ public class UnidirectionalDoubleAbstract extends AbstractEntityTest {
 
 	@Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(ContainedEntity.class, cce1_id));
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(SetEntity.class, cse1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(ContainedEntity.class, cce1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(SetEntity.class, cse1_id));
     }
 
     @Test
     public void testHistoryOfReferencedCollection() {
 		ContainedEntity cce1 = getEntityManager().find(ContainedEntity.class, cce1_id);
 
-		Set<AbstractContainedEntity> entities = getAuditReader().find(SetEntity.class, cse1_id, 1).getEntities();
+		Set<AbstractContainedEntity> entities = getAuditReader().find(SetEntity.class, cse1_id, 1L).getEntities();
         assert entities.size() == 1;
 		assert entities.iterator().next() instanceof ContainedEntity;
 		assert entities.contains(cce1);

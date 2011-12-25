@@ -95,10 +95,10 @@ public class InterfacesRelation extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(SetRefEdEntity.class, ed1_id));
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(SetRefEdEntity.class, ed2_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(SetRefEdEntity.class, ed1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(SetRefEdEntity.class, ed2_id));
 
-        assert Arrays.asList(2, 3).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing1_id));
+        assert Arrays.asList(2L, 3L).equals(getAuditReader().getRevisions(SetRefIngEntity.class, ing1_id));
     }
 
     @Test
@@ -106,9 +106,9 @@ public class InterfacesRelation extends AbstractEntityTest {
         SetRefEdEntity ed1 = getEntityManager().find(SetRefEdEntity.class, ed1_id);
         SetRefEdEntity ed2 = getEntityManager().find(SetRefEdEntity.class, ed2_id);
 
-        SetRefIngEntity rev1 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 1);
-        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 2);
-        SetRefIngEntity rev3 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 3);
+        SetRefIngEntity rev1 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 1L);
+        SetRefIngEntity rev2 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 2L);
+        SetRefIngEntity rev3 = getAuditReader().find(SetRefIngEntity.class, ing1_id, 3L);
 
         assert rev1 == null;
         assert rev2.getReference().equals(ed1);

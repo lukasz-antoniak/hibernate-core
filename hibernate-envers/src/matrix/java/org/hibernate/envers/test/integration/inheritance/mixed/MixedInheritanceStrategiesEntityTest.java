@@ -88,9 +88,9 @@ public class MixedInheritanceStrategiesEntityTest extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assertEquals(Arrays.asList(1), getAuditReader().getRevisions(NormalActivity.class, id1));
-        assertEquals(Arrays.asList(3), getAuditReader().getRevisions(NormalActivity.class, id3));
-        assertEquals(Arrays.asList(2, 4), getAuditReader().getRevisions(CheckInActivity.class, id2));
+        assertEquals(Arrays.asList(1L), getAuditReader().getRevisions(NormalActivity.class, id1));
+        assertEquals(Arrays.asList(3L), getAuditReader().getRevisions(NormalActivity.class, id3));
+        assertEquals(Arrays.asList(2L, 4L), getAuditReader().getRevisions(CheckInActivity.class, id2));
     }
 
     @Test
@@ -120,8 +120,8 @@ public class MixedInheritanceStrategiesEntityTest extends AbstractEntityTest {
 
     @Test
     public void doTestFirstRevisionOfCheckInActivity() throws Exception {
-        CheckInActivity checkInActivity = getAuditReader().find(CheckInActivity.class, id2, 2);
-        NormalActivity normalActivity = getAuditReader().find(NormalActivity.class, id1, 2);
+        CheckInActivity checkInActivity = getAuditReader().find(CheckInActivity.class, id2, 2L);
+        NormalActivity normalActivity = getAuditReader().find(NormalActivity.class, id1, 2L);
 
         assertEquals(id2, checkInActivity.getId());
         assertEquals(0, checkInActivity.getSequenceNumber().intValue());
@@ -133,8 +133,8 @@ public class MixedInheritanceStrategiesEntityTest extends AbstractEntityTest {
 
     @Test
     public void doTestSecondRevisionOfCheckInActivity() throws Exception {
-        CheckInActivity checkInActivity = getAuditReader().find(CheckInActivity.class, id2, 4);
-        NormalActivity normalActivity = getAuditReader().find(NormalActivity.class, id3, 4);
+        CheckInActivity checkInActivity = getAuditReader().find(CheckInActivity.class, id2, 4L);
+        NormalActivity normalActivity = getAuditReader().find(NormalActivity.class, id3, 4L);
 
         assertEquals(id2, checkInActivity.getId());
         assertEquals(0, checkInActivity.getSequenceNumber().intValue());

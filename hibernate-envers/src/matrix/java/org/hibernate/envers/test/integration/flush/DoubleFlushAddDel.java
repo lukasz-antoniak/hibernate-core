@@ -72,6 +72,6 @@ public class DoubleFlushAddDel extends AbstractFlushTest {
 
     @Test
     public void testHistoryOfId() {
-        assert getAuditReader().find(StrTestEntity.class, id, 1) == null;
+        assert getAuditReader().find(StrTestEntity.class, id, 1L) == null;
     }
 }

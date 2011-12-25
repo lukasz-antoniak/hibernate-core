@@ -88,15 +88,15 @@ public class CustomBoxed extends AbstractEntityTest {
 
     @Test
     public void testTimestamps() {
-        assert getAuditReader().getRevisionNumberForDate(new Date(timestamp2)).intValue() == 1;
-        assert getAuditReader().getRevisionNumberForDate(new Date(timestamp3)).intValue() == 2;
+        assert getAuditReader().getRevisionNumberForDate(new Date(timestamp2)).longValue() == 1L;
+        assert getAuditReader().getRevisionNumberForDate(new Date(timestamp3)).longValue() == 2L;
     }
 
     @Test
     public void testDatesForRevisions() {
         AuditReader vr = getAuditReader();
-        assert vr.getRevisionNumberForDate(vr.getRevisionDate(1)).intValue() == 1;
-        assert vr.getRevisionNumberForDate(vr.getRevisionDate(2)).intValue() == 2;
+        assert vr.getRevisionNumberForDate(vr.getRevisionDate(1L)).intValue() == 1L;
+        assert vr.getRevisionNumberForDate(vr.getRevisionDate(2L)).intValue() == 2L;
     }
 
     @Test
@@ -104,7 +104,7 @@ public class CustomBoxed extends AbstractEntityTest {
         AuditReader vr = getAuditReader();
 
         assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp2))).getTime() <= timestamp2;
-        assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp2)).intValue()+1).getTime() > timestamp2;
+        assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp2)).longValue()+1L).getTime() > timestamp2;
 
         assert vr.getRevisionDate(vr.getRevisionNumberForDate(new Date(timestamp3))).getTime() <= timestamp3;
     }
@@ -113,11 +113,11 @@ public class CustomBoxed extends AbstractEntityTest {
     public void testFindRevision() {
         AuditReader vr = getAuditReader();
 
-        long rev1Timestamp = vr.findRevision(CustomBoxedRevEntity.class, 1).getCustomTimestamp();
+        long rev1Timestamp = vr.findRevision(CustomBoxedRevEntity.class, 1L).getCustomTimestamp();
         assert rev1Timestamp > timestamp1;
         assert rev1Timestamp <= timestamp2;
 
-        long rev2Timestamp = vr.findRevision(CustomBoxedRevEntity.class, 2).getCustomTimestamp();
+        long rev2Timestamp = vr.findRevision(CustomBoxedRevEntity.class, 2L).getCustomTimestamp();
         assert rev2Timestamp > timestamp2;
         assert rev2Timestamp <= timestamp3;
     }
@@ -127,18 +127,18 @@ public class CustomBoxed extends AbstractEntityTest {
         AuditReader vr = getAuditReader();
 
         Set<Number> revNumbers = new HashSet<Number>();
-        revNumbers.add(1);
-        revNumbers.add(2);
+        revNumbers.add(1L);
+        revNumbers.add(2L);
         
         Map<Number, CustomBoxedRevEntity> revisionMap = vr.findRevisions(CustomBoxedRevEntity.class, revNumbers);
         assert(revisionMap.size() == 2);
-        assert(revisionMap.get(1).equals(vr.findRevision(CustomBoxedRevEntity.class, 1)));
-        assert(revisionMap.get(2).equals(vr.findRevision(CustomBoxedRevEntity.class, 2)));
+        assert(revisionMap.get(1L).equals(vr.findRevision(CustomBoxedRevEntity.class, 1L)));
+        assert(revisionMap.get(2L).equals(vr.findRevision(CustomBoxedRevEntity.class, 2L)));
     }
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(StrTestEntity.class, id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(StrTestEntity.class, id));
     }
 
     @Test
@@ -146,7 +146,7 @@ public class CustomBoxed extends AbstractEntityTest {
         StrTestEntity ver1 = new StrTestEntity("x", id);
         StrTestEntity ver2 = new StrTestEntity("y", id);
 
-        assert getAuditReader().find(StrTestEntity.class, id, 1).equals(ver1);
-        assert getAuditReader().find(StrTestEntity.class, id, 2).equals(ver2);
+        assert getAuditReader().find(StrTestEntity.class, id, 1L).equals(ver1);
+        assert getAuditReader().find(StrTestEntity.class, id, 2L).equals(ver2);
     }
 }

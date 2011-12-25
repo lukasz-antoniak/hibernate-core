@@ -123,11 +123,11 @@ public class TernaryMapFlush extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assertEquals(Arrays.asList(1, 2, 3), getAuditReader().getRevisions(TernaryMapEntity.class, map1_id));
-        assertEquals(Arrays.asList(1), getAuditReader().getRevisions(StrTestEntity.class, str1_id));
-        assertEquals(Arrays.asList(1), getAuditReader().getRevisions(StrTestEntity.class, str2_id));
-        assertEquals(Arrays.asList(1) ,getAuditReader().getRevisions(IntTestEntity.class, int1_id));
-        assertEquals(Arrays.asList(1) ,getAuditReader().getRevisions(IntTestEntity.class, int2_id));
+        assertEquals(Arrays.asList(1L, 2L, 3L), getAuditReader().getRevisions(TernaryMapEntity.class, map1_id));
+        assertEquals(Arrays.asList(1L), getAuditReader().getRevisions(StrTestEntity.class, str1_id));
+        assertEquals(Arrays.asList(1L), getAuditReader().getRevisions(StrTestEntity.class, str2_id));
+        assertEquals(Arrays.asList(1L) ,getAuditReader().getRevisions(IntTestEntity.class, int1_id));
+        assertEquals(Arrays.asList(1L) ,getAuditReader().getRevisions(IntTestEntity.class, int2_id));
     }
 
     @Test
@@ -137,9 +137,9 @@ public class TernaryMapFlush extends AbstractEntityTest {
         IntTestEntity int1 = getEntityManager().find(IntTestEntity.class, int1_id);
         IntTestEntity int2 = getEntityManager().find(IntTestEntity.class, int2_id);
 
-        TernaryMapEntity rev1 = getAuditReader().find(TernaryMapEntity.class, map1_id, 1);
-        TernaryMapEntity rev2 = getAuditReader().find(TernaryMapEntity.class, map1_id, 2);
-        TernaryMapEntity rev3 = getAuditReader().find(TernaryMapEntity.class, map1_id, 3);
+        TernaryMapEntity rev1 = getAuditReader().find(TernaryMapEntity.class, map1_id, 1L);
+        TernaryMapEntity rev2 = getAuditReader().find(TernaryMapEntity.class, map1_id, 2L);
+        TernaryMapEntity rev3 = getAuditReader().find(TernaryMapEntity.class, map1_id, 3L);
 
         assertEquals(rev1.getMap(), TestTools.makeMap(int1, str1));
         assertEquals(rev2.getMap(), TestTools.makeMap(int1, str1, int2, str2));

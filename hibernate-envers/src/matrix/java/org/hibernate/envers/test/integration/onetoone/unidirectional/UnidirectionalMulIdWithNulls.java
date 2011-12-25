@@ -46,14 +46,14 @@ public class UnidirectionalMulIdWithNulls extends AbstractEntityTest {
 
     @Test
     public void testNullReference() {
-        UniRefIngMulIdEntity nullRef = getAuditReader().find(UniRefIngMulIdEntity.class, 2, 1);
+        UniRefIngMulIdEntity nullRef = getAuditReader().find(UniRefIngMulIdEntity.class, 2, 1L);
         assertNull(nullRef.getReference());
     }
 
     @Test
     public void testNotNullReference() {
-        EmbIdTestEntity eite = getAuditReader().find(EmbIdTestEntity.class, ei, 1);
-        UniRefIngMulIdEntity notNullRef = getAuditReader().find(UniRefIngMulIdEntity.class, 1, 1);
+        EmbIdTestEntity eite = getAuditReader().find(EmbIdTestEntity.class, ei, 1L);
+        UniRefIngMulIdEntity notNullRef = getAuditReader().find(UniRefIngMulIdEntity.class, 1, 1L);
         assertNotNull(notNullRef.getReference());
         assertEquals(notNullRef.getReference(), eite);
     }

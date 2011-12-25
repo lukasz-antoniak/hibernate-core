@@ -61,7 +61,7 @@ public class TrackingEntitiesMultipleChangesTest extends AbstractEntityTest {
         StrTestEntity ste1 = new StrTestEntity("x", steId1);
         StrTestEntity ste2 = new StrTestEntity("y", steId2);
 
-        assert Arrays.asList(ste1, ste2).equals(getCrossTypeRevisionChangesReader().findEntities(1));
+        assert Arrays.asList(ste1, ste2).equals(getCrossTypeRevisionChangesReader().findEntities(1L));
     }
 
     @Test
@@ -69,14 +69,14 @@ public class TrackingEntitiesMultipleChangesTest extends AbstractEntityTest {
         StrTestEntity ste1 = new StrTestEntity("z", steId1);
         StrTestEntity ste2 = new StrTestEntity(null, steId2);
 
-        assert Arrays.asList(ste1, ste2).equals(getCrossTypeRevisionChangesReader().findEntities(2));
+        assert Arrays.asList(ste1, ste2).equals(getCrossTypeRevisionChangesReader().findEntities(2L));
     }
 
     @Test
     public void testTrackUpdateAndRemoveTheSameEntity() {
         StrTestEntity ste1 = new StrTestEntity(null, steId1);
 
-        assert Arrays.asList(ste1).equals(getCrossTypeRevisionChangesReader().findEntities(3));
+        assert Arrays.asList(ste1).equals(getCrossTypeRevisionChangesReader().findEntities(3L));
     }
 
     private CrossTypeRevisionChangesReader getCrossTypeRevisionChangesReader() {

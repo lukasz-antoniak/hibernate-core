@@ -77,8 +77,8 @@ public class ReadEntityWithAuditedManyToManyTest extends AbstractOneSessionTest{
     
     private void loadDataOnSessionAndAuditReader() {
     	
-    	car1_2 = getAuditReader().find(Car.class, id_car1, 2);
-    	Car car2_2 = getAuditReader().find(Car.class, id_car2, 2);
+    	car1_2 = getAuditReader().find(Car.class, id_car1, 2L);
+    	Car car2_2 = getAuditReader().find(Car.class, id_car2, 2L);
 
     	// navigate through relations to load objects
     	for (Person owner : car1_2.getOwners()) {
@@ -94,7 +94,7 @@ public class ReadEntityWithAuditedManyToManyTest extends AbstractOneSessionTest{
     	
     	car1 = (Car)getSession().get(Car.class, id_car1);
     	person1 = (Person)getSession().get("Personaje", id_pers1);
-    	person1_1 = getAuditReader().find(Person.class, "Personaje", id_pers1, 1);
+    	person1_1 = getAuditReader().find(Person.class, "Personaje", id_pers1, 1L);
     }
     
 
@@ -103,10 +103,10 @@ public class ReadEntityWithAuditedManyToManyTest extends AbstractOneSessionTest{
 		String currPerson1EN = getSession().getEntityName(person1);
     	String currCar1EN = getSession().getEntityName(car1);
     	
-    	String person1_1EN = getAuditReader().getEntityName(id_pers1, 1, person1_1);
+    	String person1_1EN = getAuditReader().getEntityName(id_pers1, 1L, person1_1);
     	assert(currPerson1EN.equals(person1_1EN));
     	
-    	String car1_2EN = getAuditReader().getEntityName(id_car1, 2, car1_2);
+    	String car1_2EN = getAuditReader().getEntityName(id_car1, 2L, car1_2);
     	assert(currCar1EN.equals(car1_2EN));
 	}
     

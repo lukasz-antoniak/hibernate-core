@@ -93,21 +93,21 @@ public class OrderByLimitQuery extends AbstractEntityTest {
     @Test
     public void testEntitiesOrderLimitByQueryRev1() {
         List res_0_to_1 = getAuditReader().createQuery()
-                .forEntitiesAtRevision(IntTestEntity.class, 1)
+                .forEntitiesAtRevision(IntTestEntity.class, 1L)
                 .addOrder(AuditEntity.property("number").desc())
                 .setFirstResult(0)
                 .setMaxResults(2)
                 .getResultList();
 
         List res_2_to_3 = getAuditReader().createQuery()
-                .forEntitiesAtRevision(IntTestEntity.class, 1)
+                .forEntitiesAtRevision(IntTestEntity.class, 1L)
                 .addOrder(AuditEntity.property("number").desc())
                 .setFirstResult(2)
                 .setMaxResults(2)
                 .getResultList();
 
         List res_empty = getAuditReader().createQuery()
-                .forEntitiesAtRevision(IntTestEntity.class, 1)
+                .forEntitiesAtRevision(IntTestEntity.class, 1L)
                 .addOrder(AuditEntity.property("number").desc())
                 .setFirstResult(4)
                 .setMaxResults(2)
@@ -121,21 +121,21 @@ public class OrderByLimitQuery extends AbstractEntityTest {
     @Test
     public void testEntitiesOrderLimitByQueryRev2() {
         List res_0_to_1 = getAuditReader().createQuery()
-                .forEntitiesAtRevision(IntTestEntity.class, 2)
+                .forEntitiesAtRevision(IntTestEntity.class, 2L)
                 .addOrder(AuditEntity.property("number").desc())
                 .setFirstResult(0)
                 .setMaxResults(2)
                 .getResultList();
 
         List res_2_to_3 = getAuditReader().createQuery()
-                .forEntitiesAtRevision(IntTestEntity.class, 2)
+                .forEntitiesAtRevision(IntTestEntity.class, 2L)
                 .addOrder(AuditEntity.property("number").desc())
                 .setFirstResult(2)
                 .setMaxResults(2)
                 .getResultList();
 
         List res_4 = getAuditReader().createQuery()
-                .forEntitiesAtRevision(IntTestEntity.class, 2)
+                .forEntitiesAtRevision(IntTestEntity.class, 2L)
                 .addOrder(AuditEntity.property("number").desc())
                 .setFirstResult(4)
                 .setMaxResults(2)

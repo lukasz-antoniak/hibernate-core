@@ -90,33 +90,33 @@ public class ChildReferencing extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2, 3).equals(getAuditReader().getRevisions(ReferencedEntity.class, re_id1));
-        assert Arrays.asList(1, 3).equals(getAuditReader().getRevisions(ReferencedEntity.class, re_id2));
-        assert Arrays.asList(2, 3).equals(getAuditReader().getRevisions(ChildIngEntity.class, c_id));
+        assert Arrays.asList(1L, 2L, 3L).equals(getAuditReader().getRevisions(ReferencedEntity.class, re_id1));
+        assert Arrays.asList(1L, 3L).equals(getAuditReader().getRevisions(ReferencedEntity.class, re_id2));
+        assert Arrays.asList(2L, 3L).equals(getAuditReader().getRevisions(ChildIngEntity.class, c_id));
     }
 
     @Test
     public void testHistoryOfReferencedCollection1() {
-        assert getAuditReader().find(ReferencedEntity.class, re_id1, 1).getReferencing().size() == 0;
-        assert getAuditReader().find(ReferencedEntity.class, re_id1, 2).getReferencing().equals(
+        assert getAuditReader().find(ReferencedEntity.class, re_id1, 1L).getReferencing().size() == 0;
+        assert getAuditReader().find(ReferencedEntity.class, re_id1, 2L).getReferencing().equals(
                 TestTools.makeSet(new ChildIngEntity(c_id, "y", 1l)));
-        assert getAuditReader().find(ReferencedEntity.class, re_id1, 3).getReferencing().size() == 0;
+        assert getAuditReader().find(ReferencedEntity.class, re_id1, 3L).getReferencing().size() == 0;
     }
 
     @Test
     public void testHistoryOfReferencedCollection2() {
-        assert getAuditReader().find(ReferencedEntity.class, re_id2, 1).getReferencing().size() == 0;
-        assert getAuditReader().find(ReferencedEntity.class, re_id2, 2).getReferencing().size() == 0;
-        assert getAuditReader().find(ReferencedEntity.class, re_id2, 3).getReferencing().equals(
+        assert getAuditReader().find(ReferencedEntity.class, re_id2, 1L).getReferencing().size() == 0;
+        assert getAuditReader().find(ReferencedEntity.class, re_id2, 2L).getReferencing().size() == 0;
+        assert getAuditReader().find(ReferencedEntity.class, re_id2, 3L).getReferencing().equals(
                 TestTools.makeSet(new ChildIngEntity(c_id, "y", 1l)));
     }
 
     @Test
     public void testChildHistory() {
-        assert getAuditReader().find(ChildIngEntity.class, c_id, 1) == null;
-        assert getAuditReader().find(ChildIngEntity.class, c_id, 2).getReferenced().equals(
+        assert getAuditReader().find(ChildIngEntity.class, c_id, 1L) == null;
+        assert getAuditReader().find(ChildIngEntity.class, c_id, 2L).getReferenced().equals(
                 new ReferencedEntity(re_id1));
-        assert getAuditReader().find(ChildIngEntity.class, c_id, 3).getReferenced().equals(
+        assert getAuditReader().find(ChildIngEntity.class, c_id, 3L).getReferenced().equals(
                 new ReferencedEntity(re_id2));
     }
 }

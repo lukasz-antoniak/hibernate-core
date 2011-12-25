@@ -76,14 +76,14 @@ public class CollectionOfComponents extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(ComponentSetTestEntity.class, id1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(ComponentSetTestEntity.class, id1));
     }
 
     @Test
     public void testHistoryOfId1() {
-        assert getAuditReader().find(ComponentSetTestEntity.class, id1, 1).getComps().size() == 0;
+        assert getAuditReader().find(ComponentSetTestEntity.class, id1, 1L).getComps().size() == 0;
 		
-		Set<Component1> comps1 = getAuditReader().find(ComponentSetTestEntity.class, id1, 2).getComps();
+		Set<Component1> comps1 = getAuditReader().find(ComponentSetTestEntity.class, id1, 2L).getComps();
         assert comps1.size() == 1;
 		assert comps1.contains(new Component1("a", "b"));
     }

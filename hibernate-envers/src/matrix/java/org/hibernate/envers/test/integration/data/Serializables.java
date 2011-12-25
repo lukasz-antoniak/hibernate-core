@@ -60,7 +60,7 @@ public class Serializables extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(SerializableTestEntity.class, id1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(SerializableTestEntity.class, id1));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class Serializables extends AbstractEntityTest {
         SerializableTestEntity ver1 = new SerializableTestEntity(id1, new SerObject("d1"));
         SerializableTestEntity ver2 = new SerializableTestEntity(id1, new SerObject("d2"));
 
-        assert getAuditReader().find(SerializableTestEntity.class, id1, 1).equals(ver1);
-        assert getAuditReader().find(SerializableTestEntity.class, id1, 2).equals(ver2);
+        assert getAuditReader().find(SerializableTestEntity.class, id1, 1L).equals(ver1);
+        assert getAuditReader().find(SerializableTestEntity.class, id1, 2L).equals(ver2);
     }
 }

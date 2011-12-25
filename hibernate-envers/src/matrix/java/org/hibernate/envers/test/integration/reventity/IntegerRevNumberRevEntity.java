@@ -22,7 +22,6 @@
  * Boston, MA  02110-1301  USA
  */
 package org.hibernate.envers.test.integration.reventity;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -36,48 +35,48 @@ import org.hibernate.envers.RevisionTimestamp;
  */
 @Entity
 @RevisionEntity
-public class LongRevNumberRevEntity {
+public class IntegerRevNumberRevEntity {
     @Id
     @GeneratedValue
     @RevisionNumber
-    @Column(columnDefinition = "int")
-    private long customId;
+    private Integer customId;
 
     @RevisionTimestamp
-    private long customTimestamp;
+    private Long customTimestamp;
 
-    public long getCustomId() {
+    public Integer getCustomId() {
         return customId;
     }
 
-    public void setCustomId(long customId) {
+    public void setCustomId(Integer customId) {
         this.customId = customId;
     }
 
-    public long getCustomTimestamp() {
+    public Long getCustomTimestamp() {
         return customTimestamp;
     }
 
-    public void setCustomTimestamp(long customTimestamp) {
+    public void setCustomTimestamp(Long customTimestamp) {
         this.customTimestamp = customTimestamp;
     }
 
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof LongRevNumberRevEntity)) return false;
+        if (!(o instanceof IntegerRevNumberRevEntity)) return false;
 
-        LongRevNumberRevEntity that = (LongRevNumberRevEntity) o;
+        IntegerRevNumberRevEntity that = (IntegerRevNumberRevEntity) o;
 
-        if (customId != that.customId) return false;
-        if (customTimestamp != that.customTimestamp) return false;
+        if (customId != null ? !customId.equals(that.customId) : that.customId != null) return false;
+        if (customTimestamp != null ? !customTimestamp.equals(that.customTimestamp) : that.customTimestamp != null)
+            return false;
 
         return true;
     }
 
     public int hashCode() {
         int result;
-        result = (int) (customId ^ (customId >>> 32));
-        result = 31 * result + (int) (customTimestamp ^ (customTimestamp >>> 32));
+        result = (customId != null ? customId.hashCode() : 0);
+        result = 31 * result + (customTimestamp != null ? customTimestamp.hashCode() : 0);
         return result;
     }
 }

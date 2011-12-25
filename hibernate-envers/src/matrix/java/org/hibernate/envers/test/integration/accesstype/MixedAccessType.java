@@ -60,7 +60,7 @@ public class MixedAccessType extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(MixedAccessTypeEntity.class, id1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(MixedAccessTypeEntity.class, id1));
     }
 
     @Test
@@ -68,8 +68,8 @@ public class MixedAccessType extends AbstractEntityTest {
         MixedAccessTypeEntity ver1 = new MixedAccessTypeEntity(id1, "data");
         MixedAccessTypeEntity ver2 = new MixedAccessTypeEntity(id1, "data2");
 
-        MixedAccessTypeEntity rev1 = getAuditReader().find(MixedAccessTypeEntity.class, id1, 1);
-        MixedAccessTypeEntity rev2 = getAuditReader().find(MixedAccessTypeEntity.class, id1, 2);
+        MixedAccessTypeEntity rev1 = getAuditReader().find(MixedAccessTypeEntity.class, id1, 1L);
+        MixedAccessTypeEntity rev2 = getAuditReader().find(MixedAccessTypeEntity.class, id1, 2L);
 
         assert rev1.isDataSet();
         assert rev2.isDataSet();

@@ -72,7 +72,7 @@ public class CompositeDateId extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(CompositeDateIdTestEntity.class, id1));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(CompositeDateIdTestEntity.class, id1));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class CompositeDateId extends AbstractEntityTest {
         CompositeDateIdTestEntity ver1 = new CompositeDateIdTestEntity(id1, "x");
         CompositeDateIdTestEntity ver2 = new CompositeDateIdTestEntity(id1, "y");
 
-        assert getAuditReader().find(CompositeDateIdTestEntity.class, id1, 1).getStr1().equals("x");
-        assert getAuditReader().find(CompositeDateIdTestEntity.class, id1, 2).getStr1().equals("y");
+        assert getAuditReader().find(CompositeDateIdTestEntity.class, id1, 1L).getStr1().equals("x");
+        assert getAuditReader().find(CompositeDateIdTestEntity.class, id1, 2L).getStr1().equals("y");
     }
 }

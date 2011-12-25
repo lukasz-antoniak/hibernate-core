@@ -95,17 +95,17 @@ public class BidirectionalReference extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() { 
-        assert Arrays.asList(2, 3).equals(getAuditReader().getRevisions(GreetingPO.class, g1_id));
+        assert Arrays.asList(2L, 3L).equals(getAuditReader().getRevisions(GreetingPO.class, g1_id));
 
-        assert Arrays.asList(1, 2, 3).equals(getAuditReader().getRevisions(GreetingSetPO.class, set1_id));
-		assert Arrays.asList(1, 3).equals(getAuditReader().getRevisions(GreetingSetPO.class, set2_id));
+        assert Arrays.asList(1L, 2L, 3L).equals(getAuditReader().getRevisions(GreetingSetPO.class, set1_id));
+		assert Arrays.asList(1L, 3L).equals(getAuditReader().getRevisions(GreetingSetPO.class, set2_id));
     }
 	
     @Test
     public void testHistoryOfG1() {
-		GreetingPO rev1 = getAuditReader().find(GreetingPO.class, g1_id, 1);
-		GreetingPO rev2 = getAuditReader().find(GreetingPO.class, g1_id, 2);
-		GreetingPO rev3 = getAuditReader().find(GreetingPO.class, g1_id, 3);
+		GreetingPO rev1 = getAuditReader().find(GreetingPO.class, g1_id, 1L);
+		GreetingPO rev2 = getAuditReader().find(GreetingPO.class, g1_id, 2L);
+		GreetingPO rev3 = getAuditReader().find(GreetingPO.class, g1_id, 3L);
 
         assert rev1 == null;
         assert rev2.getGreetingSet().getName().equals("a1");
@@ -114,9 +114,9 @@ public class BidirectionalReference extends AbstractEntityTest {
 
 	@Test
     public void testHistoryOfSet1() {
-		GreetingSetPO rev1 = getAuditReader().find(GreetingSetPO.class, set1_id, 1);
-		GreetingSetPO rev2 = getAuditReader().find(GreetingSetPO.class, set1_id, 2);
-		GreetingSetPO rev3 = getAuditReader().find(GreetingSetPO.class, set1_id, 3);
+		GreetingSetPO rev1 = getAuditReader().find(GreetingSetPO.class, set1_id, 1L);
+		GreetingSetPO rev2 = getAuditReader().find(GreetingSetPO.class, set1_id, 2L);
+		GreetingSetPO rev3 = getAuditReader().find(GreetingSetPO.class, set1_id, 3L);
 
         assert rev1.getName().equals("a1");
         assert rev2.getName().equals("a1");
@@ -133,9 +133,9 @@ public class BidirectionalReference extends AbstractEntityTest {
 
 	@Test
     public void testHistoryOfSet2() {
-		GreetingSetPO rev1 = getAuditReader().find(GreetingSetPO.class, set2_id, 1);
-		GreetingSetPO rev2 = getAuditReader().find(GreetingSetPO.class, set2_id, 2);
-		GreetingSetPO rev3 = getAuditReader().find(GreetingSetPO.class, set2_id, 3);
+		GreetingSetPO rev1 = getAuditReader().find(GreetingSetPO.class, set2_id, 1L);
+		GreetingSetPO rev2 = getAuditReader().find(GreetingSetPO.class, set2_id, 2L);
+		GreetingSetPO rev3 = getAuditReader().find(GreetingSetPO.class, set2_id, 3L);
 
         assert rev1.getName().equals("a2");
         assert rev2.getName().equals("a2");

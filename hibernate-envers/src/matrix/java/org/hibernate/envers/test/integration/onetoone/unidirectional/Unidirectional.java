@@ -111,13 +111,13 @@ public class Unidirectional extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed1_id));
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed2_id));
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed3_id));
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed4_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed2_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed3_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(UniRefEdEntity.class, ed4_id));
 
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(UniRefIngEntity.class, ing1_id));
-        assert Arrays.asList(1, 3).equals(getAuditReader().getRevisions(UniRefIngEntity.class, ing2_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(UniRefIngEntity.class, ing1_id));
+        assert Arrays.asList(1L, 3L).equals(getAuditReader().getRevisions(UniRefIngEntity.class, ing2_id));
     }
 
     @Test
@@ -125,9 +125,9 @@ public class Unidirectional extends AbstractEntityTest {
         UniRefEdEntity ed1 = getEntityManager().find(UniRefEdEntity.class, ed1_id);
         UniRefEdEntity ed2 = getEntityManager().find(UniRefEdEntity.class, ed2_id);
 
-        UniRefIngEntity rev1 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 1);
-        UniRefIngEntity rev2 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 2);
-        UniRefIngEntity rev3 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 3);
+        UniRefIngEntity rev1 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 1L);
+        UniRefIngEntity rev2 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 2L);
+        UniRefIngEntity rev3 = getAuditReader().find(UniRefIngEntity.class, ing1_id, 3L);
 
         assert rev1.getReference().equals(ed1);
         assert rev2.getReference().equals(ed2);
@@ -139,9 +139,9 @@ public class Unidirectional extends AbstractEntityTest {
         UniRefEdEntity ed3 = getEntityManager().find(UniRefEdEntity.class, ed3_id);
         UniRefEdEntity ed4 = getEntityManager().find(UniRefEdEntity.class, ed4_id);
 
-        UniRefIngEntity rev1 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 1);
-        UniRefIngEntity rev2 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 2);
-        UniRefIngEntity rev3 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 3);
+        UniRefIngEntity rev1 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 1L);
+        UniRefIngEntity rev2 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 2L);
+        UniRefIngEntity rev3 = getAuditReader().find(UniRefIngEntity.class, ing2_id, 3L);
 
         assert rev1.getReference().equals(ed3);
         assert rev2.getReference().equals(ed3);

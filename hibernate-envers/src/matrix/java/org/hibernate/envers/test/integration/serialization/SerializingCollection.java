@@ -75,7 +75,7 @@ public class SerializingCollection extends AbstractEntityTest {
     @Test
     public void testDetach()throws Exception  {
         CollectionRefIngEntity ing1 = getEntityManager().find(CollectionRefIngEntity.class, ing1_id);
-        CollectionRefEdEntity rev1 = getAuditReader().find(CollectionRefEdEntity.class, ed1_id, 1);
+        CollectionRefEdEntity rev1 = getAuditReader().find(CollectionRefEdEntity.class, ed1_id, 1L);
 
 		// First forcing loading of the collection
 		assert rev1.getReffering().size() == 1;

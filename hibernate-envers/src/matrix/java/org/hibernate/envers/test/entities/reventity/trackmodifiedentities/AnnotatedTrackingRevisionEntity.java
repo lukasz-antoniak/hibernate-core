@@ -24,7 +24,7 @@ public class AnnotatedTrackingRevisionEntity {
     @Id
     @GeneratedValue
     @RevisionNumber
-    private int customId;
+    private long customId;
 
     @RevisionTimestamp
     private long customTimestamp;
@@ -35,11 +35,11 @@ public class AnnotatedTrackingRevisionEntity {
     @ModifiedEntityNames
     private Set<String> entityNames;
 
-    public int getCustomId() {
+    public long getCustomId() {
         return customId;
     }
 
-    public void setCustomId(int customId) {
+    public void setCustomId(long customId) {
         this.customId = customId;
     }
 
@@ -73,7 +73,7 @@ public class AnnotatedTrackingRevisionEntity {
     }
 
     public int hashCode() {
-        int result = customId;
+        int result = (int) (customId ^ (customId >>> 32));
         result = 31 * result + (int) (customTimestamp ^ (customTimestamp >>> 32));
         result = 31 * result + (entityNames != null ? entityNames.hashCode() : 0);
         return result;

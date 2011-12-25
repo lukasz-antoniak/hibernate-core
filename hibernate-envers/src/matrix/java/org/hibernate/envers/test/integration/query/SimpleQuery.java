@@ -108,7 +108,7 @@ public class SimpleQuery extends AbstractEntityTest {
     @Test
     public void testEntitiesIdQuery() {
         StrIntTestEntity ver2 = (StrIntTestEntity) getAuditReader().createQuery()
-                .forEntitiesAtRevision(StrIntTestEntity.class, 2)
+                .forEntitiesAtRevision(StrIntTestEntity.class, 2L)
                 .add(AuditEntity.id().eq(id2))
                 .getSingleResult();
 
@@ -118,17 +118,17 @@ public class SimpleQuery extends AbstractEntityTest {
     @Test
     public void testEntitiesPropertyEqualsQuery() {
         List ver1 = getAuditReader().createQuery()
-                .forEntitiesAtRevision(StrIntTestEntity.class, 1)
+                .forEntitiesAtRevision(StrIntTestEntity.class, 1L)
                 .add(AuditEntity.property("str1").eq("a"))
                 .getResultList();
 
         List ver2 = getAuditReader().createQuery()
-                .forEntitiesAtRevision(StrIntTestEntity.class, 2)
+                .forEntitiesAtRevision(StrIntTestEntity.class, 2L)
                 .add(AuditEntity.property("str1").eq("a"))
                 .getResultList();
 
         List ver3 = getAuditReader().createQuery()
-                .forEntitiesAtRevision(StrIntTestEntity.class, 3)
+                .forEntitiesAtRevision(StrIntTestEntity.class, 3L)
                 .add(AuditEntity.property("str1").eq("a"))
                 .getResultList();
 
@@ -142,17 +142,17 @@ public class SimpleQuery extends AbstractEntityTest {
     @Test
     public void testEntitiesPropertyLeQuery() {
         List ver1 = getAuditReader().createQuery()
-                .forEntitiesAtRevision(StrIntTestEntity.class, 1)
+                .forEntitiesAtRevision(StrIntTestEntity.class, 1L)
                 .add(AuditEntity.property("number").le(10))
                 .getResultList();
 
         List ver2 = getAuditReader().createQuery()
-                .forEntitiesAtRevision(StrIntTestEntity.class, 2)
+                .forEntitiesAtRevision(StrIntTestEntity.class, 2L)
                 .add(AuditEntity.property("number").le(10))
                 .getResultList();
 
         List ver3 = getAuditReader().createQuery()
-                .forEntitiesAtRevision(StrIntTestEntity.class, 3)
+                .forEntitiesAtRevision(StrIntTestEntity.class, 3L)
                 .add(AuditEntity.property("number").le(10))
                 .getResultList();
 
@@ -187,9 +187,9 @@ public class SimpleQuery extends AbstractEntityTest {
                 .add(AuditEntity.id().eq(id3))
                 .getResultList();
 
-        assert Arrays.asList(1).equals(revs_id1);
-        assert Arrays.asList(1, 2).equals(revs_id2);
-        assert Arrays.asList(3).equals(revs_id3);
+        assert Arrays.asList(1L).equals(revs_id1);
+        assert Arrays.asList(1L, 2L).equals(revs_id2);
+        assert Arrays.asList(3L).equals(revs_id3);
     }
 
     @Test
@@ -277,8 +277,8 @@ public class SimpleQuery extends AbstractEntityTest {
         StrIntTestEntity site2 = new StrIntTestEntity("a", 10, id2);
         StrIntTestEntity site3 = new StrIntTestEntity("b", 5, id3);
 
-        List result = getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, StrIntTestEntity.class.getName(), 1).getResultList();
-        RevisionType revisionType = (RevisionType) getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 1)
+        List result = getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, StrIntTestEntity.class.getName(), 1L).getResultList();
+        RevisionType revisionType = (RevisionType) getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 1L)
                                                                    .addProjection(AuditEntity.revisionType()).add(AuditEntity.id().eq(id1))
                                                                    .getSingleResult();
 
@@ -291,8 +291,8 @@ public class SimpleQuery extends AbstractEntityTest {
         StrIntTestEntity site1 = new StrIntTestEntity("c", 10, id1);
         StrIntTestEntity site2 = new StrIntTestEntity("a", 20, id2);
 
-        List result = getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 2).getResultList();
-        RevisionType revisionType = (RevisionType) getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 2)
+        List result = getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 2L).getResultList();
+        RevisionType revisionType = (RevisionType) getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 2L)
                                                                    .addProjection(AuditEntity.revisionType()).add(AuditEntity.id().eq(id1))
                                                                    .getSingleResult();
 
@@ -304,8 +304,8 @@ public class SimpleQuery extends AbstractEntityTest {
     public void testEntitiesRemovedAtRevision() {
         StrIntTestEntity site1 = new StrIntTestEntity(null, null, id1);
 
-        List result = getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 4).getResultList();
-        RevisionType revisionType = (RevisionType) getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 4)
+        List result = getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 4L).getResultList();
+        RevisionType revisionType = (RevisionType) getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 4L)
                                                                    .addProjection(AuditEntity.revisionType()).add(AuditEntity.id().eq(id1))
                                                                    .getSingleResult();
         
@@ -315,14 +315,14 @@ public class SimpleQuery extends AbstractEntityTest {
 
     @Test
     public void testEntityNotModifiedAtRevision() {
-        List result = getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 3)
+        List result = getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 3L)
                                                     .add(AuditEntity.id().eq(id1)).getResultList();
         Assert.assertTrue(result.isEmpty());
     }
 
     @Test
     public void testNoEntitiesModifiedAtRevision() {
-        List result = getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 5).getResultList();
+        List result = getAuditReader().createQuery().forEntitiesModifiedAtRevision(StrIntTestEntity.class, 5L).getResultList();
         Assert.assertTrue(result.isEmpty());
     }
 }

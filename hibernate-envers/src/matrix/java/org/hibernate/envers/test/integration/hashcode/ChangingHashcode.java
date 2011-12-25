@@ -84,21 +84,21 @@ public class ChangingHashcode extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(WikiPage.class, pageId));
-        assert Arrays.asList(2, 3).equals(getAuditReader().getRevisions(WikiImage.class, imageId));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(WikiPage.class, pageId));
+        assert Arrays.asList(2L, 3L).equals(getAuditReader().getRevisions(WikiImage.class, imageId));
     }
 
     @Test
     public void testHistoryOfImage() {
-		assert getAuditReader().find(WikiImage.class, imageId, 1) == null;
-        assert getAuditReader().find(WikiImage.class, imageId, 2).equals(new WikiImage("name1"));
-        assert getAuditReader().find(WikiImage.class, imageId, 3).equals(new WikiImage("name2"));
+		assert getAuditReader().find(WikiImage.class, imageId, 1L) == null;
+        assert getAuditReader().find(WikiImage.class, imageId, 2L).equals(new WikiImage("name1"));
+        assert getAuditReader().find(WikiImage.class, imageId, 3L).equals(new WikiImage("name2"));
     }
 
     @Test
     public void testHistoryOfPage() {
-        assert getAuditReader().find(WikiPage.class, pageId, 1).getImages().size() == 0;
-        assert getAuditReader().find(WikiPage.class, pageId, 2).getImages().equals(TestTools.makeSet(new WikiImage("name1")));
-        assert getAuditReader().find(WikiPage.class, pageId, 3).getImages().equals(TestTools.makeSet(new WikiImage("name2")));
+        assert getAuditReader().find(WikiPage.class, pageId, 1L).getImages().size() == 0;
+        assert getAuditReader().find(WikiPage.class, pageId, 2L).getImages().equals(TestTools.makeSet(new WikiImage("name1")));
+        assert getAuditReader().find(WikiPage.class, pageId, 3L).getImages().equals(TestTools.makeSet(new WikiImage("name2")));
     }
 }

@@ -82,16 +82,16 @@ public class OneToManyUnidirectionalNaming extends AbstractEntityTest {
 
     @Test
     public void testRevisionsCounts() {
-        assert Arrays.asList(1, 2).equals(getAuditReader().getRevisions(DetachedNamingTestEntity.class, uni1_id));
-        assert Arrays.asList(1).equals(getAuditReader().getRevisions(StrTestEntity.class, str1_id));
+        assert Arrays.asList(1L, 2L).equals(getAuditReader().getRevisions(DetachedNamingTestEntity.class, uni1_id));
+        assert Arrays.asList(1L).equals(getAuditReader().getRevisions(StrTestEntity.class, str1_id));
     }
 
     @Test
     public void testHistoryOfUniId1() {
         StrTestEntity str1 = getEntityManager().find(StrTestEntity.class, str1_id);
 
-        DetachedNamingTestEntity rev1 = getAuditReader().find(DetachedNamingTestEntity.class, uni1_id, 1);
-        DetachedNamingTestEntity rev2 = getAuditReader().find(DetachedNamingTestEntity.class, uni1_id, 2);
+        DetachedNamingTestEntity rev1 = getAuditReader().find(DetachedNamingTestEntity.class, uni1_id, 1L);
+        DetachedNamingTestEntity rev2 = getAuditReader().find(DetachedNamingTestEntity.class, uni1_id, 2L);
 
         assert rev1.getCollection().equals(TestTools.makeSet());
         assert rev2.getCollection().equals(TestTools.makeSet(str1));
