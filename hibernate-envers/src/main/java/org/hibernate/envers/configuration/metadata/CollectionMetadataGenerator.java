@@ -76,6 +76,7 @@ import org.hibernate.envers.tools.StringTools;
 import org.hibernate.envers.tools.Tools;
 import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.IndexedCollection;
+import org.hibernate.mapping.ManyToOne;
 import org.hibernate.mapping.OneToMany;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
@@ -637,6 +638,12 @@ public final class CollectionMetadataGenerator {
                 // The equality is intentional. We want to find a collection property with the same collection table.
                 //noinspection ObjectEquality
                 if (((Collection) property.getValue()).getCollectionTable() == collectionTable) {
+                    return property.getName();
+                }
+            } else if (property.getValue() instanceof ManyToOne) {
+                // The equality is intentional. We want to find a collection property with the same collection table.
+                //noinspection ObjectEquality
+                if (property.getValue().getTable() == collectionTable) {
                     return property.getName();
                 }
             }
