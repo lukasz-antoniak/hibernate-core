@@ -75,16 +75,16 @@ public class ImplicitMappedByTest extends AbstractEntityTest {
     @Test
     public void testHistoryOfOwned() {
         OneToManyOwned owned = new OneToManyOwned("data", null, ownedId);
-        Set<ManyToOneOwning> referencing = new HashSet<ManyToOneOwning>();
         ManyToOneOwning owning1 = new ManyToOneOwning("data1", owned, owning1Id);
-        referencing.add(owning1);
         ManyToOneOwning owning2 = new ManyToOneOwning("data2", owned, owning2Id);
-        referencing.add(owning2);
-        owned.setReferencing(referencing);
 
         OneToManyOwned ver1 = getAuditReader().find(OneToManyOwned.class, ownedId, 1);
         Assert.assertEquals(owned, ver1);
         Assert.assertEquals(TestTools.makeSet(owning1, owning2), ver1.getReferencing());
+
+        OneToManyOwned ver2 = getAuditReader().find(OneToManyOwned.class, ownedId, 2);
+        Assert.assertEquals(owned, ver2);
+        Assert.assertEquals(TestTools.makeSet(owning2), ver2.getReferencing());
     }
 
     @Test
@@ -95,10 +95,16 @@ public class ImplicitMappedByTest extends AbstractEntityTest {
 
     @Test
     public void testHistoryOfOwning2() {
-        ManyToOneOwning ver1 = new ManyToOneOwning("data2", null, owning2Id);
-        ManyToOneOwning ver3 = new ManyToOneOwning("data2modified", null, owning2Id);
+        OneToManyOwned owned = new OneToManyOwned("data", null, ownedId);
+        ManyToOneOwning owning1 = new ManyToOneOwning("data2", owned, owning2Id);
+        ManyToOneOwning owning3 = new ManyToOneOwning("data2modified", owned, owning2Id);
 
-        Assert.assertEquals(ver1, getAuditReader().find(ManyToOneOwning.class, owning2Id, 1));
-        Assert.assertEquals(ver3, getAuditReader().find(ManyToOneOwning.class, owning2Id, 3));
+        ManyToOneOwning ver1 = getAuditReader().find(ManyToOneOwning.class, owning2Id, 1);
+        ManyToOneOwning ver3 = getAuditReader().find(ManyToOneOwning.class, owning2Id, 3);
+
+        Assert.assertEquals(owning1, ver1);
+        Assert.assertEquals(owned.getId(), ver1.getReferences().getId());
+        Assert.assertEquals(owning3, ver3);
+        Assert.assertEquals(owned.getId(), ver3.getReferences().getId());
     }
 }
