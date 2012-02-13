@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
+import org.hibernate.ConnectionReleaseMode;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.action.spi.BeforeTransactionCompletionProcess;
@@ -138,22 +139,15 @@ public class AuditProcess implements BeforeTransactionCompletionProcess {
 
         // see: http://www.jboss.com/index.html?module=bb&op=viewtopic&p=4178431
         if (FlushMode.isManualFlushMode(session.getFlushMode())) {
-            Session temporarySession = null;
-            try {
-                temporarySession = session.getFactory().openTemporarySession();
-
-                executeInSession(temporarySession);
-
-                temporarySession.flush();
-            } finally {
-                if (temporarySession != null) {
-                    temporarySession.close();
-                }
-            }
+            Session temporarySession = ((Session) session).sessionWithOptions().transactionContext().autoClose(true)
+                                                                               .connectionReleaseMode(ConnectionReleaseMode.AFTER_STATEMENT)
+                                                                               .openSession();
+            executeInSession(temporarySession);
+            temporarySession.flush();
         } else {
             executeInSession((Session) session);
 
-            // Explicity flushing the session, as the auto-flush may have already happened.
+            // Explicitly flushing the session, as the auto-flush may have already happened.
             session.flush();
         }
     }
