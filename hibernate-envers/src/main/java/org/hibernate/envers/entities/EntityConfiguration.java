@@ -24,7 +24,9 @@
 package org.hibernate.envers.entities;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import org.hibernate.envers.configuration.metadata.InheritanceType;
 import org.hibernate.envers.entities.mapper.ExtendedPropertyMapper;
 import org.hibernate.envers.entities.mapper.PropertyMapper;
 import org.hibernate.envers.entities.mapper.id.IdMapper;
@@ -42,14 +44,18 @@ public class EntityConfiguration {
     // Maps from property name
     private Map<String, RelationDescription> relations;
     private String parentEntityName;
+    // Map storing subentity names grouped by inheritance type.
+    private Map<InheritanceType, Set<String>> childEntitiesDescriptor;
 
     public EntityConfiguration(String versionsEntityName, String entityClassName, IdMappingData idMappingData,
-                               ExtendedPropertyMapper propertyMapper, String parentEntityName) {
+                               ExtendedPropertyMapper propertyMapper, String parentEntityName,
+                               Map<InheritanceType, Set<String>> childEntitiesDescriptor) {
         this.versionsEntityName = versionsEntityName;
         this.entityClassName = entityClassName;
         this.idMappingData = idMappingData;
         this.propertyMapper = propertyMapper;
         this.parentEntityName = parentEntityName;
+        this.childEntitiesDescriptor = childEntitiesDescriptor;
 
         this.relations = new HashMap<String, RelationDescription>();
     }
@@ -105,6 +111,18 @@ public class EntityConfiguration {
 
     public String getParentEntityName() {
         return parentEntityName;
+    }
+
+    public boolean hasSingleTableSubentities() {
+        return !childEntitiesDescriptor.get(InheritanceType.SINGLE).isEmpty();
+    }
+
+    public boolean hasJoinedTableSubentities() {
+        return !childEntitiesDescriptor.get(InheritanceType.JOINED).isEmpty();
+    }
+
+    public boolean hasTablePerClassSubentities() {
+        return !childEntitiesDescriptor.get(InheritanceType.TABLE_PER_CLASS).isEmpty();
     }
 
     // For use by EntitiesConfigurations

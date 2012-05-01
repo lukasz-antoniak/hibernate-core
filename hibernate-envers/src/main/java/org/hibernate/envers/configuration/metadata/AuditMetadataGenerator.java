@@ -23,8 +23,10 @@
  */
 package org.hibernate.envers.configuration.metadata;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.dom4j.Element;
 import org.jboss.logging.Logger;
@@ -411,6 +413,10 @@ public final class AuditMetadataGenerator {
                                   EntityXmlMappingData xmlMappingData, boolean isAudited) {
         String schema = getSchema(auditingData.getAuditTable().schema(), pc.getTable());
         String catalog = getCatalog(auditingData.getAuditTable().catalog(), pc.getTable());
+        final Map<InheritanceType, Set<String>> subentitiesDescriptor = new HashMap<InheritanceType, Set<String>>();
+        for (InheritanceType type : InheritanceType.values()) {
+            subentitiesDescriptor.put(type, new HashSet<String>());
+        }
 
 		if (!isAudited) {
 			String entityName = pc.getEntityName();
@@ -427,7 +433,7 @@ public final class AuditMetadataGenerator {
 			ExtendedPropertyMapper propertyMapper = null;
 			String parentEntityName = null;
 			EntityConfiguration entityCfg = new EntityConfiguration(entityName, pc.getClassName(), idMapper, propertyMapper,
-					parentEntityName);
+					parentEntityName, subentitiesDescriptor);
 			notAuditedEntitiesConfigurations.put(entityName, entityCfg);
 			return;
 		}
@@ -487,6 +493,11 @@ public final class AuditMetadataGenerator {
         class_mapping = mappingData.getFirst();
         propertyMapper = mappingData.getSecond();
         parentEntityName = mappingData.getThird();
+        Iterator<PersistentClass> subentitiesIterator = pc.getSubclassIterator();
+        while (subentitiesIterator.hasNext()) {
+            PersistentClass subclass = subentitiesIterator.next();
+            subentitiesDescriptor.get(InheritanceType.get(subclass)).add(subclass.getEntityName());
+        }
 
         xmlMappingData.setClassMapping(class_mapping);
 
@@ -500,8 +511,8 @@ public final class AuditMetadataGenerator {
         addJoins(pc, propertyMapper, auditingData, pc.getEntityName(), xmlMappingData, true);
 
         // Storing the generated configuration
-        EntityConfiguration entityCfg = new EntityConfiguration(auditEntityName,pc.getClassName(), idMapper,
-                propertyMapper, parentEntityName);
+        EntityConfiguration entityCfg = new EntityConfiguration(auditEntityName, pc.getClassName(), idMapper,
+                propertyMapper, parentEntityName, subentitiesDescriptor);
         entitiesConfigurations.put(pc.getEntityName(), entityCfg);
     }
 
