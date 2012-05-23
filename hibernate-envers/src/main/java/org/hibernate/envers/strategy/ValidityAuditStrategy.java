@@ -8,9 +8,6 @@ import java.util.Map;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.dialect.Dialect;
-import org.hibernate.dialect.Oracle8iDialect;
-import org.hibernate.dialect.PostgreSQL81Dialect;
-import org.hibernate.dialect.SQLServer2005Dialect;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.configuration.AuditConfiguration;
@@ -74,10 +71,20 @@ public class ValidityAuditStrategy implements AuditStrategy {
 
         // Update the end date of the previous row if this operation is expected to have a previous row
         if (getRevisionType(auditCfg, data) != RevisionType.ADD) {
-            if ((dialect instanceof Oracle8iDialect && auditEntityCfg.hasTablePerClassSubentities())
-                    || (dialect instanceof SQLServer2005Dialect && auditEntityCfg.hasTablePerClassSubentities())
-                    || (dialect instanceof PostgreSQL81Dialect && (auditEntityCfg.hasTablePerClassSubentities()
-                        || auditEntityCfg.hasJoinedTableSubentities()))) {
+            if (shallSelectAndUpdate(dialect, auditEntityCfg)) {
+                // Constructing a query:
+                // select e from audited_ent e where e.end_rev is null and e.id = :id
+                QueryBuilder qb = new QueryBuilder(auditedEntityName, MIDDLE_ENTITY_ALIAS);
+                // e.id = :id
+                idMapper.addIdEqualsToQuery(qb.getRootParameters(), id, auditCfg.getAuditEntCfg().getOriginalIdPropName(), true);
+                // e.end_rev is null
+                addEndRevisionNullRestriction(auditCfg, qb.getRootParameters());
+
+                @SuppressWarnings({"unchecked"})
+                List<Object> l = qb.toQuery(session).setLockOptions(LockOptions.UPGRADE).list();
+
+                updateLastRevision(session, auditCfg, l, id, auditedEntityName, revision);
+            } else {
                 // Save the audit data
                 session.save(auditedEntityName, data);
                 sessionCacheCleaner.scheduleAuditDataRemoval(session, data);
@@ -103,25 +110,25 @@ public class ValidityAuditStrategy implements AuditStrategy {
                     throw new RuntimeException("Cannot update previous revision for entity " + auditedEntityName + " and id " + id);
                 }
                 return;
-            } else {
-                // Constructing a query:
-                // select e from audited_ent e where e.end_rev is null and e.id = :id
-                QueryBuilder qb = new QueryBuilder(auditedEntityName, MIDDLE_ENTITY_ALIAS);
-                // e.id = :id
-                idMapper.addIdEqualsToQuery(qb.getRootParameters(), id, auditCfg.getAuditEntCfg().getOriginalIdPropName(), true);
-                // e.end_rev is null
-                addEndRevisionNullRestriction(auditCfg, qb.getRootParameters());
-
-                @SuppressWarnings({"unchecked"})
-                List<Object> l = qb.toQuery(session).setLockOptions(LockOptions.UPGRADE).list();
-
-                updateLastRevision(session, auditCfg, l, id, auditedEntityName, revision);
             }
         }
 
         // Save the audit data
         session.save(auditedEntityName, data);
         sessionCacheCleaner.scheduleAuditDataRemoval(session, data);
+    }
+
+    public boolean shallSelectAndUpdate(Dialect dialect, EntityConfiguration auditEntityCfg) {
+        // Hibernate fails to execute multi-table bulk operations if dialect does not support "row value constructor" feature.
+        // In case of inheritance, secondary and join table mappings SQL query looks like:
+        // update ParentEntity_AUD set REVEND=? where (id, REV) IN (select id, REV from HT_ChildEntity_AUD)
+        // because Hibernate utilizes temporary tables.
+        // See: http://in.relation.to/Bloggers/MultitableBulkOperations, https://community.jboss.org/wiki/TemporaryTableUse.
+        // TODO: This might be improved to return false only if Hibernate is supposed to produce query with row value
+        // constructor and the actual dialect does not support required feature. However, Hibernate decides to use temporary
+        // tables while translating HQL to SQL query (QueryTranslatorImpl#buildAppropriateStatementExecutor(HqlSqlWalker)),
+        // and it is difficult to predict here.
+        return !dialect.supportsRowValueConstructorSyntax();
     }
 
     @SuppressWarnings({"unchecked"})
