@@ -116,6 +116,41 @@ public class SQLServerDialectTest extends BaseCoreFunctionalTestCase {
 		s.close();
 	}
 
+	@TestForIssue(jiraKey = "HHH-7369")
+	@Test
+	public void testPaginationOnScalarQuery() throws Exception {
+		Session s = openSession();
+		Transaction tx = s.beginTransaction();
+
+		for ( int i = 1; i <= 20; i++ ) {
+			Product2 kit = new Product2();
+			kit.id = i;
+			kit.description = "Kit" + i;
+			s.persist( kit );
+		}
+		s.flush();
+		s.clear();
+
+		List list = s.createSQLQuery( "select id from Product2 where description like 'Kit%' order by id" ).list();
+		assertEquals(Integer.class, list.get(0).getClass()); // scalar result is an Integer
+
+		list = s.createSQLQuery( "select id from Product2 where description like 'Kit%' order by id" ).setFirstResult( 2 ).setMaxResults( 2 ).list();
+		assertEquals(Integer.class, list.get(0).getClass()); // this fails without patch, as result suddenly has become an array
+
+		// same once again with alias
+		list = s.createSQLQuery( "select id as myint from Product2 where description like 'Kit%' order by id asc" ).setFirstResult( 2 ).setMaxResults( 2 ).list();
+		assertEquals(Integer.class, list.get(0).getClass());
+		tx.rollback();
+		s.close();
+	}
+
+    @TestForIssue(jiraKey = "HHH-7368")
+    @Test
+    public void testPaginationWithTrailingSemicolon() throws Exception {
+        Session s = openSession();
+        s.createSQLQuery( "select id from Product2 where description like 'Kit%' order by id;" ).setFirstResult( 2 ).setMaxResults( 2 ).list();
+        s.close();
+    }
 
 	@TestForIssue(jiraKey = "HHH-3961")
 	@Test

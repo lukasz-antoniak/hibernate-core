@@ -25,6 +25,8 @@ package org.hibernate.dialect;
 
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,15 +34,16 @@ import org.hibernate.JDBCException;
 import org.hibernate.LockMode;
 import org.hibernate.QueryTimeoutException;
 import org.hibernate.dialect.function.NoArgSQLFunction;
-import org.hibernate.exception.LockTimeoutException;
 import org.hibernate.exception.spi.SQLExceptionConversionDelegate;
 import org.hibernate.internal.util.JdbcExceptionHelper;
+import org.hibernate.internal.util.StringHelper;
 import org.hibernate.type.StandardBasicTypes;
 
 /**
  * A dialect for Microsoft SQL 2005. (HHH-3936 fix)
  *
  * @author Yoryos Valotasios
+ * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
 public class SQLServer2005Dialect extends SQLServerDialect {
 	private static final String SELECT = "select";
@@ -49,10 +52,7 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 	private static final String ORDER_BY = "order by";
 	private static final int MAX_LENGTH = 8000;
 
-	/**
-	 * Regular expression for stripping alias
-	 */
-	private static final Pattern ALIAS_PATTERN = Pattern.compile( "\\sas\\s[^,]+(,?)" );
+	private static final Pattern ALIAS_PATTERN = Pattern.compile( "(?i)\\sas\\s(.)+$" );
 
 	public SQLServer2005Dialect() {
 		// HHH-3965 fix
@@ -130,87 +130,92 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 	@Override
 	public String getLimitString(String querySqlString, boolean hasOffset) {
 		StringBuilder sb = new StringBuilder( querySqlString.trim() );
-
-		int orderByIndex = shallowIndexOfWord( sb, ORDER_BY, 0 );
-		CharSequence orderby = orderByIndex > 0 ? sb.subSequence( orderByIndex, sb.length() )
-				: "ORDER BY CURRENT_TIMESTAMP";
-
-		// Delete the order by clause at the end of the query
-		if ( orderByIndex > 0 ) {
-			sb.delete( orderByIndex, orderByIndex + orderby.length() );
+		if (sb.charAt(sb.length() - 1) == ';') {
+			sb.setLength(sb.length() - 1);
 		}
 
-		// HHH-5715 bug fix
-		replaceDistinctWithGroupBy( sb );
+		final String selectClause = fillAliasInSelectClause( sb );
 
-		insertRowNumberFunction( sb, orderby );
+		int orderByIndex = shallowIndexOfWord( sb, ORDER_BY, 0 );
+		if ( orderByIndex > 0 ) {
+			addTopExpression( sb );
+		}
+
+		encloseWithOuterQuery( sb );
 
 		// Wrap the query within a with statement:
-		sb.insert( 0, "WITH query AS (" ).append( ") SELECT * FROM query " );
+		sb.insert( 0, "WITH query AS (" ).append( ") SELECT ").append( selectClause ).append( " FROM query " );
 		sb.append( "WHERE __hibernate_row_nr__ >= ? AND __hibernate_row_nr__ < ?" );
 
 		return sb.toString();
 	}
 
-	/**
-	 * Utility method that checks if the given sql query is a select distinct one and if so replaces the distinct select
-	 * with an equivalent simple select with a group by clause.
-	 *
-	 * @param sql an sql query
-	 */
-	protected static void replaceDistinctWithGroupBy(StringBuilder sql) {
-		int distinctIndex = shallowIndexOfWord( sql, DISTINCT, 0 );
-		int selectEndIndex = shallowIndexOfWord( sql, FROM, 0 );
-		if (distinctIndex > 0 && distinctIndex < selectEndIndex) {
-			sql.delete( distinctIndex, distinctIndex + DISTINCT.length() + " ".length());
-			sql.append( " group by" ).append( getSelectFieldsWithoutAliases( sql ) );
+	protected String fillAliasInSelectClause(StringBuilder sb) {
+		final List<String> aliases = new LinkedList<String>();
+		final int startPos = shallowIndexOf( sb, SELECT_WITH_SPACE, 0 );
+		int endPos = shallowIndexOfWord( sb, FROM, startPos );
+		int nextComa = startPos;
+		int prevComa = startPos;
+		int unique = 0;
+		
+		while ( nextComa != -1 ) {
+			prevComa = nextComa;
+			nextComa = shallowIndexOf( sb, ",", nextComa );
+			if ( nextComa > endPos ) break;
+			if ( nextComa != -1 ) {
+				String expression = sb.substring( prevComa, nextComa );
+				String alias = getAlias( expression );
+				if ( alias == null ) {
+					// Inserting alias.
+					alias = StringHelper.generateAlias( "page", unique );
+					sb.insert( nextComa, " as " + alias );
+					++unique;
+					nextComa += ( " as " + alias ).length();
+				}
+				aliases.add( alias );
+				++nextComa;
+			}
+		}
+		// Processing last column.
+		endPos = shallowIndexOfWord( sb, FROM, startPos ); // Refreshing end position, because we might have inserted new alias.
+		String expression = sb.substring( prevComa, endPos );
+		String alias = getAlias( expression );
+		if ( alias == null ) {
+			// Inserting alias.
+			alias = StringHelper.generateAlias( "page", unique );
+			sb.insert( endPos - 1, " as " + alias );
+		}
+		aliases.add( alias );
+
+		return StringHelper.join( ", ", aliases.iterator() );
+	}
+
+	private String getAlias(String expression) {
+		Matcher matcher = ALIAS_PATTERN.matcher( expression );
+		if ( matcher.find() ) {
+			return matcher.group( 0 ).replaceFirst( "(?i)\\sas\\s", "" ).trim();
+		}
+		return null;
+	}
+
+	protected void encloseWithOuterQuery(StringBuilder sql) {
+		sql.insert( 0, "SELECT inner_query.*, ROW_NUMBER() OVER (ORDER BY CURRENT_TIMESTAMP) as __hibernate_row_nr__ FROM ( " );
+		sql.append( " ) inner_query " );
+	}
+
+	protected void addTopExpression(StringBuilder sql) {
+		final int distinctStartPos = shallowIndexOfWord( sql, DISTINCT, 0 );
+		if (distinctStartPos > 0) {
+			// Place TOP after DISTINCT.
+			sql.insert( distinctStartPos + DISTINCT.length(), " TOP(100)PERCENT" );
+		} else {
+			final int selectStartPos = shallowIndexOf( sql, SELECT_WITH_SPACE, 0 );
+			// Place TOP after SELECT.
+			sql.insert( selectStartPos + SELECT.length(), " TOP(100)PERCENT" );
 		}
 	}
 
 	public static final String SELECT_WITH_SPACE = SELECT + ' ';
-
-	/**
-	 * This utility method searches the given sql query for the fields of the select statement and returns them without
-	 * the aliases.
-	 *
-	 * @param sql sql query
-	 *
-	 * @return the fields of the select statement without their alias
-	 */
-	protected static CharSequence getSelectFieldsWithoutAliases(StringBuilder sql) {
-		final int selectStartPos = shallowIndexOf( sql, SELECT_WITH_SPACE, 0 );
-		final int fromStartPos = shallowIndexOfWord( sql, FROM, selectStartPos );
-		String select = sql.substring( selectStartPos + SELECT.length(), fromStartPos );
-
-		// Strip the as clauses
-		return stripAliases( select );
-	}
-
-	/**
-	 * Utility method that strips the aliases.
-	 *
-	 * @param str string to replace the as statements
-	 *
-	 * @return a string without the as statements
-	 */
-	protected static String stripAliases(String str) {
-		Matcher matcher = ALIAS_PATTERN.matcher( str );
-		return matcher.replaceAll( "$1" );
-	}
-
-	/**
-	 * We must place the row_number function at the end of select clause.
-	 *
-	 * @param sql the initial sql query without the order by clause
-	 * @param orderby the order by clause of the query
-	 */
-	protected void insertRowNumberFunction(StringBuilder sql, CharSequence orderby) {
-		// Find the end of the select clause
-		int selectEndIndex = shallowIndexOfWord( sql, FROM, 0 );
-
-		// Insert after the select clause the row_number() function:
-		sql.insert( selectEndIndex - 1, ", ROW_NUMBER() OVER (" + orderby + ") as __hibernate_row_nr__" );
-	}
 
 	@Override // since SQLServer2005 the nowait hint is supported
 	public String appendLockHint(LockMode mode, String tableName) {
@@ -264,6 +269,7 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 		} while ( cur < len && depth != 0 && pos != -1 );
 		return depth == 0 ? pos : -1;
 	}
+
 	@Override
 	public SQLExceptionConversionDelegate buildSQLExceptionConversionDelegate() {
 		return new SQLExceptionConversionDelegate() {
@@ -278,5 +284,4 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 			}
 		};
 	}
-
 }
