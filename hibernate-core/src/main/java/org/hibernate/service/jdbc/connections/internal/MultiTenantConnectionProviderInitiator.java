@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.jboss.logging.Logger;
 
+import org.hibernate.HibernateException;
 import org.hibernate.MultiTenancyStrategy;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.service.classloading.spi.ClassLoaderService;
@@ -84,7 +85,7 @@ public class MultiTenantConnectionProviderInitiator implements BasicServiceIniti
 				}
 				catch (ClassLoadingException cle) {
 					log.warn( "Unable to locate specified class [" + className + "]", cle );
-					return null;
+					throw new HibernateException( "Unable to locate specified multi-tenant connection provider [" + className + "]" );
 				}
 			}
 
@@ -93,7 +94,7 @@ public class MultiTenantConnectionProviderInitiator implements BasicServiceIniti
 			}
 			catch (Exception e) {
 				log.warn( "Unable to instantiate specified class [" + implClass.getName() + "]", e );
-				return null;
+				throw new HibernateException( "Unable to instantiate specified multi-tenant connection provider [" + implClass.getName() + "]" );
 			}
 		}
 	}
