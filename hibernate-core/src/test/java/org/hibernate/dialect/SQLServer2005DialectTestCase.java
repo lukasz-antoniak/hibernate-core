@@ -57,7 +57,7 @@ public class SQLServer2005DialectTestCase extends BaseUnitTestCase {
 
 		assertEquals(
 				"with query as (select inner_query.*, row_number() over (order by current_timestamp) as __hibernate_row_nr__ from ( " +
-						"select distinct top(100)percent f1 as f53245 from table849752 order by f234, f67 desc ) inner_query )" +
+						"select distinct top(?) f1 as f53245 from table849752 order by f234, f67 desc ) inner_query )" +
 						" select f53245 from query where __hibernate_row_nr__ >= ? and __hibernate_row_nr__ < ?",
 				dialect.getLimitString( input, 10, 15 ).toLowerCase()
 		);
@@ -109,7 +109,7 @@ public class SQLServer2005DialectTestCase extends BaseUnitTestCase {
 
 		assertEquals(
 				"WITH query AS (SELECT inner_query.*, ROW_NUMBER() OVER (ORDER BY CURRENT_TIMESTAMP) as __hibernate_row_nr__ FROM ( " +
-						"select TOP(100)PERCENT persistent0_.id as page0_, persistent0_.uid AS tmp1, " +
+						"select TOP(?) persistent0_.id as page0_, persistent0_.uid AS tmp1, " +
 						"(select case when persistent0_.name = 'Smith' then 'Neo' else persistent0_.id end) as page1_ " +
 						"from C_Customer persistent0_ where persistent0_.type='Va' order by persistent0_.Order ) " +
 						"inner_query ) SELECT page0_, tmp1, page1_ FROM query WHERE __hibernate_row_nr__ >= ? AND __hibernate_row_nr__ < ?",
@@ -124,7 +124,7 @@ public class SQLServer2005DialectTestCase extends BaseUnitTestCase {
 
 		assertEquals(
 				"WITH query AS (SELECT inner_query.*, ROW_NUMBER() OVER (ORDER BY CURRENT_TIMESTAMP) as __hibernate_row_nr__ FROM ( " +
-						"select TOP(100)PERCENT aggregate_function(distinct p.n) as f1 from table849752 p order by f1 ) inner_query ) " +
+						"select TOP(?) aggregate_function(distinct p.n) as f1 from table849752 p order by f1 ) inner_query ) " +
 						"SELECT f1 FROM query WHERE __hibernate_row_nr__ >= ? AND __hibernate_row_nr__ < ?",
 				dialect.getLimitString( distinctInAggregateSQL, 2, 5 )
 		);

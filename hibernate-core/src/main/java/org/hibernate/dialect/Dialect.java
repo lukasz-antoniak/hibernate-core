@@ -29,6 +29,7 @@ import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.NClob;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -2238,5 +2239,61 @@ public abstract class Dialect implements ConversionContext {
 	public boolean supportsTupleDistinctCounts() {
 		// oddly most database in fact seem to, so true is the default.
 		return true;
+	}
+
+	/**
+	 * Bind parameter values needed by the LIMIT clause before original SELECT statement.
+	 *
+	 * @param sql SQL statement with applied limit clause.
+	 * @param statement The statement to which to bind limit parameter values.
+	 * @param index The bind position from which to start binding.
+	 * @param firstRow First row number to select.
+	 * @param lastRow Last row number to select.
+	 * @return The number of parameter values bound.
+	 * @throws java.sql.SQLException Indicates problems binding parameter values.
+	 */
+	public int bindLimitParametersPreQuery(String sql, PreparedStatement statement, int index, int firstRow, int lastRow)
+			throws SQLException {
+		return bindLimitParametersFirst() ? bindLimitParameters( statement, index, firstRow, lastRow ) : 0;
+	}
+
+	/**
+	 * Bind parameter values needed by the LIMIT clause after original SELECT statement.
+	 *
+	 * @param sql SQL statement with applied limit clause.
+	 * @param statement The statement to which to bind limit parameter values.
+	 * @param index The bind position from which to start binding.
+	 * @param firstRow First row number to select.
+	 * @param lastRow Last row number to select.
+	 * @return The number of parameter values bound.
+	 * @throws java.sql.SQLException Indicates problems binding parameter values.
+	 */
+	public int bindLimitParametersPostQuery(String sql, PreparedStatement statement, int index, int firstRow, int lastRow)
+			throws SQLException {
+		return !bindLimitParametersFirst() ? bindLimitParameters( statement, index, firstRow, lastRow ) : 0;
+	}
+
+	/**
+	 * Default implementation of binding parameter values needed by the dialect-specific LIMIT clause.
+	 *
+	 * @param statement The statement to which to bind limit parameter values.
+	 * @param index The bind position from which to start binding.
+	 * @param firstRow First row number to select.
+	 * @param lastRow Last row number to select.
+	 * @return The number of parameter values bound.
+	 * @throws java.sql.SQLException Indicates problems binding parameter values.
+	 */
+	protected int bindLimitParameters(PreparedStatement statement, int index, int firstRow, int lastRow)
+			throws SQLException {
+		if ( !supportsVariableLimit() ) {
+			return 0;
+		}
+		boolean hasFirstRow = supportsLimitOffset() && ( firstRow > 0 || forceLimitUsage() );
+		boolean reverse = bindLimitParametersInReverseOrder();
+		if ( hasFirstRow ) {
+			statement.setInt( index + ( reverse ? 1 : 0 ), firstRow );
+		}
+		statement.setInt( index + ( reverse || !hasFirstRow ? 0 : 1 ), lastRow );
+		return hasFirstRow ? 2 : 1;
 	}
 }

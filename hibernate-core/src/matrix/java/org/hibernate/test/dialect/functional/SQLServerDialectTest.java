@@ -27,11 +27,13 @@
 package org.hibernate.test.dialect.functional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.LockMode;
@@ -40,7 +42,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.dialect.SQLServer2005Dialect;
 import org.hibernate.exception.SQLGrammarException;
-import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.jdbc.ReturningWork;
 import org.hibernate.testing.RequiresDialect;
 import org.hibernate.testing.TestForIssue;
@@ -55,9 +56,8 @@ import org.junit.Test;
  */
 @RequiresDialect(value = { SQLServer2005Dialect.class })
 public class SQLServerDialectTest extends BaseCoreFunctionalTestCase {
-
-	@TestForIssue(jiraKey = "HHH-7198")
 	@Test
+	@TestForIssue(jiraKey = "HHH-7198")
 	public void testMaxResultsSqlServerWithCaseSensitiveCollation() throws Exception {
 
 		Session s = openSession();
@@ -92,10 +92,7 @@ public class SQLServerDialectTest extends BaseCoreFunctionalTestCase {
 		Transaction tx = s.beginTransaction();
 
 		for ( int i = 1; i <= 20; i++ ) {
-			Product2 kit = new Product2();
-			kit.id = i;
-			kit.description = "Kit" + i;
-			s.persist( kit );
+			s.persist( new Product2( i, "Kit" + i ) );
 		}
 		s.flush();
 		s.clear();
@@ -116,17 +113,14 @@ public class SQLServerDialectTest extends BaseCoreFunctionalTestCase {
 		s.close();
 	}
 
-	@TestForIssue(jiraKey = "HHH-7369")
 	@Test
-	public void testPaginationOnScalarQuery() throws Exception {
+	@TestForIssue(jiraKey = "HHH-7369")
+	public void testPaginationWithScalarQuery() throws Exception {
 		Session s = openSession();
 		Transaction tx = s.beginTransaction();
 
-		for ( int i = 1; i <= 20; i++ ) {
-			Product2 kit = new Product2();
-			kit.id = i;
-			kit.description = "Kit" + i;
-			s.persist( kit );
+		for ( int i = 0; i < 10; i++ ) {
+			s.persist( new Product2( i, "Kit" + i ) );
 		}
 		s.flush();
 		s.clear();
@@ -140,20 +134,66 @@ public class SQLServerDialectTest extends BaseCoreFunctionalTestCase {
 		// same once again with alias
 		list = s.createSQLQuery( "select id as myint from Product2 where description like 'Kit%' order by id asc" ).setFirstResult( 2 ).setMaxResults( 2 ).list();
 		assertEquals(Integer.class, list.get(0).getClass());
+
 		tx.rollback();
 		s.close();
 	}
 
-    @TestForIssue(jiraKey = "HHH-7368")
-    @Test
-    public void testPaginationWithTrailingSemicolon() throws Exception {
-        Session s = openSession();
-        s.createSQLQuery( "select id from Product2 where description like 'Kit%' order by id;" ).setFirstResult( 2 ).setMaxResults( 2 ).list();
-        s.close();
-    }
-
-	@TestForIssue(jiraKey = "HHH-3961")
 	@Test
+	@TestForIssue(jiraKey = "HHH-7368")
+	public void testPaginationWithTrailingSemicolon() throws Exception {
+		Session s = openSession();
+		s.createSQLQuery( "select id from Product2 where description like 'Kit%' order by id;" )
+				.setFirstResult( 2 ).setMaxResults( 2 ).list();
+		s.close();
+	}
+
+	@Test
+	public void testPaginationWithHQLProjection() {
+		Session session = openSession();
+		Transaction tx = session.beginTransaction();
+
+		for ( int i = 10; i < 20; i++ ) {
+			session.persist( new Product2( i, "Kit" + i ) );
+		}
+		session.flush();
+		session.clear();
+
+		List list = session.createQuery(
+				"select id, description as descr, (select max(id) from Product2) as maximum from Product2"
+		).setFirstResult( 2 ).setMaxResults( 2 ).list();
+		assertEquals( 19, ( (Object[]) list.get( 1 ) )[2] );
+
+		list = session.createQuery( "select id, description, (select max(id) from Product2) from Product2 order by id" )
+				.setFirstResult( 2 ).setMaxResults( 2 ).list();
+		assertEquals( 2, list.size() );
+		assertArrayEquals( new Object[] {12, "Kit12", 19}, (Object[]) list.get( 0 ));
+		assertArrayEquals( new Object[] {13, "Kit13", 19}, (Object[]) list.get( 1 ));
+
+		tx.rollback();
+		session.close();
+	}
+
+	@Test
+	public void testPaginationWithHQL() {
+		Session session = openSession();
+		Transaction tx = session.beginTransaction();
+
+		for ( int i = 20; i < 30; i++ ) {
+			session.persist( new Product2( i, "Kit" + i ) );
+		}
+		session.flush();
+		session.clear();
+
+		List list = session.createQuery( "from Product2 order by id" ).setFirstResult( 3 ).setMaxResults( 2 ).list();
+		assertEquals( Arrays.asList( new Product2( 23, "Kit23" ), new Product2( 24, "Kit24" ) ), list );
+
+		tx.rollback();
+		session.close();
+	}
+
+	@Test
+	@TestForIssue(jiraKey = "HHH-3961")
 	public void testLockNowaitSqlServer() throws Exception {
 		Session s = openSession();
 		s.beginTransaction();

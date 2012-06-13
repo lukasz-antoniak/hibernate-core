@@ -53,6 +53,7 @@ import org.hibernate.cache.spi.QueryCache;
 import org.hibernate.cache.spi.QueryKey;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.SQLServer2005Dialect;
 import org.hibernate.engine.internal.TwoPhaseLoad;
 import org.hibernate.engine.jdbc.ColumnNameCache;
 import org.hibernate.engine.spi.EntityKey;
@@ -1718,8 +1719,11 @@ public abstract class Loader {
 
 			int col = 1;
 			//TODO: can we limit stored procedures ?!
-			if ( useLimit && dialect.bindLimitParametersFirst() ) {
-				col += bindLimitParameters( st, col, selection );
+			if ( useLimit ) {
+				col += dialect.bindLimitParametersPreQuery(
+						sql, st, col, interpretFirstRow( getFirstRow( selection ) ),
+						getMaxOrLimit( selection, dialect )
+				);
 			}
 			if (callable) {
 				col = dialect.registerResultSetOutParameter( (CallableStatement)st, col );
@@ -1727,8 +1731,11 @@ public abstract class Loader {
 
 			col += bindParameterValues( st, queryParameters, col, session );
 
-			if ( useLimit && !dialect.bindLimitParametersFirst() ) {
-				col += bindLimitParameters( st, col, selection );
+			if ( useLimit ) {
+				col += dialect.bindLimitParametersPostQuery(
+						sql, st, col, interpretFirstRow( getFirstRow( selection ) ),
+						getMaxOrLimit( selection, dialect )
+				);
 			}
 
 			if ( !useLimit ) {
@@ -1789,37 +1796,6 @@ public abstract class Loader {
 		final int firstRow = dialect.convertToFirstRowValue( getFirstRow( selection ) );
 		final int lastRow = selection.getMaxRows();
 		return dialect.useMaxForLimit() ? lastRow + firstRow : lastRow;
-	}
-
-	/**
-	 * Bind parameter values needed by the dialect-specific LIMIT clause.
-	 *
-	 * @param statement The statement to which to bind limit param values.
-	 * @param index The bind position from which to start binding
-	 * @param selection The selection object containing the limit information.
-	 * @return The number of parameter values bound.
-	 * @throws java.sql.SQLException Indicates problems binding parameter values.
-	 */
-	private int bindLimitParameters(
-			final PreparedStatement statement,
-			final int index,
-			final RowSelection selection) throws SQLException {
-		Dialect dialect = getFactory().getDialect();
-		if ( !dialect.supportsVariableLimit() ) {
-			return 0;
-		}
-		if ( !hasMaxRows( selection ) ) {
-			throw new AssertionFailure( "no max results set" );
-		}
-		int firstRow = interpretFirstRow( getFirstRow( selection ) );
-		int lastRow = getMaxOrLimit( selection, dialect );
-		boolean hasFirstRow = dialect.supportsLimitOffset() && ( firstRow > 0 || dialect.forceLimitUsage() );
-		boolean reverse = dialect.bindLimitParametersInReverseOrder();
-		if ( hasFirstRow ) {
-			statement.setInt( index + ( reverse ? 1 : 0 ), firstRow );
-		}
-		statement.setInt( index + ( reverse || !hasFirstRow ? 0 : 1 ), lastRow );
-		return hasFirstRow ? 2 : 1;
 	}
 
 	/**

@@ -23,6 +23,7 @@
  */
 package org.hibernate.dialect;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.LinkedList;
@@ -113,13 +114,11 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 	 *
 	 * <pre>
 	 * WITH query AS (
-	 *   original_select_clause_without_distinct_and_order_by,
-	 *   ROW_NUMBER() OVER ([ORDER BY CURRENT_TIMESTAMP | original_order_by_clause]) as __hibernate_row_nr__
-	 *   original_from_clause
-	 *   original_where_clause
-	 *   group_by_if_originally_select_distinct
+	 *   SELECT inner_query.*
+	 *        , ROW_NUMBER() OVER (ORDER BY CURRENT_TIMESTAMP) as __hibernate_row_nr__
+	 *     FROM ( original_query_with_top_if_order_by_present_and_all_aliased_columns ) inner_query
 	 * )
-	 * SELECT * FROM query WHERE __hibernate_row_nr__ >= offset AND __hibernate_row_nr__ < offset + last
+	 * SELECT alias_list FROM query WHERE __hibernate_row_nr__ >= offset AND __hibernate_row_nr__ < offset + last
 	 * </pre>
 	 *
 	 * @param querySqlString The SQL statement to base the limit query off of.
@@ -138,6 +137,7 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 
 		int orderByIndex = shallowIndexOfWord( sb, ORDER_BY, 0 );
 		if ( orderByIndex > 0 ) {
+			// ORDER BY requires using TOP.
 			addTopExpression( sb );
 		}
 
@@ -150,6 +150,22 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 		return sb.toString();
 	}
 
+	@Override
+	public int bindLimitParametersPreQuery(String sql, PreparedStatement statement, int index, int firstRow, int lastRow)
+			throws SQLException {
+		if ( sql.contains( " " + ORDER_BY + " " ) ) {
+			statement.setInt( index, lastRow ); // Binding TOP(?).
+			return 1;
+		}
+		return 0;
+	}
+
+	/**
+	 * Adds missing aliases in provided SELECT clause and returns coma-separated list of them.
+	 * 
+	 * @param sb SQL query.
+	 * @return List of aliases separated with comas.
+	 */
 	protected String fillAliasInSelectClause(StringBuilder sb) {
 		final List<String> aliases = new LinkedList<String>();
 		final int startPos = shallowIndexOf( sb, SELECT_WITH_SPACE, 0 );
@@ -166,7 +182,7 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 				String expression = sb.substring( prevComa, nextComa );
 				String alias = getAlias( expression );
 				if ( alias == null ) {
-					// Inserting alias.
+					// Inserting alias. It is unlikely that we would have to add alias, but just in case.
 					alias = StringHelper.generateAlias( "page", unique );
 					sb.insert( nextComa, " as " + alias );
 					++unique;
@@ -181,7 +197,7 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 		String expression = sb.substring( prevComa, endPos );
 		String alias = getAlias( expression );
 		if ( alias == null ) {
-			// Inserting alias.
+			// Inserting alias. It is unlikely that we would have to add alias, but just in case.
 			alias = StringHelper.generateAlias( "page", unique );
 			sb.insert( endPos - 1, " as " + alias );
 		}
@@ -190,6 +206,13 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 		return StringHelper.join( ", ", aliases.iterator() );
 	}
 
+	/**
+	 * Returns alias of provided single column selection or {@code null} if not found.
+	 * Alias should be preceded with {@code AS} keyword.
+	 *
+	 * @param expression Single column select expression.
+	 * @return Column alias.
+	 */
 	private String getAlias(String expression) {
 		Matcher matcher = ALIAS_PATTERN.matcher( expression );
 		if ( matcher.find() ) {
@@ -198,20 +221,31 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 		return null;
 	}
 
+	/**
+	 * Encloses original SQL statement with outer query that provides {@literal __hibernate_row_nr__} column.
+	 * 
+	 * @param sql SQL query.
+	 */
 	protected void encloseWithOuterQuery(StringBuilder sql) {
 		sql.insert( 0, "SELECT inner_query.*, ROW_NUMBER() OVER (ORDER BY CURRENT_TIMESTAMP) as __hibernate_row_nr__ FROM ( " );
 		sql.append( " ) inner_query " );
 	}
 
+	/**
+	 * Adds {@code TOP} expression. Parameter value is bind in
+	 * {@link #bindLimitParametersPreQuery(String, PreparedStatement, int, int, int)} method. 
+	 *
+	 * @param sql SQL query.
+	 */
 	protected void addTopExpression(StringBuilder sql) {
 		final int distinctStartPos = shallowIndexOfWord( sql, DISTINCT, 0 );
 		if (distinctStartPos > 0) {
 			// Place TOP after DISTINCT.
-			sql.insert( distinctStartPos + DISTINCT.length(), " TOP(100)PERCENT" );
+			sql.insert( distinctStartPos + DISTINCT.length(), " TOP(?)" );
 		} else {
 			final int selectStartPos = shallowIndexOf( sql, SELECT_WITH_SPACE, 0 );
 			// Place TOP after SELECT.
-			sql.insert( selectStartPos + SELECT.length(), " TOP(100)PERCENT" );
+			sql.insert( selectStartPos + SELECT.length(), " TOP(?)" );
 		}
 	}
 
