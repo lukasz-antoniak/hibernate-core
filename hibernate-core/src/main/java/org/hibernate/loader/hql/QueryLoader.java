@@ -38,6 +38,7 @@ import org.hibernate.LockOptions;
 import org.hibernate.QueryException;
 import org.hibernate.ScrollableResults;
 import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.pagination.LimitHandler;
 import org.hibernate.engine.spi.QueryParameters;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SessionImplementor;
@@ -487,11 +488,12 @@ public class QueryLoader extends BasicLoader {
 		}
 
 		try {
-			final PreparedStatement st = prepareQueryStatement( queryParameters, false, session );
+			final LimitHandler limitHandler = getFactory().getDialect().getLimitHandler( queryParameters.getRowSelection() );
+			final PreparedStatement st = prepareQueryStatement( queryParameters, false, session, limitHandler );
 			if ( queryParameters.isCallable() ) {
 				throw new QueryException("iterate() not supported for callable statements");
 			}
-			final ResultSet rs = getResultSet(st, queryParameters.hasAutoDiscoverScalarTypes(), false, queryParameters.getRowSelection(), session);
+			final ResultSet rs = getResultSet( st, queryParameters.hasAutoDiscoverScalarTypes(), false, queryParameters.getRowSelection(), session, limitHandler );
 			final Iterator result = new IteratorImpl(
 					rs,
 			        st,
