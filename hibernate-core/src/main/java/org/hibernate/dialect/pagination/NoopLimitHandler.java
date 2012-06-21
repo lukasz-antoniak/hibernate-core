@@ -6,9 +6,11 @@ import java.sql.SQLException;
 import org.hibernate.engine.spi.RowSelection;
 
 /**
+ * Handler not supporting query LIMIT clause. JDBC API is used to set maximum number of returned rows.
+ *
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
-public class NoopLimitHandler extends DefaultLimitHandler {
+public class NoopLimitHandler extends AbstractLimitHandler {
 	public static final NoopLimitHandler INSTANCE = new NoopLimitHandler();
 
 	public String getProcessedSql(String sql, RowSelection selection) {

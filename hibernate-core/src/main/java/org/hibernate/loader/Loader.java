@@ -1870,7 +1870,7 @@ public abstract class Loader {
 			rs = st.executeQuery();
 			rs = wrapResultSetIfEnabled( rs , session );
 
-			if ( !limitHandler.supportsLimitOffset() || !limitHandler.useLimit( selection ) ) {
+			if ( !limitHandler.supportsLimitOffset() || !( limitHandler.supportsLimit() && LimitHelper.hasMaxRows( selection ) ) ) {
 				advance( rs, selection );
 			}
 

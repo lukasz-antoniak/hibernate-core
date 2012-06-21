@@ -13,7 +13,7 @@ import org.hibernate.internal.util.StringHelper;
 /**
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
-public class SQLServer2005LimitHandler extends DefaultLimitHandler {
+public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 	private static final String SELECT = "select";
 	private static final String SELECT_WITH_SPACE = SELECT + ' ';
 	private static final String FROM = "from";
@@ -23,6 +23,16 @@ public class SQLServer2005LimitHandler extends DefaultLimitHandler {
 	private static final Pattern ALIAS_PATTERN = Pattern.compile( "(?i)\\sas\\s(.)+$" );
 
 	private boolean topAdded = false;
+
+	@Override
+	public boolean supportsLimit() {
+		return true;
+	}
+
+	@Override
+	public boolean useMaxForLimit() {
+		return true;
+	}
 
 	@Override
 	public boolean supportsLimitOffset() {
@@ -43,15 +53,6 @@ public class SQLServer2005LimitHandler extends DefaultLimitHandler {
 	public int convertToFirstRowValue(int zeroBasedFirstResult) {
 		// Our dialect paginated results aren't zero based. The first row should get the number 1 and so on
 		return zeroBasedFirstResult + 1;
-	}
-
-	@Override
-	public String getLimitString(String query, int offset, int limit) {
-		// We transform the query to one with an offset and limit if we have an offset and limit to bind
-		if ( offset > 1 || limit > 1 ) {
-			return getLimitString( query, true );
-		}
-		return query;
 	}
 
 	/**
@@ -174,19 +175,16 @@ public class SQLServer2005LimitHandler extends DefaultLimitHandler {
 	 * @param sql SQL query.
 	 */
 	protected void encloseWithOuterQuery(StringBuilder sql) {
-		sql.insert(
-				0,
-				"SELECT inner_query.*, ROW_NUMBER() OVER (ORDER BY CURRENT_TIMESTAMP) as __hibernate_row_nr__ FROM ( "
-		);
+		sql.insert( 0, "SELECT inner_query.*, ROW_NUMBER() OVER (ORDER BY CURRENT_TIMESTAMP) as __hibernate_row_nr__ FROM ( " );
 		sql.append( " ) inner_query " );
 	}
 
-//	/**
-//	 * Adds {@code TOP} expression. Parameter value is bind in
-//	 * {@link #bindLimitParametersAtStartOfQuery(PreparedStatement, int)} method.
-//	 *
-//	 * @param sql SQL query.
-//	 */
+	/**
+	 * Adds {@code TOP} expression. Parameter value is bind in
+	 * {@link #bindLimitParametersAtStartOfQuery(PreparedStatement, RowSelection, int)} method.
+	 *
+	 * @param sql SQL query.
+	 */
 	protected void addTopExpression(StringBuilder sql) {
 		final int distinctStartPos = shallowIndexOfWord( sql, DISTINCT, 0 );
 		if ( distinctStartPos > 0 ) {
