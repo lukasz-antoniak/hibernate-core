@@ -954,7 +954,7 @@ public class QueryTranslatorImpl extends BasicLoader implements FilterTranslator
 		if ( stats ) startTime = System.currentTimeMillis();
 
 		try {
-			final LimitHandler limitHandler = getFactory().getDialect().getLimitHandler( queryParameters.getRowSelection() );
+			final LimitHandler limitHandler = getLimitHandler( queryParameters.getRowSelection() );
 			PreparedStatement st = prepareQueryStatement( queryParameters, false, session, limitHandler );
 			ResultSet rs = getResultSet( st, queryParameters.hasAutoDiscoverScalarTypes(), false, queryParameters.getRowSelection(), session, limitHandler );
 			HolderInstantiator hi = HolderInstantiator.createClassicHolderInstantiator(holderConstructor, queryParameters.getResultTransformer());

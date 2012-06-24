@@ -98,7 +98,7 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 	@Override
 	public int bindLimitParametersAtStartOfQuery(PreparedStatement statement, RowSelection selection, int index) throws SQLException {
 		if ( topAdded ) {
-			statement.setInt( index, getMaxOrLimit( selection ) ); // Binding TOP(?).
+			statement.setInt( index, getMaxOrLimit( selection ) - 1 ); // Binding TOP(?).
 			return 1;
 		}
 		return 0;

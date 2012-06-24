@@ -488,7 +488,7 @@ public class QueryLoader extends BasicLoader {
 		}
 
 		try {
-			final LimitHandler limitHandler = getFactory().getDialect().getLimitHandler( queryParameters.getRowSelection() );
+			final LimitHandler limitHandler = getLimitHandler( queryParameters.getRowSelection() );
 			final PreparedStatement st = prepareQueryStatement( queryParameters, false, session, limitHandler );
 			if ( queryParameters.isCallable() ) {
 				throw new QueryException("iterate() not supported for callable statements");

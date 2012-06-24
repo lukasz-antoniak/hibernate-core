@@ -828,7 +828,7 @@ public abstract class Loader {
 		final int entitySpan = getEntityPersisters().length;
 
 		final ArrayList hydratedObjects = entitySpan == 0 ? null : new ArrayList( entitySpan * 10 );
-		final LimitHandler limitHandler = getFactory().getDialect().getLimitHandler( queryParameters.getRowSelection() );
+		final LimitHandler limitHandler = getLimitHandler( queryParameters.getRowSelection() );
 		final PreparedStatement st = prepareQueryStatement( queryParameters, false, session, limitHandler );
 		final ResultSet rs = getResultSet( st, queryParameters.hasAutoDiscoverScalarTypes(), queryParameters.isCallable(), selection, session, limitHandler );
 
@@ -1650,6 +1650,18 @@ public abstract class Loader {
 		}
 	}
 
+	/**
+	 * Build LIMIT clause handler applicable for given selection criteria. Returns {@link NoopLimitHandler} delegate
+	 * if dialect does not support LIMIT expression or processed query does not use pagination.
+	 *
+	 * @param selection Selection criteria.
+	 * @return LIMIT clause delegate
+	 */
+	protected LimitHandler getLimitHandler(RowSelection selection) {
+		final LimitHandler limitHandler = getFactory().getDialect().buildLimitHandler();
+		return limitHandler.supportsLimit() && LimitHelper.hasMaxRows( selection ) ? limitHandler : NoopLimitHandler.INSTANCE;
+	}
+
 	private ScrollMode getScrollMode(boolean scroll, boolean hasFirstRow, boolean useLimitOffSet, QueryParameters queryParameters) {
 		final boolean canScroll = getFactory().getSettings().isScrollableResultSetsEnabled();
 		if ( canScroll ) {
@@ -1662,6 +1674,7 @@ public abstract class Loader {
 		}
 		return null;
 	}
+
 	/**
 	 * Obtain a <tt>PreparedStatement</tt> with all parameters pre-bound.
 	 * Bind JDBC-style <tt>?</tt> parameters, named parameters, and
@@ -1671,7 +1684,7 @@ public abstract class Loader {
 	        final QueryParameters queryParameters,
 	        final boolean scroll,
 	        final SessionImplementor session,
-			final LimitHandler limitHandler) throws SQLException, HibernateException {
+	        final LimitHandler limitHandler) throws SQLException, HibernateException {
 
 		queryParameters.processFilters( getSQLString(), session );
 		String sql = queryParameters.getFilteredSQL();
@@ -1862,7 +1875,7 @@ public abstract class Loader {
 	        final boolean callable,
 	        final RowSelection selection,
 	        final SessionImplementor session,
-			final LimitHandler limitHandler)
+	        final LimitHandler limitHandler)
 	throws SQLException, HibernateException {
 
 		ResultSet rs = null;
@@ -2422,7 +2435,7 @@ public abstract class Loader {
 		if ( stats ) startTime = System.currentTimeMillis();
 
 		try {
-			final LimitHandler limitHandler = getFactory().getDialect().getLimitHandler( queryParameters.getRowSelection() );
+			final LimitHandler limitHandler = getLimitHandler( queryParameters.getRowSelection() );
 			PreparedStatement st = prepareQueryStatement( queryParameters, true, session, limitHandler );
 			ResultSet rs = getResultSet( st, queryParameters.hasAutoDiscoverScalarTypes(), queryParameters.isCallable(), queryParameters.getRowSelection(), session, limitHandler );
 

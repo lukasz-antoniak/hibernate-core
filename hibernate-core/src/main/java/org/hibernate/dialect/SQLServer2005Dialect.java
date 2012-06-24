@@ -75,7 +75,7 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 	}
 
 	@Override
-	protected LimitHandler buildLimitHandler() {
+	public LimitHandler buildLimitHandler() {
 		return new SQLServer2005LimitHandler();
 	}
 

@@ -126,7 +126,7 @@ public abstract class AbstractLimitHandler implements LimitHandler {
 	 */
 	protected int bindLimitParameters(PreparedStatement statement, RowSelection selection, int index)
 			throws SQLException {
-		if ( !supportsVariableLimit() || selection == null ) {
+		if ( !supportsVariableLimit() || !LimitHelper.hasMaxRows( selection ) ) {
 			return 0;
 		}
 		int firstRow = convertToFirstRowValue( LimitHelper.getFirstRow( selection ) );

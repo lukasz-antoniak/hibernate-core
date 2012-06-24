@@ -60,10 +60,7 @@ import org.hibernate.dialect.lock.PessimisticWriteSelectLockingStrategy;
 import org.hibernate.dialect.lock.SelectLockingStrategy;
 import org.hibernate.dialect.pagination.LegacyLimitHandler;
 import org.hibernate.dialect.pagination.LimitHandler;
-import org.hibernate.dialect.pagination.LimitHelper;
-import org.hibernate.dialect.pagination.NoopLimitHandler;
 import org.hibernate.engine.jdbc.LobCreator;
-import org.hibernate.engine.spi.RowSelection;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.exception.spi.ConversionContext;
 import org.hibernate.exception.spi.SQLExceptionConversionDelegate;
@@ -1086,22 +1083,11 @@ public abstract class Dialect implements ConversionContext {
 	}
 
 	/**
-	 * Build LIMIT clause handler applicable for given selection criteria.
-	 *
-	 * @param selection Selection criteria.
-	 * @return LIMIT clause delegate
-	 */
-	public LimitHandler getLimitHandler(RowSelection selection) {
-		final LimitHandler limitHandler = buildLimitHandler();
-		return limitHandler.supportsLimit() && LimitHelper.hasMaxRows( selection ) ? limitHandler : NoopLimitHandler.INSTANCE;
-	}
-
-	/**
 	 * Build delegate managing LIMIT clause.
 	 *
 	 * @return LIMIT clause delegate.
 	 */
-	protected LimitHandler buildLimitHandler() {
+	public LimitHandler buildLimitHandler() {
 		return new LegacyLimitHandler( this );
 	}
 
