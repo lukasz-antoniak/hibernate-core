@@ -22,7 +22,8 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 
 	private static final Pattern ALIAS_PATTERN = Pattern.compile( "(?i)\\sas\\s(.)+$" );
 
-	private boolean topAdded = false;
+	private boolean topAdded = false; // Flag indicating whether TOP(?) expression has been added to the original query.
+	private boolean hasLowerLimit = true; // True if offset greater than 0.
 
 	@Override
 	public boolean supportsLimit() {
@@ -69,6 +70,8 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 	 * SELECT alias_list FROM query WHERE __hibernate_row_nr__ >= offset AND __hibernate_row_nr__ < offset + last
 	 * </pre>
 	 *
+	 * When offset equals {@literal 0}, only {@literal TOP(?)} expression is added to the original query.
+	 *
 	 * @return A new SQL statement with the LIMIT clause applied.
 	 */
 	@Override
@@ -78,19 +81,25 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 			sb.setLength( sb.length() - 1 );
 		}
 
-		final String selectClause = fillAliasInSelectClause( sb );
+		if ( LimitHelper.getFirstRow( selection ) > 0 ) {
+			final String selectClause = fillAliasInSelectClause( sb );
 
-		int orderByIndex = shallowIndexOfWord( sb, ORDER_BY, 0 );
-		if ( orderByIndex > 0 ) {
-			// ORDER BY requires using TOP.
+			int orderByIndex = shallowIndexOfWord( sb, ORDER_BY, 0 );
+			if ( orderByIndex > 0 ) {
+				// ORDER BY requires using TOP.
+				addTopExpression( sb );
+			}
+
+			encloseWithOuterQuery( sb );
+
+			// Wrap the query within a with statement:
+			sb.insert( 0, "WITH query AS (" ).append( ") SELECT " ).append( selectClause ).append( " FROM query " );
+			sb.append( "WHERE __hibernate_row_nr__ >= ? AND __hibernate_row_nr__ < ?" );
+		}
+		else {
+			hasLowerLimit = false;
 			addTopExpression( sb );
 		}
-
-		encloseWithOuterQuery( sb );
-
-		// Wrap the query within a with statement:
-		sb.insert( 0, "WITH query AS (" ).append( ") SELECT " ).append( selectClause ).append( " FROM query " );
-		sb.append( "WHERE __hibernate_row_nr__ >= ? AND __hibernate_row_nr__ < ?" );
 
 		return sb.toString();
 	}
@@ -102,6 +111,11 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 			return 1;
 		}
 		return 0;
+	}
+
+	@Override
+	public int bindLimitParametersAtEndOfQuery(PreparedStatement statement, RowSelection selection, int index) throws SQLException {
+		return hasLowerLimit ? super.bindLimitParametersAtEndOfQuery( statement, selection, index ) : 0;
 	}
 
 	/**

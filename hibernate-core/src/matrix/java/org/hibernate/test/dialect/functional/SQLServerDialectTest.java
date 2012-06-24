@@ -193,6 +193,28 @@ public class SQLServerDialectTest extends BaseCoreFunctionalTestCase {
 	}
 
 	@Test
+	@TestForIssue(jiraKey = "HHH-7370")
+	public void testPaginationWithMaxOnly() {
+		Session session = openSession();
+		Transaction tx = session.beginTransaction();
+
+		for ( int i = 30; i < 40; i++ ) {
+			session.persist( new Product2( i, "Kit" + i ) );
+		}
+		session.flush();
+		session.clear();
+
+		List list = session.createQuery( "from Product2 order by id" ).setFirstResult( 0 ).setMaxResults( 2 ).list();
+		assertEquals( Arrays.asList( new Product2( 30, "Kit30" ), new Product2( 31, "Kit31" ) ), list );
+
+		list = session.createQuery( "select distinct p from Product2 p order by p.id" ).setMaxResults( 1 ).list();
+		assertEquals( Arrays.asList( new Product2( 30, "Kit30" ) ), list );
+
+		tx.rollback();
+		session.close();
+	}
+
+	@Test
 	@TestForIssue(jiraKey = "HHH-3961")
 	public void testLockNowaitSqlServer() throws Exception {
 		Session s = openSession();
@@ -263,5 +285,4 @@ public class SQLServerDialectTest extends BaseCoreFunctionalTestCase {
 				Product2.class
 		};
 	}
-
 }
