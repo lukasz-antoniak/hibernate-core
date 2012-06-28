@@ -49,7 +49,7 @@ public class LegacyLimitHandler extends AbstractLimitHandler {
 	}
 
 	public String getProcessedSql() {
-		boolean hasFirstRow = LimitHelper.getFirstRow( selection ) > 0;
+		boolean hasFirstRow = LimitHelper.hasFirstRow( selection );
 		boolean useLimitOffset = hasFirstRow && supportsLimit() && supportsLimitOffset() && LimitHelper.hasMaxRows( selection );
 		return dialect.getLimitString( sql, useLimitOffset ? LimitHelper.getFirstRow( selection ) : 0, getMaxOrLimit() );
 	}

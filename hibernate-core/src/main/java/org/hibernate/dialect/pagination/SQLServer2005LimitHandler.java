@@ -85,7 +85,7 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 			sb.setLength( sb.length() - 1 );
 		}
 
-		if ( LimitHelper.getFirstRow( selection ) > 0 ) {
+		if ( LimitHelper.hasFirstRow( selection ) ) {
 			final String selectClause = fillAliasInSelectClause( sb );
 
 			int orderByIndex = shallowIndexOfWord( sb, ORDER_BY, 0 );
