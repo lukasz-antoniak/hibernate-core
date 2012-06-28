@@ -29,43 +29,38 @@ public interface LimitHandler {
 	public boolean supportsLimitOffset();
 
 	/**
-	 * Given a selection criteria, apply the limit clause to the query.
+	 * Return processed SQL query.
 	 *
-	 * @param sql SQL query.
-	 * @param selection Selection criteria.
-	 * @return The modified query statement with the limit applied.
+	 * @return Query statement with LIMIT clause applied.
 	 */
-	public String getProcessedSql(String sql, RowSelection selection);
+	public String getProcessedSql();
 
 	/**
 	 * Bind parameter values needed by the LIMIT clause before original SELECT statement.
 	 *
 	 * @param statement Statement to which to bind limit parameter values.
-	 * @param selection Selection criteria.
 	 * @param index Index from which to start binding.
 	 * @return The number of parameter values bound.
 	 * @throws SQLException Indicates problems binding parameter values.
 	 */
-	public int bindLimitParametersAtStartOfQuery(PreparedStatement statement, RowSelection selection, int index) throws SQLException;
+	public int bindLimitParametersAtStartOfQuery(PreparedStatement statement, int index) throws SQLException;
 
 	/**
 	 * Bind parameter values needed by the LIMIT clause after original SELECT statement.
 	 *
 	 * @param statement Statement to which to bind limit parameter values.
-	 * @param selection Selection criteria.
 	 * @param index Index from which to start binding.
 	 * @return The number of parameter values bound.
 	 * @throws SQLException Indicates problems binding parameter values.
 	 */
-	public int bindLimitParametersAtEndOfQuery(PreparedStatement statement, RowSelection selection, int index) throws SQLException;
+	public int bindLimitParametersAtEndOfQuery(PreparedStatement statement, int index) throws SQLException;
 
 	/**
 	 * Use JDBC API to limit the number of rows returned by the SQL query. Typically handlers that do not
 	 * support LIMIT clause should implement this method.
 	 *
 	 * @param statement Statement which number of returned rows shall be limited.
-	 * @param selection Selection criteria. {@code null} in case of unlimited number of rows.
 	 * @throws SQLException Indicates problems while limiting maximum rows returned.
 	 */
-	public void setMaxRows(PreparedStatement statement, RowSelection selection) throws SQLException;
+	public void setMaxRows(PreparedStatement statement) throws SQLException;
 }

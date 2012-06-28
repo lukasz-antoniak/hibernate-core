@@ -11,7 +11,8 @@ import org.hibernate.engine.spi.RowSelection;
 public class LegacyLimitHandler extends AbstractLimitHandler {
 	private final Dialect dialect;
 
-	public LegacyLimitHandler(Dialect dialect) {
+	public LegacyLimitHandler(Dialect dialect, String sql, RowSelection selection) {
+		super( sql, selection );
 		this.dialect = dialect;
 	}
 
@@ -47,9 +48,9 @@ public class LegacyLimitHandler extends AbstractLimitHandler {
 		return dialect.convertToFirstRowValue( zeroBasedFirstResult );
 	}
 
-	public String getProcessedSql(String sql, RowSelection selection) {
+	public String getProcessedSql() {
 		boolean hasFirstRow = LimitHelper.getFirstRow( selection ) > 0;
 		boolean useLimitOffset = hasFirstRow && supportsLimit() && supportsLimitOffset() && LimitHelper.hasMaxRows( selection );
-		return dialect.getLimitString( sql, useLimitOffset ? LimitHelper.getFirstRow( selection ) : 0, getMaxOrLimit( selection ) );
+		return dialect.getLimitString( sql, useLimitOffset ? LimitHelper.getFirstRow( selection ) : 0, getMaxOrLimit() );
 	}
 }

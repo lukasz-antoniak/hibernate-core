@@ -75,8 +75,8 @@ public class SQLServer2005Dialect extends SQLServerDialect {
 	}
 
 	@Override
-	public LimitHandler buildLimitHandler() {
-		return new SQLServer2005LimitHandler();
+	public LimitHandler buildLimitHandler(String sql, RowSelection selection) {
+		return new SQLServer2005LimitHandler( sql, selection );
 	}
 
 	@Override // since SQLServer2005 the nowait hint is supported

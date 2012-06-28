@@ -23,7 +23,11 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 	private static final Pattern ALIAS_PATTERN = Pattern.compile( "(?i)\\sas\\s(.)+$" );
 
 	private boolean topAdded = false; // Flag indicating whether TOP(?) expression has been added to the original query.
-	private boolean hasLowerLimit = true; // True if offset greater than 0.
+	private boolean hasOffset = true; // True if offset greater than 0.
+
+	public SQLServer2005LimitHandler(String sql, RowSelection selection) {
+		super( sql, selection );
+	}
 
 	@Override
 	public boolean supportsLimit() {
@@ -75,7 +79,7 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 	 * @return A new SQL statement with the LIMIT clause applied.
 	 */
 	@Override
-	public String getProcessedSql(String sql, RowSelection selection) {
+	public String getProcessedSql() {
 		StringBuilder sb = new StringBuilder( sql );
 		if ( sb.charAt( sb.length() - 1 ) == ';' ) {
 			sb.setLength( sb.length() - 1 );
@@ -97,7 +101,7 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 			sb.append( "WHERE __hibernate_row_nr__ >= ? AND __hibernate_row_nr__ < ?" );
 		}
 		else {
-			hasLowerLimit = false;
+			hasOffset = false;
 			addTopExpression( sb );
 		}
 
@@ -105,17 +109,17 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 	}
 
 	@Override
-	public int bindLimitParametersAtStartOfQuery(PreparedStatement statement, RowSelection selection, int index) throws SQLException {
+	public int bindLimitParametersAtStartOfQuery(PreparedStatement statement, int index) throws SQLException {
 		if ( topAdded ) {
-			statement.setInt( index, getMaxOrLimit( selection ) - 1 ); // Binding TOP(?).
+			statement.setInt( index, getMaxOrLimit() - 1 ); // Binding TOP(?).
 			return 1;
 		}
 		return 0;
 	}
 
 	@Override
-	public int bindLimitParametersAtEndOfQuery(PreparedStatement statement, RowSelection selection, int index) throws SQLException {
-		return hasLowerLimit ? super.bindLimitParametersAtEndOfQuery( statement, selection, index ) : 0;
+	public int bindLimitParametersAtEndOfQuery(PreparedStatement statement, int index) throws SQLException {
+		return hasOffset ? super.bindLimitParametersAtEndOfQuery( statement, index ) : 0;
 	}
 
 	/**
@@ -195,7 +199,7 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 
 	/**
 	 * Adds {@code TOP} expression. Parameter value is bind in
-	 * {@link #bindLimitParametersAtStartOfQuery(PreparedStatement, RowSelection, int)} method.
+	 * {@link #bindLimitParametersAtStartOfQuery(PreparedStatement, int)} method.
 	 *
 	 * @param sql SQL query.
 	 */

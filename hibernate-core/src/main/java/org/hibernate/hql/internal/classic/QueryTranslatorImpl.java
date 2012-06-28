@@ -48,7 +48,6 @@ import org.hibernate.MappingException;
 import org.hibernate.QueryException;
 import org.hibernate.ScrollableResults;
 import org.hibernate.dialect.Dialect;
-import org.hibernate.dialect.pagination.LimitHandler;
 import org.hibernate.engine.internal.JoinSequence;
 import org.hibernate.engine.spi.QueryParameters;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -954,9 +953,8 @@ public class QueryTranslatorImpl extends BasicLoader implements FilterTranslator
 		if ( stats ) startTime = System.currentTimeMillis();
 
 		try {
-			final LimitHandler limitHandler = getLimitHandler( queryParameters.getRowSelection() );
-			PreparedStatement st = prepareQueryStatement( queryParameters, false, session, limitHandler );
-			ResultSet rs = getResultSet( st, queryParameters.hasAutoDiscoverScalarTypes(), false, queryParameters.getRowSelection(), session, limitHandler );
+			final ResultSet rs = executeQueryStatement( queryParameters, false, session );
+			final PreparedStatement st = (PreparedStatement) rs.getStatement();
 			HolderInstantiator hi = HolderInstantiator.createClassicHolderInstantiator(holderConstructor, queryParameters.getResultTransformer());
 			Iterator result = new IteratorImpl( rs, st, session, queryParameters.isReadOnly( session ), returnTypes, getColumnNames(), hi );
 

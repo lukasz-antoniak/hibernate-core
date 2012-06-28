@@ -11,21 +11,23 @@ import org.hibernate.engine.spi.RowSelection;
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
 public class NoopLimitHandler extends AbstractLimitHandler {
-	public static final NoopLimitHandler INSTANCE = new NoopLimitHandler();
+	public NoopLimitHandler(String sql, RowSelection selection) {
+		super( sql, selection );
+	}
 
-	public String getProcessedSql(String sql, RowSelection selection) {
+	public String getProcessedSql() {
 		return sql;
 	}
 
-	public int bindLimitParametersAtStartOfQuery(PreparedStatement statement, RowSelection selection, int index) {
+	public int bindLimitParametersAtStartOfQuery(PreparedStatement statement, int index) {
 		return 0;
 	}
 
-	public int bindLimitParametersAtEndOfQuery(PreparedStatement statement, RowSelection selection, int index) {
+	public int bindLimitParametersAtEndOfQuery(PreparedStatement statement, int index) {
 		return 0;
 	}
 
-	public void setMaxRows(PreparedStatement statement, RowSelection selection) throws SQLException {
+	public void setMaxRows(PreparedStatement statement) throws SQLException {
 		if ( LimitHelper.hasMaxRows( selection ) ) {
 			statement.setMaxRows( selection.getMaxRows() + convertToFirstRowValue( LimitHelper.getFirstRow( selection ) ) );
 		}
