@@ -492,7 +492,6 @@ public class QueryLoader extends BasicLoader {
 			}
 			final ResultSet rs = executeQueryStatement( queryParameters, false, session );
 			final PreparedStatement st = (PreparedStatement) rs.getStatement();
-
 			final Iterator result = new IteratorImpl(
 					rs,
 			        st,

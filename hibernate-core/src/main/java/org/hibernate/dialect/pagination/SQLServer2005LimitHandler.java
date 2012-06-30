@@ -11,6 +11,8 @@ import org.hibernate.engine.spi.RowSelection;
 import org.hibernate.internal.util.StringHelper;
 
 /**
+ * LIMIT clause handler compatible with SQL Server 2005 and later.
+ *
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
 public class SQLServer2005LimitHandler extends AbstractLimitHandler {

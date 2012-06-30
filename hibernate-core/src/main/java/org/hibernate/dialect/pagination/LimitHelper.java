@@ -6,6 +6,10 @@ import org.hibernate.engine.spi.RowSelection;
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
 public class LimitHelper {
+	public static boolean useLimit(LimitHandler limitHandler, RowSelection selection) {
+		return limitHandler.supportsLimit() && hasMaxRows( selection );
+	}
+
 	public static boolean hasFirstRow(RowSelection selection) {
 		return getFirstRow( selection ) > 0;
 	}

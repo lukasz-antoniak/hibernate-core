@@ -1659,7 +1659,7 @@ public abstract class Loader {
 	 */
 	protected LimitHandler getLimitHandler(String sql, RowSelection selection) {
 		final LimitHandler limitHandler = getFactory().getDialect().buildLimitHandler( sql, selection );
-		return limitHandler.supportsLimit() && LimitHelper.hasMaxRows( selection ) ? limitHandler : new NoopLimitHandler( sql, selection );
+		return LimitHelper.useLimit( limitHandler, selection ) ? limitHandler : new NoopLimitHandler( sql, selection );
 	}
 
 	private ScrollMode getScrollMode(boolean scroll, boolean hasFirstRow, boolean useLimitOffSet, QueryParameters queryParameters) {
@@ -1676,8 +1676,8 @@ public abstract class Loader {
 	}
 
 	/**
-	 * Process query filters, apply LIMIT clause, and add lock, hints, comments if necessary. Finally execute
-	 * SQL statement and advance to the first row.
+	 * Process query string by applying filters, LIMIT clause, locks and comments if necessary.
+	 * Finally execute SQL statement and advance to the first row.
 	 */
 	protected ResultSet executeQueryStatement(
 			final QueryParameters queryParameters,
@@ -1690,7 +1690,7 @@ public abstract class Loader {
 		final LimitHandler limitHandler = getLimitHandler( queryParameters.getFilteredSQL(), queryParameters.getRowSelection() );
 		String sql = limitHandler.getProcessedSql();
 
-		// Adding lock, hints and comments.
+		// Adding locks and comments.
 		sql = preprocessSQL( sql, queryParameters, getFactory().getDialect() );
 
 		final PreparedStatement st = prepareQueryStatement( sql, queryParameters, limitHandler, scroll, session );
@@ -1896,7 +1896,7 @@ public abstract class Loader {
 			ResultSet rs = st.executeQuery();
 			rs = wrapResultSetIfEnabled( rs , session );
 
-			if ( !limitHandler.supportsLimitOffset() || !( limitHandler.supportsLimit() && LimitHelper.hasMaxRows( selection ) ) ) {
+			if ( !limitHandler.supportsLimitOffset() || !LimitHelper.useLimit( limitHandler, selection ) ) {
 				advance( rs, selection );
 			}
 
