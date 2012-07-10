@@ -47,11 +47,6 @@ public class SQLServer2005LimitHandler extends AbstractLimitHandler {
 	}
 
 	@Override
-	public boolean bindLimitParametersFirst() {
-		return false;
-	}
-
-	@Override
 	public boolean supportsVariableLimit() {
 		return true;
 	}

@@ -1086,6 +1086,8 @@ public abstract class Dialect implements ConversionContext {
 	/**
 	 * Build delegate managing LIMIT clause.
 	 *
+	 * @param sql SQL query.
+	 * @param selection Selection criteria. {@code null} in case of unlimited number of rows.
 	 * @return LIMIT clause delegate.
 	 */
 	public LimitHandler buildLimitHandler(String sql, RowSelection selection) {

@@ -23,13 +23,8 @@
  */
 package org.hibernate.dialect;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.hibernate.JDBCException;
 import org.hibernate.LockMode;
@@ -40,7 +35,6 @@ import org.hibernate.dialect.pagination.SQLServer2005LimitHandler;
 import org.hibernate.engine.spi.RowSelection;
 import org.hibernate.exception.spi.SQLExceptionConversionDelegate;
 import org.hibernate.internal.util.JdbcExceptionHelper;
-import org.hibernate.internal.util.StringHelper;
 import org.hibernate.type.StandardBasicTypes;
 
 /**
