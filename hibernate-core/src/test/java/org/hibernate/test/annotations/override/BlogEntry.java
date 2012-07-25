@@ -6,11 +6,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Table;
 
 /**
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
 @Entity
+@Table(schema = AssociationOverrideSchemaTest.SCHEMA_NAME)
 @AssociationOverride(name = "tags",
 		joinTable = @JoinTable(name = AssociationOverrideSchemaTest.TABLE_NAME,
 				joinColumns = @JoinColumn(name = AssociationOverrideSchemaTest.ID_COLUMN_NAME),
