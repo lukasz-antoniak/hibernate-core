@@ -185,10 +185,7 @@ public abstract class BaseCoreFunctionalTestCase extends BaseUnitTestCase {
 				if ( !( getDialect() instanceof H2Dialect ) ) {
 					throw new UnsupportedOperationException( "Only H2 dialect supports creation of second schema." );
 				}
-				configuration.setProperty(
-						Environment.URL,
-						configuration.getProperty( Environment.URL ) + ";INIT=CREATE SCHEMA IF NOT EXISTS " + secondSchemaName
-				);
+				Helper.createH2Schema( secondSchemaName, configuration );
 			}
 		}
 		configuration.setProperty( Environment.DIALECT, getDialect().getClass().getName() );
