@@ -25,10 +25,10 @@ public abstract class Entry implements Serializable {
 	private Long id;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-    @JoinTable(name = "TAGS", joinColumns = @JoinColumn(name = "ID"))
-    @Column(name = "KEYWORD")
-    @Fetch(FetchMode.JOIN)
-    private Set<String> tags = new HashSet<String>();
+	@JoinTable(name = "TAGS", joinColumns = @JoinColumn(name = "ID"))
+	@Column(name = "KEYWORD")
+	@Fetch(FetchMode.JOIN)
+	private Set<String> tags = new HashSet<String>();
 
 	@Override
 	public boolean equals(Object o) {
