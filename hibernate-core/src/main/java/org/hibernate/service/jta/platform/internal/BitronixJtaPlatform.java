@@ -24,6 +24,9 @@
 package org.hibernate.service.jta.platform.internal;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.regex.Pattern;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
@@ -51,5 +54,10 @@ public class BitronixJtaPlatform extends AbstractJtaPlatform {
 	@Override
 	protected UserTransaction locateUserTransaction() {
 		return (UserTransaction) jndiService().locate( "java:comp/UserTransaction" );
+	}
+
+	@Override
+	public Collection<Pattern> getCharacteristicJarArchivePatterns() {
+		return Arrays.asList( Pattern.compile( "btm-*.jar" ) );
 	}
 }

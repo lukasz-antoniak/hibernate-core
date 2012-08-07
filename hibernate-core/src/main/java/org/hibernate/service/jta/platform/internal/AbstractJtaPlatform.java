@@ -43,7 +43,7 @@ import org.hibernate.service.spi.ServiceRegistryImplementor;
  * @author Steve Ebersole
  */
 public abstract class AbstractJtaPlatform
-		implements JtaPlatform, Configurable, ServiceRegistryAwareService, TransactionManagerAccess {
+		implements JtaPlatform, Configurable, ServiceRegistryAwareService, TransactionManagerAccess, ClasspathRecognizable {
 	private boolean cacheTransactionManager;
 	private boolean cacheUserTransaction;
 	private ServiceRegistryImplementor serviceRegistry;

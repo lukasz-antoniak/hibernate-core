@@ -24,6 +24,8 @@
 package org.hibernate.service.jta.platform.internal;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.regex.Pattern;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
@@ -93,5 +95,10 @@ public class WebSphereJtaPlatform extends AbstractJtaPlatform {
 	protected UserTransaction locateUserTransaction() {
 		final String utName = webSphereVersion == 5 ? VERSION_5_UT_NAME : VERSION_4_UT_NAME;
 		return (UserTransaction) jndiService().locate( utName );
+	}
+
+	@Override
+	public Collection<Pattern> getCharacteristicJarArchivePatterns() {
+		return null;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 }

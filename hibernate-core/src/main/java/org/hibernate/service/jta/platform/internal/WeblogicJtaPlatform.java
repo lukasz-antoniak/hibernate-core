@@ -23,6 +23,9 @@
  */
 package org.hibernate.service.jta.platform.internal;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.regex.Pattern;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
@@ -44,5 +47,10 @@ public class WeblogicJtaPlatform extends AbstractJtaPlatform {
 	@Override
 	protected UserTransaction locateUserTransaction() {
 		return (UserTransaction) jndiService().locate( UT_NAME );
+	}
+
+	@Override
+	public Collection<Pattern> getCharacteristicJarArchivePatterns() {
+		return Arrays.asList( Pattern.compile( "weblogic.jar" ) );
 	}
 }

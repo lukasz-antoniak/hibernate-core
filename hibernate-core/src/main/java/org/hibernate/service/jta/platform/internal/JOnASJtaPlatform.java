@@ -24,6 +24,8 @@
 package org.hibernate.service.jta.platform.internal;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.regex.Pattern;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
@@ -53,5 +55,10 @@ public class JOnASJtaPlatform extends AbstractJtaPlatform {
 	@Override
 	protected UserTransaction locateUserTransaction() {
 		return (UserTransaction) jndiService().locate( UT_NAME );
+	}
+
+	@Override
+	public Collection<Pattern> getCharacteristicJarArchivePatterns() {
+		return null;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 }

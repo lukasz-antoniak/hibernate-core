@@ -26,6 +26,8 @@ package org.hibernate.service.jta.platform.internal;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Collection;
+import java.util.regex.Pattern;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
@@ -78,6 +80,11 @@ public class WebSphereExtendedJtaPlatform extends AbstractJtaPlatform {
 	public Object getTransactionIdentifier(Transaction transaction) {
 		// WebSphere, however, is not a sane JEE/JTA container...
 		return Integer.valueOf( transaction.hashCode() );
+	}
+
+	@Override
+	public Collection<Pattern> getCharacteristicJarArchivePatterns() {
+		return null;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 
 	public class TransactionManagerAdapter implements TransactionManager {

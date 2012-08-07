@@ -23,6 +23,8 @@
  */
 package org.hibernate.testing.jta;
 
+import java.util.Collection;
+import java.util.regex.Pattern;
 import javax.transaction.Status;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionSynchronizationRegistry;
@@ -128,4 +130,8 @@ public class TestingJtaPlatformImpl extends AbstractJtaPlatform {
 		return synchronizationStrategy;
 	}
 
+	@Override
+	public Collection<Pattern> getCharacteristicJarArchivePatterns() {
+		return null;
+	}
 }

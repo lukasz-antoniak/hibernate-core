@@ -57,13 +57,12 @@ public class JtaPlatformInitiator implements BasicServiceInitiator<JtaPlatform> 
 	@Override
 	@SuppressWarnings( {"unchecked"})
 	public JtaPlatform initiateService(Map configurationValues, ServiceRegistryImplementor registry) {
-		final Object platform = getConfiguredPlatform( configurationValues, registry );
+		// TODO: Register ClasspathJtaPlatformResolver as a service.
+		final JtaPlatform platform = new ClasspathJtaPlatformResolver().resolveJtaPlatform( configurationValues, registry );
 		if ( platform == null ) {
 			return new NoJtaPlatform();
 		}
-		return registry.getService( ConfigurationService.class )
-				.cast( JtaPlatform.class, platform );
-
+		return platform;
 	}
 
 	private Object getConfiguredPlatform(Map configVales, ServiceRegistryImplementor registry) {
