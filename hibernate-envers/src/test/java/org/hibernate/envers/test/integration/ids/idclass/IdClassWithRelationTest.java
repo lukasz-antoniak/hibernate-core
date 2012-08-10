@@ -1,14 +1,13 @@
 package org.hibernate.envers.test.integration.ids.idclass;
 
-import java.util.Arrays;
-import javax.persistence.EntityManager;
-
 import junit.framework.Assert;
-import org.junit.Test;
-
 import org.hibernate.envers.test.BaseEnversJPAFunctionalTestCase;
 import org.hibernate.envers.test.Priority;
 import org.hibernate.testing.TestForIssue;
+import org.junit.Test;
+
+import javax.persistence.EntityManager;
+import java.util.Arrays;
 
 /**
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
@@ -76,13 +75,7 @@ public class IdClassWithRelationTest extends BaseEnversJPAFunctionalTestCase {
         Assert.assertEquals(entity.getId(), ver1.getId());
         Assert.assertEquals(entity.getSampleValue(), ver1.getSampleValue());
         Assert.assertEquals(entity.getType().getType(), ver1.getType().getType());
-        try {
-            Assert.assertEquals(entity.getType().getDescription(), ver1.getType().getDescription());
-            Assert.fail("Above comparison is expected to fail, because Hibernate loads ClassType proxy pointing to the" +
-                    "original data instead of historical value. Requires major changes in Envers identifier mapper " +
-                    "class hierarchy.");
-        } catch (Throwable e) {
-        }
+        Assert.assertEquals(entity.getType().getDescription(), ver1.getType().getDescription());
 
         // given
         entity.setSampleValue("modified data");
