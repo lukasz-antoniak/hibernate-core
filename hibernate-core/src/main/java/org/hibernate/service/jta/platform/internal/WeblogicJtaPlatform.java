@@ -25,7 +25,6 @@ package org.hibernate.service.jta.platform.internal;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.regex.Pattern;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
@@ -50,7 +49,7 @@ public class WeblogicJtaPlatform extends AbstractJtaPlatform {
 	}
 
 	@Override
-	public Collection<Pattern> getCharacteristicJarArchivePatterns() {
-		return Arrays.asList( Pattern.compile( "weblogic.jar" ) );
+	public Collection<String> getCharacteristicClassNames() {
+		return Arrays.asList( "weblogic.Server","com.oracle.classloader.launch.Launcher" );
 	}
 }

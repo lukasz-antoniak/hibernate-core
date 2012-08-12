@@ -23,6 +23,7 @@ import org.hibernate.transaction.TransactionManagerLookup;
 public abstract class AbstractJtaPlatformResolver implements JtaPlatformResolver {
 	private static final CoreMessageLogger LOG = Logger.getMessageLogger(CoreMessageLogger.class, AbstractJtaPlatformResolver.class.getName() );
 
+	// Legacy transaction lookup managers map to JTA platform.
 	protected final Map<String, AbstractJtaPlatform> registeredPlatforms;
 
 	protected AbstractJtaPlatformResolver() {

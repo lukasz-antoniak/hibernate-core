@@ -25,7 +25,6 @@ package org.hibernate.service.jta.platform.internal;
 
 import java.util.Collection;
 import java.util.Properties;
-import java.util.regex.Pattern;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
@@ -61,7 +60,7 @@ public class TransactionManagerLookupBridge extends AbstractJtaPlatform {
 	}
 
 	@Override
-	public Collection<Pattern> getCharacteristicJarArchivePatterns() {
-		return null;
+	public Collection<String> getCharacteristicClassNames() {
+		return null;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 }

@@ -24,7 +24,6 @@
 package org.hibernate.testing.jta;
 
 import java.util.Collection;
-import java.util.regex.Pattern;
 import javax.transaction.Status;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionSynchronizationRegistry;
@@ -131,7 +130,7 @@ public class TestingJtaPlatformImpl extends AbstractJtaPlatform {
 	}
 
 	@Override
-	public Collection<Pattern> getCharacteristicJarArchivePatterns() {
-		return null;
+	public Collection<String> getCharacteristicClassNames() {
+		return null;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 }

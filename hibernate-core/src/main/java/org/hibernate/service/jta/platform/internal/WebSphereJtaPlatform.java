@@ -25,7 +25,6 @@ package org.hibernate.service.jta.platform.internal;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.regex.Pattern;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
@@ -98,7 +97,7 @@ public class WebSphereJtaPlatform extends AbstractJtaPlatform {
 	}
 
 	@Override
-	public Collection<Pattern> getCharacteristicJarArchivePatterns() {
+	public Collection<String> getCharacteristicClassNames() {
 		return null;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 }

@@ -24,7 +24,6 @@
 package org.hibernate.service.jta.platform.internal;
 
 import java.util.Collection;
-import java.util.regex.Pattern;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
@@ -69,7 +68,7 @@ public class JBossStandAloneJtaPlatform extends AbstractJtaPlatform {
 	}
 
 	@Override
-	public Collection<Pattern> getCharacteristicJarArchivePatterns() {
+	public Collection<String> getCharacteristicClassNames() {
 		return null;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 }
