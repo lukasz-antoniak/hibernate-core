@@ -25,6 +25,7 @@ package org.hibernate.envers.entities;
 
 import org.hibernate.envers.configuration.AuditConfiguration;
 import org.hibernate.envers.entities.mapper.id.IdMapper;
+import org.hibernate.envers.entities.mapper.id.MultipleIdMapper;
 import org.hibernate.envers.entities.mapper.relation.lazy.ToOneDelegateSessionImplementor;
 import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.reader.AuditReaderImplementor;
@@ -75,9 +76,11 @@ public class EntityInstantiator {
         IdMapper idMapper = verCfg.getEntCfg().get(entityName).getIdMapper();
         Map originalId = (Map) versionsEntity.get(verCfg.getAuditEntCfg().getOriginalIdPropName());
 
-        // Replace identifier proxies if do not point to audit tables
         // Hacking HHH-4751 issue (@IdClass with @ManyToOne relation mapping inside)
-        replaceNonAuditIdProxies(originalId, revision);
+        if (idMapper instanceof MultipleIdMapper) {
+            // Replace identifier proxies if do not point to audit tables
+            replaceNonAuditIdProxies(originalId, revision);
+        }
 
         Object primaryKey = idMapper.mapToIdFromMap(originalId);
 
