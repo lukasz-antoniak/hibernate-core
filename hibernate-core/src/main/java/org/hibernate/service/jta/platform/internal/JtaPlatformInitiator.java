@@ -23,6 +23,7 @@
  */
 package org.hibernate.service.jta.platform.internal;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jboss.logging.Logger;
@@ -35,6 +36,7 @@ import org.hibernate.service.classloading.spi.ClassLoaderService;
 import org.hibernate.service.config.spi.ConfigurationService;
 import org.hibernate.service.jta.platform.spi.JtaPlatform;
 import org.hibernate.service.jta.platform.spi.JtaPlatformException;
+import org.hibernate.service.jta.platform.spi.JtaPlatformResolver;
 import org.hibernate.service.spi.BasicServiceInitiator;
 import org.hibernate.service.spi.ServiceRegistryImplementor;
 import org.hibernate.transaction.TransactionManagerLookup;
@@ -49,6 +51,27 @@ public class JtaPlatformInitiator implements BasicServiceInitiator<JtaPlatform> 
 
 	private static final CoreMessageLogger LOG = Logger.getMessageLogger(CoreMessageLogger.class, JtaPlatformInitiator.class.getName());
 
+	// Legacy transaction lookup managers map to JTA platform.
+	protected final Map<String, AbstractJtaPlatform> registeredPlatforms;
+
+	public JtaPlatformInitiator() {
+		registeredPlatforms = new LinkedHashMap<String, AbstractJtaPlatform>();
+		registeredPlatforms.put( "org.hibernate.transaction.BESTransactionManagerLookup", new BorlandEnterpriseServerJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.BTMTransactionManagerLookup", new BitronixJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.JBossTransactionManagerLookup", new JBossAppServerJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.JBossTSStandaloneTransactionManagerLookup", new JBossStandAloneJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.JOnASTransactionManagerLookup", new JOnASJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.JOTMTransactionManagerLookup", new JOTMJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.JRun4TransactionManagerLookup", new JRun4JtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.OC4JTransactionManagerLookup", new OC4JJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.OrionTransactionManagerLookup", new OrionJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.ResinTransactionManagerLookup", new ResinJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.SunONETransactionManagerLookup", new SunOneJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.WeblogicTransactionManagerLookup", new WeblogicJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.WebSphereTransactionManagerLookup", new WebSphereJtaPlatform() );
+		registeredPlatforms.put( "org.hibernate.transaction.WebSphereExtendedJTATransactionLookup", new WebSphereExtendedJtaPlatform() );
+	}
+
 	@Override
 	public Class<JtaPlatform> getServiceInitiated() {
 		return JtaPlatform.class;
@@ -57,104 +80,53 @@ public class JtaPlatformInitiator implements BasicServiceInitiator<JtaPlatform> 
 	@Override
 	@SuppressWarnings( {"unchecked"})
 	public JtaPlatform initiateService(Map configurationValues, ServiceRegistryImplementor registry) {
-		// TODO: Register ClasspathJtaPlatformResolver as a service.
-		final JtaPlatform platform = new ClasspathJtaPlatformResolver().resolveJtaPlatform( configurationValues, registry );
-		if ( platform == null ) {
-			return new NoJtaPlatform();
+		// Retrieving configured JTA platform.
+		Object platform = getConfiguredPlatform( configurationValues, registry );
+		if ( platform != null ) {
+			return registry.getService( ConfigurationService.class ).cast( JtaPlatform.class, platform );
 		}
-		return platform;
+
+		// Trying to guess if not configured.
+		JtaPlatform guessedPlatform = registry.getService( JtaPlatformResolver.class )
+				.resolveJtaPlatform( configurationValues, registry, registeredPlatforms.values() );
+		if ( guessedPlatform != null ) {
+			return guessedPlatform;
+		}
+
+		return new NoJtaPlatform();
 	}
 
-	private Object getConfiguredPlatform(Map configVales, ServiceRegistryImplementor registry) {
-		Object platform = configVales.get( AvailableSettings.JTA_PLATFORM );
+	private Object getConfiguredPlatform(Map configurationValues, ServiceRegistryImplementor registry) {
+		Object platform = configurationValues.get( AvailableSettings.JTA_PLATFORM );
 		if ( platform == null ) {
-			final String transactionManagerLookupImplName = (String) configVales.get( Environment.TRANSACTION_MANAGER_STRATEGY );
+			final String transactionManagerLookupImplName = (String) configurationValues.get( Environment.TRANSACTION_MANAGER_STRATEGY );
 			if ( transactionManagerLookupImplName != null ) {
-                LOG.deprecatedTransactionManagerStrategy(TransactionManagerLookup.class.getName(),
-                                                         Environment.TRANSACTION_MANAGER_STRATEGY,
-                                                         JtaPlatform.class.getName(),
-                                                         AvailableSettings.JTA_PLATFORM);
-				platform = mapLegacyClasses( transactionManagerLookupImplName, configVales, registry );
-                LOG.debugf("Mapped %s -> %s", transactionManagerLookupImplName, platform);
+				LOG.deprecatedTransactionManagerStrategy(TransactionManagerLookup.class.getName(),
+						Environment.TRANSACTION_MANAGER_STRATEGY,
+						JtaPlatform.class.getName(),
+						AvailableSettings.JTA_PLATFORM);
+				platform = mapLegacyClasses( transactionManagerLookupImplName, configurationValues, registry );
+				LOG.debugf("Mapped legacy class %s -> %s", transactionManagerLookupImplName, platform);
 			}
 		}
 		return platform;
 	}
 
-	private JtaPlatform mapLegacyClasses(String tmlImplName, Map configVales, ServiceRegistryImplementor registry) {
-		if ( tmlImplName == null ) {
-			return null;
-		}
-
-        LOG.legacyTransactionManagerStrategy(JtaPlatform.class.getName(), AvailableSettings.JTA_PLATFORM);
-
-		if ( "org.hibernate.transaction.BESTransactionManagerLookup".equals( tmlImplName ) ) {
-			return new BorlandEnterpriseServerJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.BTMTransactionManagerLookup".equals( tmlImplName ) ) {
-			return new BitronixJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.JBossTransactionManagerLookup".equals( tmlImplName ) ) {
-			return new JBossAppServerJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.JBossTSStandaloneTransactionManagerLookup".equals( tmlImplName ) ) {
-			return new JBossStandAloneJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.JOnASTransactionManagerLookup".equals( tmlImplName ) ) {
-			return new JOnASJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.JOTMTransactionManagerLookup".equals( tmlImplName ) ) {
-			return new JOTMJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.JRun4TransactionManagerLookup".equals( tmlImplName ) ) {
-			return new JRun4JtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.OC4JTransactionManagerLookup".equals( tmlImplName ) ) {
-			return new OC4JJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.OrionTransactionManagerLookup".equals( tmlImplName ) ) {
-			return new OrionJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.ResinTransactionManagerLookup".equals( tmlImplName ) ) {
-			return new ResinJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.SunONETransactionManagerLookup".equals( tmlImplName ) ) {
-			return new SunOneJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.WeblogicTransactionManagerLookup".equals( tmlImplName ) ) {
-			return new WeblogicJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.WebSphereTransactionManagerLookup".equals( tmlImplName ) ) {
-			return new WebSphereJtaPlatform();
-		}
-
-		if ( "org.hibernate.transaction.WebSphereExtendedJTATransactionLookup".equals( tmlImplName ) ) {
-			return new WebSphereExtendedJtaPlatform();
+	private JtaPlatform mapLegacyClasses(String tmlImplName, Map configurationValues, ServiceRegistryImplementor registry) {
+		if ( registeredPlatforms.containsKey( tmlImplName ) ) {
+			return registeredPlatforms.get( tmlImplName );
 		}
 
 		try {
 			TransactionManagerLookup lookup = (TransactionManagerLookup) registry.getService( ClassLoaderService.class )
 					.classForName( tmlImplName )
 					.newInstance();
-			return new TransactionManagerLookupBridge( lookup, JndiHelper.extractJndiProperties( configVales ) );
+			return new TransactionManagerLookupBridge( lookup, JndiHelper.extractJndiProperties( configurationValues ) );
 		}
 		catch ( Exception e ) {
 			throw new JtaPlatformException(
 					"Unable to build " + TransactionManagerLookupBridge.class.getName() + " from specified " +
-							TransactionManagerLookup.class.getName() + " implementation: " +
-							tmlImplName
+							TransactionManagerLookup.class.getName() + " implementation: " + tmlImplName
 			);
 		}
 	}

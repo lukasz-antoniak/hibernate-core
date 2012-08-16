@@ -57,6 +57,6 @@ public class BitronixJtaPlatform extends AbstractJtaPlatform {
 
 	@Override
 	public Collection<String> getCharacteristicClassNames() {
-		return Arrays.asList( "" );
+		return Arrays.asList( TM_CLASS_NAME );
 	}
 }

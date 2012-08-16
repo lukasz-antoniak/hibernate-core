@@ -529,6 +529,52 @@
             </variablelist>
         </section>
 
+        <section xml:id="services-JtaPlatformResolver">
+            <title><interfacename>org.hibernate.service.jta.platform.spi.JtaPlatformResolver</interfacename></title>
+            <variablelist>
+                <varlistentry>
+                    <term>Notes</term>
+                    <listitem>
+                        <para>
+                            Provides resolution of <interfacename>org.hibernate.service.jta.platform.spi.JtaPlatform</interfacename>
+                            based on the runtime environment.
+                        </para>
+                        <para>
+                            The standard resolver implementation acts as a chain, delegating to a series of individual
+                            resolvers.  The standard Hibernate resolution behavior is contained in
+                            <classname>org.hibernate.service.jta.platform.internal.ClasspathJtaPlatformResolver</classname>.
+                            <classname>org.hibernate.service.jta.platform.internal.JtaPlatformResolverInitiator</classname>
+                            also consults with the <property>hibernate.transaction.jta.platform_resolvers</property>
+                            setting for any custom resolvers.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Initiator</term>
+                    <listitem>
+                        <para>
+                            <classname>org.hibernate.service.jta.platform.internal.JtaPlatformResolverInitiator</classname>
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Implementations</term>
+                    <listitem>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <classname>org.hibernate.service.jta.platform.internal.ClasspathJtaPlatformResolver</classname> -
+                                    determines current JTA platform based on predefined class lookups.  For example,
+                                    tries to find "weblogic.Server" class in the classpath while matching
+                                    <classname>org.hibernate.service.jta.platform.internal.WeblogicJtaPlatform</classname>.
+                                </para>
+                            </listitem>
+                        </itemizedlist>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </section>
+
         <section xml:id="services-MultiTenantConnectionProvider">
             <title><interfacename>org.hibernate.service.jdbc.connections.spi.MultiTenantConnectionProvider</interfacename></title>
             <variablelist>

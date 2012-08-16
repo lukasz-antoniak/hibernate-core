@@ -50,6 +50,7 @@ public class WeblogicJtaPlatform extends AbstractJtaPlatform {
 
 	@Override
 	public Collection<String> getCharacteristicClassNames() {
-		return Arrays.asList( "weblogic.Server","com.oracle.classloader.launch.Launcher" );
+		// Tested on WebLogic 11g (10.3.4.0) and 12c (12.1.1.0).
+		return Arrays.asList( "weblogic.Server", "com.oracle.classloader.launch.Launcher" );
 	}
 }

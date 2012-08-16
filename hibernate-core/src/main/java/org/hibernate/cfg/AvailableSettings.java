@@ -283,6 +283,14 @@ public interface AvailableSettings {
 	public static final String JTA_PLATFORM = "hibernate.transaction.jta.platform";
 
 	/**
+	 * List of additional {@link org.hibernate.service.jta.platform.spi.JtaPlatformResolver} implementors
+	 * responsible for automatic JTA platform resolution.
+	 *
+	 * By default only {@link org.hibernate.service.jta.platform.internal.ClasspathJtaPlatformResolver} is used.
+	 */
+	public static final String JTA_PLATFORM_RESOLVERS = "hibernate.transaction.jta.platform_resolvers";
+
+	/**
 	 * Names the {@link org.hibernate.transaction.TransactionManagerLookup} implementation to use for obtaining
 	 * reference to the {@literal JTA} {@link javax.transaction.TransactionManager}
 	 *

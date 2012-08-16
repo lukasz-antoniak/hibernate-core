@@ -45,33 +45,36 @@ public class WebSphereJtaPlatform extends AbstractJtaPlatform {
 	public static final String VERSION_5_UT_NAME = "java:comp/UserTransaction";
 	public static final String VERSION_4_UT_NAME = "jta/usertransaction";
 
-	private final Class transactionManagerAccessClass;
-	private final int webSphereVersion;
+	private Class transactionManagerAccessClass = null;
+	private int webSphereVersion = 0;
 
-	public WebSphereJtaPlatform() {
+	private boolean initialized = false;
+
+	private void initialize() {
 		try {
 			Class clazz;
 			int version;
 			try {
 				clazz = Class.forName( "com.ibm.ws.Transaction.TransactionManagerFactory" );
 				version = 5;
-                LOG.debug("WebSphere 5.1");
+				LOG.debug("WebSphere 5.1");
 			}
 			catch ( Exception e ) {
 				try {
 					clazz = Class.forName( "com.ibm.ejs.jts.jta.TransactionManagerFactory" );
 					version = 5;
-                    LOG.debug("WebSphere 5.0");
+					LOG.debug("WebSphere 5.0");
 				}
 				catch ( Exception e2 ) {
 					clazz = Class.forName( "com.ibm.ejs.jts.jta.JTSXA" );
 					version = 4;
-                    LOG.debug("WebSphere 4");
+					LOG.debug("WebSphere 4");
 				}
 			}
 
 			transactionManagerAccessClass = clazz;
 			webSphereVersion = version;
+			initialized = true;
 		}
 		catch ( Exception e ) {
 			throw new JtaPlatformException( "Could not locate WebSphere TransactionManager access class", e );
@@ -80,6 +83,9 @@ public class WebSphereJtaPlatform extends AbstractJtaPlatform {
 
 	@Override
 	protected TransactionManager locateTransactionManager() {
+		if ( !initialized ) {
+			initialize();
+		}
 		try {
 			final Method method = transactionManagerAccessClass.getMethod( "getTransactionManager" );
 			return ( TransactionManager ) method.invoke( null );
@@ -92,6 +98,9 @@ public class WebSphereJtaPlatform extends AbstractJtaPlatform {
 
 	@Override
 	protected UserTransaction locateUserTransaction() {
+		if ( !initialized ) {
+			initialize();
+		}
 		final String utName = webSphereVersion == 5 ? VERSION_5_UT_NAME : VERSION_4_UT_NAME;
 		return (UserTransaction) jndiService().locate( utName );
 	}

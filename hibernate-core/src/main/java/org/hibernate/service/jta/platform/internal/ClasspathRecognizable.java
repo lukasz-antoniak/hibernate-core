@@ -8,5 +8,8 @@ import java.util.Collection;
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
 public interface ClasspathRecognizable {
+	/**
+	 * @return List of characteristic fully qualified class names.
+	 */
 	public Collection<String> getCharacteristicClassNames();
 }
