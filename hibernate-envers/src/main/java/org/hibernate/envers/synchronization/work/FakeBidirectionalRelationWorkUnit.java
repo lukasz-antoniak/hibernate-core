@@ -27,9 +27,8 @@ public class FakeBidirectionalRelationWorkUnit extends AbstractAuditWorkUnit imp
                                              AuditConfiguration verCfg, Serializable id,
                                              String referencingPropertyName, Object owningEntity,
                                              RelationDescription rd, RevisionType revisionType,
-                                             Object index,
-                                             AuditWorkUnit nestedWorkUnit) {
-        super(sessionImplementor, entityName, verCfg, id, revisionType);
+                                             Object index, AuditWorkUnit nestedWorkUnit, Object entity) {
+        super(sessionImplementor, entityName, verCfg, id, revisionType, entity);
         this.nestedWorkUnit = nestedWorkUnit;
 
         // Adding the change for the relation.
@@ -40,14 +39,14 @@ public class FakeBidirectionalRelationWorkUnit extends AbstractAuditWorkUnit imp
     public FakeBidirectionalRelationWorkUnit(FakeBidirectionalRelationWorkUnit original,
                                              Map<String, FakeRelationChange> fakeRelationChanges,
                                              AuditWorkUnit nestedWorkUnit) {
-        super(original.sessionImplementor, original.entityName, original.verCfg, original.id, original.revisionType);
+        super(original.sessionImplementor, original.entityName, original.verCfg, original.id, original.revisionType, nestedWorkUnit.getEntity());
 
         this.fakeRelationChanges = fakeRelationChanges;
         this.nestedWorkUnit = nestedWorkUnit;
     }
 
     public FakeBidirectionalRelationWorkUnit(FakeBidirectionalRelationWorkUnit original, AuditWorkUnit nestedWorkUnit) {
-        super(original.sessionImplementor, original.entityName, original.verCfg, original.id, original.revisionType);
+        super(original.sessionImplementor, original.entityName, original.verCfg, original.id, original.revisionType, nestedWorkUnit.getEntity());
 
         this.nestedWorkUnit = nestedWorkUnit;
 

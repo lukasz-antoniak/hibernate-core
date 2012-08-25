@@ -24,15 +24,20 @@
 package org.hibernate.envers.test.integration.onetomany;
 
 import java.util.Arrays;
+import java.util.Map;
 import javax.persistence.EntityManager;
 
 import org.junit.Test;
 
-import org.hibernate.envers.test.BaseEnversJPAFunctionalTestCase ;
+import org.hibernate.envers.RevisionType;
+import org.hibernate.envers.test.BaseEnversJPAFunctionalTestCase;
 import org.hibernate.envers.test.Priority;
 import org.hibernate.envers.test.entities.onetomany.ListRefEdEntity;
 import org.hibernate.envers.test.entities.onetomany.ListRefIngEntity;
+import org.hibernate.envers.test.tools.NotificationCheckRevisionListener;
 import org.hibernate.envers.test.tools.TestTools;
+
+import static org.hibernate.envers.test.tools.NotificationCheckRevisionListener.expectNotification;
 
 /**
  * @author Adam Warski (adam at warski dot org)
@@ -49,7 +54,12 @@ public class BasicList extends BaseEnversJPAFunctionalTestCase  {
 		return new Class[] { ListRefEdEntity.class, ListRefIngEntity.class };
     }
 
-    @Test
+	@Override
+	protected void addConfigOptions(Map options) {
+		options.put( "org.hibernate.envers.revision_listener", NotificationCheckRevisionListener.class.getName() );
+	}
+
+	@Test
     @Priority(10)
     public void initData() {
         EntityManager em = getEntityManager();
@@ -69,7 +79,13 @@ public class BasicList extends BaseEnversJPAFunctionalTestCase  {
         em.persist(ing1);
         em.persist(ing2);
 
+		expectNotification( ListRefEdEntity.class, ed1.getId(), ed1, RevisionType.ADD );
+		expectNotification( ListRefEdEntity.class, ed2.getId(), ed2, RevisionType.ADD );
+		expectNotification( ListRefIngEntity.class, ing1.getId(), ing1, RevisionType.ADD );
+		expectNotification( ListRefIngEntity.class, ing2.getId(), ing2, RevisionType.ADD );
+
         em.getTransaction().commit();
+		NotificationCheckRevisionListener.checkAllExpectedNotificationsProcessed();
 
         // Revision 2
         em.getTransaction().begin();
@@ -79,7 +95,12 @@ public class BasicList extends BaseEnversJPAFunctionalTestCase  {
 
         ing1.setReference(ed2);
 
+		expectNotification( ListRefIngEntity.class, ing1.getId(), ing1, RevisionType.MOD );
+		expectNotification( ListRefEdEntity.class, ed2.getId(), ed2, RevisionType.MOD );
+		expectNotification( ListRefEdEntity.class, ed1.getId(), ed1, RevisionType.MOD );
+
         em.getTransaction().commit();
+		NotificationCheckRevisionListener.checkAllExpectedNotificationsProcessed();
 
         // Revision 3
         em.getTransaction().begin();
@@ -89,9 +110,14 @@ public class BasicList extends BaseEnversJPAFunctionalTestCase  {
 
         ing2.setReference(ed2);
 
-        em.getTransaction().commit();
+		expectNotification( ListRefIngEntity.class, ing2.getId(), ing2, RevisionType.MOD );
+		expectNotification( ListRefEdEntity.class, ed2.getId(), ed2, RevisionType.MOD );
+		expectNotification( ListRefEdEntity.class, ed1.getId(), ed1, RevisionType.MOD );
 
-        //
+        em.getTransaction().commit();
+		NotificationCheckRevisionListener.checkAllExpectedNotificationsProcessed();
+
+		//
 
         ed1_id = ed1.getId();
         ed2_id = ed2.getId();

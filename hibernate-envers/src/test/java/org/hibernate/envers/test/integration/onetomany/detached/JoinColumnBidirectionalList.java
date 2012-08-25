@@ -24,15 +24,19 @@
 package org.hibernate.envers.test.integration.onetomany.detached;
 
 import java.util.Arrays;
+import java.util.Map;
 import javax.persistence.EntityManager;
 
 import org.junit.Test;
 
+import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.test.BaseEnversJPAFunctionalTestCase;
 import org.hibernate.envers.test.Priority;
 import org.hibernate.envers.test.entities.onetomany.detached.ListJoinColumnBidirectionalRefEdEntity;
 import org.hibernate.envers.test.entities.onetomany.detached.ListJoinColumnBidirectionalRefIngEntity;
+import org.hibernate.envers.test.tools.NotificationCheckRevisionListener;
 
+import static org.hibernate.envers.test.tools.NotificationCheckRevisionListener.expectNotification;
 import static org.hibernate.envers.test.tools.TestTools.checkList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -54,7 +58,12 @@ public class JoinColumnBidirectionalList extends BaseEnversJPAFunctionalTestCase
 		return new Class[] { ListJoinColumnBidirectionalRefIngEntity.class, ListJoinColumnBidirectionalRefEdEntity.class };
     }
 
-    @Test
+	@Override
+	protected void addConfigOptions(Map options) {
+		options.put( "org.hibernate.envers.revision_listener", NotificationCheckRevisionListener.class.getName() );
+	}
+
+	@Test
     @Priority(10)
     public void createData() {
         EntityManager em = getEntityManager();
@@ -73,7 +82,13 @@ public class JoinColumnBidirectionalList extends BaseEnversJPAFunctionalTestCase
         em.persist(ing1);
         em.persist(ing2);
 
+		expectNotification( ListJoinColumnBidirectionalRefIngEntity.class, ing1.getId(), ing1, RevisionType.ADD );
+		expectNotification( ListJoinColumnBidirectionalRefIngEntity.class, ing2.getId(), ing2, RevisionType.ADD );
+		expectNotification( ListJoinColumnBidirectionalRefEdEntity.class, ed1.getId(), ed1, RevisionType.ADD );
+		expectNotification( ListJoinColumnBidirectionalRefEdEntity.class, ed2.getId(), ed2, RevisionType.ADD );
+
         em.getTransaction().commit();
+		NotificationCheckRevisionListener.checkAllExpectedNotificationsProcessed();
 
         // Revision 2 (ing1: ed1, ed2)
         em.getTransaction().begin();
@@ -86,7 +101,12 @@ public class JoinColumnBidirectionalList extends BaseEnversJPAFunctionalTestCase
         ing2.getReferences().remove(ed2);
         ing1.getReferences().add(ed2);
 
+		expectNotification( ListJoinColumnBidirectionalRefIngEntity.class, ing1.getId(), ing1, RevisionType.MOD );
+		expectNotification( ListJoinColumnBidirectionalRefEdEntity.class, ed2.getId(), ed2, RevisionType.ADD );
+		expectNotification( ListJoinColumnBidirectionalRefIngEntity.class, ing2.getId(), ing2, RevisionType.MOD );
+
         em.getTransaction().commit();
+		NotificationCheckRevisionListener.checkAllExpectedNotificationsProcessed();
         em.clear();
 
         // No revision - no changes
@@ -100,6 +120,7 @@ public class JoinColumnBidirectionalList extends BaseEnversJPAFunctionalTestCase
         ed2.setOwner(ing2);
 
         em.getTransaction().commit();
+		NotificationCheckRevisionListener.checkAllExpectedNotificationsProcessed();
         em.clear();
 
         // Revision 3 (ing1: ed1, ed2)
@@ -111,7 +132,10 @@ public class JoinColumnBidirectionalList extends BaseEnversJPAFunctionalTestCase
         // Shouldn't get written
         ed1.setOwner(ing2);
 
+		expectNotification( ListJoinColumnBidirectionalRefEdEntity.class, ed1.getId(), ed1, RevisionType.MOD );
+
         em.getTransaction().commit();
+		NotificationCheckRevisionListener.checkAllExpectedNotificationsProcessed();
         em.clear();
 
         // Revision 4 (ing2: ed1, ed2)
@@ -124,7 +148,13 @@ public class JoinColumnBidirectionalList extends BaseEnversJPAFunctionalTestCase
         ing2.getReferences().add(ed1);
         ing2.getReferences().add(ed2);
 
+		expectNotification( ListJoinColumnBidirectionalRefIngEntity.class, ing1.getId(), ing1, RevisionType.MOD );
+		expectNotification( ListJoinColumnBidirectionalRefEdEntity.class, ed1.getId(), ed1, RevisionType.DEL );
+		expectNotification( ListJoinColumnBidirectionalRefEdEntity.class, ed2.getId(), ed2, RevisionType.DEL );
+		expectNotification( ListJoinColumnBidirectionalRefIngEntity.class, ing2.getId(), ing2, RevisionType.MOD );
+
         em.getTransaction().commit();
+		NotificationCheckRevisionListener.checkAllExpectedNotificationsProcessed();
         em.clear();
 
         //

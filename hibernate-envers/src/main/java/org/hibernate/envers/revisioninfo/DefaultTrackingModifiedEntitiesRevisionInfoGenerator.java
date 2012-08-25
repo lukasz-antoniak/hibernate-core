@@ -34,9 +34,9 @@ public class DefaultTrackingModifiedEntitiesRevisionInfoGenerator extends Defaul
 
     @Override
     @SuppressWarnings({"unchecked"})
-    public void entityChanged(Class entityClass, String entityName, Serializable entityId, RevisionType revisionType,
-                              Object revisionEntity) {
-        super.entityChanged(entityClass, entityName, entityId, revisionType, revisionEntity);
+    public void entityChanged(Class entityClass, String entityName, Serializable entityId, Object entity,
+							  RevisionType revisionType, Object revisionEntity) {
+        super.entityChanged(entityClass, entityName, entityId, entity, revisionType, revisionEntity);
         Set<String> modifiedEntityNames = (Set<String>) modifiedEntityNamesGetter.get(revisionEntity);
         if (modifiedEntityNames == null) {
             modifiedEntityNames = new HashSet<String>();

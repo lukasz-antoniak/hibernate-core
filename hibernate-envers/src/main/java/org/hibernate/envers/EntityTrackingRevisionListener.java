@@ -15,9 +15,10 @@ public interface EntityTrackingRevisionListener extends RevisionListener {
      * @param entityName Name of the audited entity. May be useful when Java class is mapped multiple times,
      *                   potentially to different tables. 
      * @param entityId Identifier of modified entity.
+	 * @param entity The actual entity or persistent collection that has changed.
      * @param revisionType Modification type (addition, update or removal).
      * @param revisionEntity An instance of the entity annotated with {@link RevisionEntity}.
      */
-    void entityChanged(Class entityClass, String entityName, Serializable entityId, RevisionType revisionType,
-                       Object revisionEntity);
+    void entityChanged(Class entityClass, String entityName, Serializable entityId, Object entity,
+					   RevisionType revisionType, Object revisionEntity);
 }

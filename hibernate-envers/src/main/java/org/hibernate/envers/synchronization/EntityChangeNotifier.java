@@ -37,7 +37,7 @@ public class EntityChangeNotifier {
             entityId = ((PersistentCollectionChangeWorkUnit.PersistentCollectionChangeWorkUnitId) entityId).getOwnerId();
         }
         Class entityClass = Tools.getEntityClass(sessionImplementor, session, vwu.getEntityName());
-        revisionInfoGenerator.entityChanged(entityClass, vwu.getEntityName(), entityId, vwu.getRevisionType(),
-                                            currentRevisionData);
+        revisionInfoGenerator.entityChanged(entityClass, vwu.getEntityName(), entityId, vwu.getEntity(),
+											vwu.getRevisionType(), currentRevisionData);
     }
 }

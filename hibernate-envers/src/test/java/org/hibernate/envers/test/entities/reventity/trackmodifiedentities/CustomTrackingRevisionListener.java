@@ -10,8 +10,8 @@ import org.hibernate.envers.RevisionType;
  */
 public class CustomTrackingRevisionListener implements EntityTrackingRevisionListener {
     @Override
-    public void entityChanged(Class entityClass, String entityName, Serializable entityId, RevisionType revisionType,
-                              Object revisionEntity) {
+    public void entityChanged(Class entityClass, String entityName, Serializable entityId, Object entity,
+							  RevisionType revisionType, Object revisionEntity) {
         ((CustomTrackingRevisionEntity)revisionEntity).addModifiedEntityType(entityClass.getName());
     }
 

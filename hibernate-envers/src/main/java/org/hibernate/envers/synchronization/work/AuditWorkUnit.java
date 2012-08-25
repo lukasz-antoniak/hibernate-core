@@ -35,6 +35,7 @@ import org.hibernate.envers.RevisionType;
 public interface AuditWorkUnit extends WorkUnitMergeVisitor, WorkUnitMergeDispatcher {
     Serializable getEntityId();
     String getEntityName();
+	Object getEntity();
     
     boolean containsWork();
 

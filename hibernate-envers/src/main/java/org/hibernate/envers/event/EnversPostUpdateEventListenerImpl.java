@@ -59,7 +59,8 @@ public class EnversPostUpdateEventListenerImpl extends BaseEnversEventListener i
                     event.getId(),
 					event.getPersister(),
 					newDbState,
-					event.getOldState()
+					event.getOldState(),
+					event.getEntity()
 			);
             auditProcess.addWorkUnit( workUnit );
 

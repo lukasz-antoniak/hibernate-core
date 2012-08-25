@@ -98,11 +98,11 @@ public class DefaultRevisionInfoGenerator implements RevisionInfoGenerator {
         return revisionInfo;
     }
 
-    public void entityChanged(Class entityClass, String entityName, Serializable entityId, RevisionType revisionType,
-                              Object revisionInfo) {
+    public void entityChanged(Class entityClass, String entityName, Serializable entityId, Object entity,
+							  RevisionType revisionType, Object revisionInfo) {
         if (listener instanceof EntityTrackingRevisionListener) {
-            ((EntityTrackingRevisionListener) listener).entityChanged(entityClass, entityName, entityId, revisionType,
-                                                                      revisionInfo);
+            ((EntityTrackingRevisionListener) listener).entityChanged(entityClass, entityName, entityId, entity,
+																	  revisionType, revisionInfo);
         }
     }
 }

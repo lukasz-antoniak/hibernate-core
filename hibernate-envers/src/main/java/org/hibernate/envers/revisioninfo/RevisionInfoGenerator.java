@@ -37,8 +37,8 @@ public interface RevisionInfoGenerator {
     Object generate();
 
     /**
-     * @see EntityTrackingRevisionListener#entityChanged(Class, String, Serializable, RevisionType, Object)
+     * @see EntityTrackingRevisionListener#entityChanged(Class, String, Serializable, Object, RevisionType, Object)
      */
-    void entityChanged(Class entityClass, String entityName, Serializable entityId, RevisionType revisionType,
-                       Object revisionEntity);
+    void entityChanged(Class entityClass, String entityName, Serializable entityId, Object entity,
+					   RevisionType revisionType, Object revisionEntity);
 }
