@@ -9,6 +9,8 @@ import org.hibernate.envers.ModifiedEntityNames;
 import org.hibernate.envers.RevisionListener;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.entities.PropertyData;
+import org.hibernate.envers.synchronization.CollectionChangeEvent;
+import org.hibernate.envers.synchronization.EntityChangeEvent;
 import org.hibernate.envers.tools.reflection.ReflectionTools;
 import org.hibernate.property.Getter;
 import org.hibernate.property.Setter;
@@ -33,10 +35,19 @@ public class DefaultTrackingModifiedEntitiesRevisionInfoGenerator extends Defaul
     }
 
     @Override
+    public void entityChanged(EntityChangeEvent event) {
+        super.entityChanged(event);
+        setModifiedEntityName(event.getRevisionEntity(), event.getEntityName());
+    }
+
+    @Override
+    public void collectionChanged(CollectionChangeEvent event) {
+        super.collectionChanged(event);
+        setModifiedEntityName(event.getRevisionEntity(), event.getEntityName());
+    }
+
     @SuppressWarnings({"unchecked"})
-    public void entityChanged(Class entityClass, String entityName, Serializable entityId, Object entity,
-							  RevisionType revisionType, Object revisionEntity) {
-        super.entityChanged(entityClass, entityName, entityId, entity, revisionType, revisionEntity);
+    private void setModifiedEntityName(Object revisionEntity, String entityName) {
         Set<String> modifiedEntityNames = (Set<String>) modifiedEntityNamesGetter.get(revisionEntity);
         if (modifiedEntityNames == null) {
             modifiedEntityNames = new HashSet<String>();

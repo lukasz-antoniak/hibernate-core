@@ -28,17 +28,23 @@ import java.io.Serializable;
 import org.hibernate.Session;
 import org.hibernate.envers.EntityTrackingRevisionListener;
 import org.hibernate.envers.RevisionType;
+import org.hibernate.envers.synchronization.CollectionChangeEvent;
+import org.hibernate.envers.synchronization.EntityChangeEvent;
 
 /**
  * @author Adam Warski (adam at warski dot org)
  */
 public interface RevisionInfoGenerator {
-	void saveRevisionData(Session session, Object revisionData);
+    void saveRevisionData(Session session, Object revisionData);
     Object generate();
 
     /**
-     * @see EntityTrackingRevisionListener#entityChanged(Class, String, Serializable, Object, RevisionType, Object)
+     * @see EntityTrackingRevisionListener#entityChanged(EntityChangeEvent)
      */
-    void entityChanged(Class entityClass, String entityName, Serializable entityId, Object entity,
-					   RevisionType revisionType, Object revisionEntity);
+    void entityChanged(EntityChangeEvent event);
+
+    /**
+     * @see EntityTrackingRevisionListener#collectionChanged(CollectionChangeEvent)
+     */
+    void collectionChanged(CollectionChangeEvent event);
 }

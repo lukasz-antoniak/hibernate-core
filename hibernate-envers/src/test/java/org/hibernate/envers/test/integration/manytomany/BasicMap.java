@@ -39,7 +39,8 @@ import org.hibernate.envers.test.entities.manytomany.MapOwningEntity;
 import org.hibernate.envers.test.tools.NotificationCheckRevisionListener;
 import org.hibernate.envers.test.tools.TestTools;
 
-import static org.hibernate.envers.test.tools.NotificationCheckRevisionListener.expectNotification;
+import static org.hibernate.envers.test.tools.NotificationCheckRevisionListener.expectCollectionNotification;
+import static org.hibernate.envers.test.tools.NotificationCheckRevisionListener.expectEntityNotification;
 
 /**
  * @author Adam Warski (adam at warski dot org)
@@ -82,11 +83,11 @@ public class BasicMap extends BaseEnversJPAFunctionalTestCase {
         em.persist(ing1);
         em.persist(ing2);
 
-		expectNotification( MapOwnedEntity.class, ed1.getId(), ed1, RevisionType.ADD );
-		expectNotification( MapOwnedEntity.class, ed2.getId(), ed2, RevisionType.ADD );
-		expectNotification( MapOwningEntity.class, ing1.getId(), ing1, RevisionType.ADD );
-		expectNotification( MapOwningEntity.class, ing2.getId(), ing2, RevisionType.ADD );
-		expectNotification( MapOwningEntity.class, ing2.getId(), TestTools.makeMap( "2", ed2 ), RevisionType.MOD );
+		expectEntityNotification( MapOwnedEntity.class, ed1.getId(), ed1, RevisionType.ADD );
+		expectEntityNotification( MapOwnedEntity.class, ed2.getId(), ed2, RevisionType.ADD );
+		expectEntityNotification( MapOwningEntity.class, ing1.getId(), ing1, RevisionType.ADD );
+		expectEntityNotification( MapOwningEntity.class, ing2.getId(), ing2, RevisionType.ADD );
+		expectCollectionNotification( MapOwningEntity.class, ing2.getId(), TestTools.makeMap( "2", ed2 ), RevisionType.MOD );
 
         em.getTransaction().commit();
 		NotificationCheckRevisionListener.checkAllExpectedNotificationsProcessed();
@@ -105,12 +106,12 @@ public class BasicMap extends BaseEnversJPAFunctionalTestCase {
 
         ing2.getReferences().put("2", ed1);
 
-		expectNotification( MapOwningEntity.class, ing1.getId(), TestTools.makeMap( "1", ed1, "2", ed1 ), RevisionType.MOD );
-		expectNotification( MapOwningEntity.class, ing1.getId(), ing1, RevisionType.MOD );
-		expectNotification( MapOwnedEntity.class, ed1.getId(), ed1, RevisionType.MOD );
-		expectNotification( MapOwningEntity.class, ing2.getId(), TestTools.makeMap( "2", ed1 ), RevisionType.MOD );
-		expectNotification( MapOwningEntity.class, ing2.getId(), ing2, RevisionType.MOD );
-		expectNotification( MapOwnedEntity.class, ed2.getId(), ed2, RevisionType.MOD );
+		expectCollectionNotification( MapOwningEntity.class, ing1.getId(), TestTools.makeMap( "1", ed1, "2", ed1 ), RevisionType.MOD );
+		expectEntityNotification( MapOwningEntity.class, ing1.getId(), ing1, RevisionType.MOD );
+		expectEntityNotification( MapOwnedEntity.class, ed1.getId(), ed1, RevisionType.MOD );
+		expectCollectionNotification( MapOwningEntity.class, ing2.getId(), TestTools.makeMap( "2", ed1 ), RevisionType.MOD );
+		expectEntityNotification( MapOwningEntity.class, ing2.getId(), ing2, RevisionType.MOD );
+		expectEntityNotification( MapOwnedEntity.class, ed2.getId(), ed2, RevisionType.MOD );
 
         em.getTransaction().commit();
 		NotificationCheckRevisionListener.checkAllExpectedNotificationsProcessed();
@@ -138,12 +139,12 @@ public class BasicMap extends BaseEnversJPAFunctionalTestCase {
         ing2.setReferences(new HashMap<String, MapOwnedEntity>());
         ing2.getReferences().put("1", ed2);
 
-		expectNotification( MapOwningEntity.class, ing2.getId(), ing2, RevisionType.MOD );
-		expectNotification( MapOwnedEntity.class, ed1.getId(), ed1, RevisionType.MOD );
-		expectNotification( MapOwningEntity.class, ing1.getId(), TestTools.makeMap(), RevisionType.MOD );
-		expectNotification( MapOwningEntity.class, ing1.getId(), ing1, RevisionType.MOD );
-		expectNotification( MapOwningEntity.class, ing2.getId(), TestTools.makeMap( "1", ed2 ), RevisionType.MOD );
-		expectNotification( MapOwnedEntity.class, ed2.getId(),ed2, RevisionType.MOD );
+		expectEntityNotification( MapOwningEntity.class, ing2.getId(), ing2, RevisionType.MOD );
+		expectEntityNotification( MapOwnedEntity.class, ed1.getId(), ed1, RevisionType.MOD );
+		expectCollectionNotification( MapOwningEntity.class, ing1.getId(), TestTools.makeMap(), RevisionType.MOD );
+		expectEntityNotification( MapOwningEntity.class, ing1.getId(), ing1, RevisionType.MOD );
+		expectCollectionNotification( MapOwningEntity.class, ing2.getId(), TestTools.makeMap( "1", ed2 ), RevisionType.MOD );
+		expectEntityNotification( MapOwnedEntity.class, ed2.getId(), ed2, RevisionType.MOD );
 
         em.getTransaction().commit();
 		NotificationCheckRevisionListener.checkAllExpectedNotificationsProcessed();

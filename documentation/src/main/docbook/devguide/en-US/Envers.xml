@@ -630,11 +630,13 @@ public class AnnotatedTrackingRevisionEntity {
 public class CustomEntityTrackingRevisionListener
              implements EntityTrackingRevisionListener {
     @Override
-    public void entityChanged(Class entityClass, String entityName,
-                              Serializable entityId, RevisionType revisionType,
-                              Object revisionEntity) {
-        String type = entityClass.getName();
-        ((CustomTrackingRevisionEntity)revisionEntity).addModifiedEntityType(type);
+    public void entityChanged(EntityChangeEvent event) {
+        String type = event.getEntityClass().getName();
+        ((CustomTrackingRevisionEntity)event.getRevisionEntity()).addModifiedEntityType(type);
+    }
+
+    @Override
+    public void collectionChanged(CollectionChangeEvent event) {
     }
 
     @Override

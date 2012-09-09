@@ -47,7 +47,7 @@ public class AuditProcess implements BeforeTransactionCompletionProcess {
     private final LinkedList<AuditWorkUnit> workUnits;
     private final Queue<AuditWorkUnit> undoQueue;
     private final Map<Pair<String, Object>, AuditWorkUnit> usedIds;
-    private final EntityChangeNotifier entityChangeNotifier;
+    private final ChangeNotifier changeNotifier;
 
     private Object revisionData;
 
@@ -58,7 +58,7 @@ public class AuditProcess implements BeforeTransactionCompletionProcess {
         workUnits = new LinkedList<AuditWorkUnit>();
         undoQueue = new LinkedList<AuditWorkUnit>();
         usedIds = new HashMap<Pair<String, Object>, AuditWorkUnit>();
-        entityChangeNotifier = new EntityChangeNotifier(revisionInfoGenerator, session);
+        changeNotifier = new ChangeNotifier(revisionInfoGenerator, session);
     }
 
     private void removeWorkUnit(AuditWorkUnit vwu) {
@@ -114,7 +114,7 @@ public class AuditProcess implements BeforeTransactionCompletionProcess {
 
         while ((vwu = workUnits.poll()) != null) {
             vwu.perform(session, revisionData);
-            entityChangeNotifier.entityChanged(session, currentRevisionData, vwu);
+            changeNotifier.notifyRevisionGenerator(session, currentRevisionData, vwu);
         }
     }
 

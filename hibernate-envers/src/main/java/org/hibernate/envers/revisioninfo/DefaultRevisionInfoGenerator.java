@@ -32,6 +32,8 @@ import org.hibernate.envers.EntityTrackingRevisionListener;
 import org.hibernate.envers.RevisionListener;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.entities.PropertyData;
+import org.hibernate.envers.synchronization.CollectionChangeEvent;
+import org.hibernate.envers.synchronization.EntityChangeEvent;
 import org.hibernate.envers.synchronization.SessionCacheCleaner;
 import org.hibernate.envers.tools.reflection.ReflectionTools;
 import org.hibernate.property.Setter;
@@ -98,11 +100,15 @@ public class DefaultRevisionInfoGenerator implements RevisionInfoGenerator {
         return revisionInfo;
     }
 
-    public void entityChanged(Class entityClass, String entityName, Serializable entityId, Object entity,
-							  RevisionType revisionType, Object revisionInfo) {
+    public void entityChanged(EntityChangeEvent event) {
         if (listener instanceof EntityTrackingRevisionListener) {
-            ((EntityTrackingRevisionListener) listener).entityChanged(entityClass, entityName, entityId, entity,
-																	  revisionType, revisionInfo);
+            ((EntityTrackingRevisionListener) listener).entityChanged(event);
+        }
+    }
+
+    public void collectionChanged(CollectionChangeEvent event) {
+        if (listener instanceof EntityTrackingRevisionListener) {
+            ((EntityTrackingRevisionListener) listener).collectionChanged(event);
         }
     }
 }

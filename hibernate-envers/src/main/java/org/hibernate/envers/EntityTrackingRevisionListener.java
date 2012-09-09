@@ -1,24 +1,24 @@
 package org.hibernate.envers;
 
-import java.io.Serializable;
+import org.hibernate.envers.synchronization.CollectionChangeEvent;
+import org.hibernate.envers.synchronization.EntityChangeEvent;
 
 /**
- * Extension of standard {@link RevisionListener} that notifies whenever an entity instance has been
- * added, modified or removed within current revision boundaries.
+ * Extension of standard {@link RevisionListener} that notifies whenever an entity instance or persistent collection
+ * has been added, modified or removed within current revision boundaries.
  * @see RevisionListener
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
 public interface EntityTrackingRevisionListener extends RevisionListener {
     /**
      * Called after audited entity data has been persisted.
-     * @param entityClass Audited entity class.
-     * @param entityName Name of the audited entity. May be useful when Java class is mapped multiple times,
-     *                   potentially to different tables. 
-     * @param entityId Identifier of modified entity.
-	 * @param entity The actual entity or persistent collection that has changed.
-     * @param revisionType Modification type (addition, update or removal).
-     * @param revisionEntity An instance of the entity annotated with {@link RevisionEntity}.
+     * @param event Entity change event.
      */
-    void entityChanged(Class entityClass, String entityName, Serializable entityId, Object entity,
-					   RevisionType revisionType, Object revisionEntity);
+    void entityChanged(EntityChangeEvent event);
+
+    /**
+     * Called after persistent collection has changed.
+     * @param event Persistent collection change event.
+     */
+    void collectionChanged(CollectionChangeEvent event);
 }

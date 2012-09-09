@@ -14,11 +14,11 @@ import org.hibernate.envers.tools.Tools;
  * Notifies {@link RevisionInfoGenerator} about changes made in the current revision.
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
-public class EntityChangeNotifier {
+public class ChangeNotifier {
     private final RevisionInfoGenerator revisionInfoGenerator;
     private final SessionImplementor sessionImplementor;
 
-    public EntityChangeNotifier(RevisionInfoGenerator revisionInfoGenerator, SessionImplementor sessionImplementor) {
+    public ChangeNotifier(RevisionInfoGenerator revisionInfoGenerator, SessionImplementor sessionImplementor) {
         this.revisionInfoGenerator = revisionInfoGenerator;
         this.sessionImplementor = sessionImplementor;
     }
@@ -30,14 +30,19 @@ public class EntityChangeNotifier {
      * @param currentRevisionData Revision log entity.
      * @param vwu Performed work unit.
      */
-    public void entityChanged(Session session, Object currentRevisionData, AuditWorkUnit vwu) {
+    public void notifyRevisionGenerator(Session session, Object currentRevisionData, AuditWorkUnit vwu) {
         Serializable entityId = vwu.getEntityId();
-        if (entityId instanceof PersistentCollectionChangeWorkUnit.PersistentCollectionChangeWorkUnitId) {
-            // Notify about a change in collection owner entity.
-            entityId = ((PersistentCollectionChangeWorkUnit.PersistentCollectionChangeWorkUnitId) entityId).getOwnerId();
-        }
         Class entityClass = Tools.getEntityClass(sessionImplementor, session, vwu.getEntityName());
-        revisionInfoGenerator.entityChanged(entityClass, vwu.getEntityName(), entityId, vwu.getEntity(),
-											vwu.getRevisionType(), currentRevisionData);
+        if (vwu instanceof PersistentCollectionChangeWorkUnit) {
+            if (entityId instanceof PersistentCollectionChangeWorkUnit.PersistentCollectionChangeWorkUnitId) {
+                // Notify about a change in collection owner entity.
+                entityId = ((PersistentCollectionChangeWorkUnit.PersistentCollectionChangeWorkUnitId) entityId).getOwnerId();
+            }
+            revisionInfoGenerator.collectionChanged(new CollectionChangeEvent(entityClass, vwu.getEntityName(), entityId, vwu.getEntity(),
+                                                                              vwu.getRevisionType(), currentRevisionData));
+        } else {
+            revisionInfoGenerator.entityChanged(new EntityChangeEvent(entityClass, vwu.getEntityName(), entityId, vwu.getEntity(),
+                                                                      vwu.getRevisionType(), currentRevisionData));
+        }
     }
 }

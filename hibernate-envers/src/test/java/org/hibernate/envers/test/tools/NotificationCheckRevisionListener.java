@@ -8,34 +8,63 @@ import junit.framework.Assert;
 
 import org.hibernate.envers.EntityTrackingRevisionListener;
 import org.hibernate.envers.RevisionType;
+import org.hibernate.envers.synchronization.CollectionChangeEvent;
+import org.hibernate.envers.synchronization.EntityChangeEvent;
 
 /**
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
 public class NotificationCheckRevisionListener implements EntityTrackingRevisionListener {
-	private final static Queue<ChangeNotification> expectedNotifications = new LinkedList<ChangeNotification>();
+	private final static Queue<ChangeNotification> expectedEntityNotifications = new LinkedList<ChangeNotification>();
+	private final static Queue<ChangeNotification> expectedCollectionNotifications = new LinkedList<ChangeNotification>();
 
-	public static void expectNotification(Class entityClass, Serializable entityId, Object entity,
-										  RevisionType revisionType) {
-		expectedNotifications.offer( new ChangeNotification( entityClass, entityId, entity, revisionType ) );
+	public static void expectEntityNotification(Class entityClass, Serializable entityId, Object entity,
+												RevisionType revisionType) {
+		expectedEntityNotifications.offer( new ChangeNotification( entityClass, entityId, entity, revisionType ) );
+	}
+
+	public static void expectCollectionNotification(Class entityClass, Serializable entityId, Object entity,
+													RevisionType revisionType) {
+		expectedCollectionNotifications.offer( new ChangeNotification( entityClass, entityId, entity, revisionType ) );
 	}
 
 	public static void checkAllExpectedNotificationsProcessed() {
-		Assert.assertTrue( expectedNotifications.isEmpty() );
+		Assert.assertTrue( expectedEntityNotifications.isEmpty() );
+		Assert.assertTrue( expectedCollectionNotifications.isEmpty() );
 	}
 
 	@Override
-	public void entityChanged(Class entityClass, String entityName, Serializable entityId, Object entity,
-							  RevisionType revisionType, Object revisionEntity) {
-		ChangeNotification notification = expectedNotifications.poll();
-		if ( notification != null ) {
-			Assert.assertEquals( notification.entityClass, entityClass );
-			Assert.assertEquals( notification.entityName, entityName );
-			Assert.assertEquals( notification.entityId, entityId );
-			System.out.println("1: " + notification.entity.getClass().getName());
-			System.out.println("2: " + entity.getClass().getName());
-			Assert.assertEquals( notification.entity, entity );
-			Assert.assertEquals( notification.revisionType, revisionType );
+	public void entityChanged(EntityChangeEvent event) {
+		checkNotification(
+				expectedEntityNotifications.poll(),
+				event.getEntityClass(),
+				event.getEntityName(),
+				event.getEntityId(),
+				event.getEntity(),
+				event.getRevisionType()
+		);
+	}
+
+	@Override
+	public void collectionChanged(CollectionChangeEvent event) {
+		checkNotification(
+				expectedCollectionNotifications.poll(),
+				event.getEntityClass(),
+				event.getEntityName(),
+				event.getEntityId(),
+				event.getCollection(),
+				event.getRevisionType()
+		);
+	}
+
+	private void checkNotification(ChangeNotification expected, Class entityClass, String entityName,
+								   Serializable entityId, Object entity, RevisionType revisionType) {
+		if ( expected != null ) {
+			Assert.assertEquals( expected.entityClass, entityClass );
+			Assert.assertEquals( expected.entityName, entityName );
+			Assert.assertEquals( expected.entityId, entityId );
+			Assert.assertEquals( expected.entity, entity );
+			Assert.assertEquals( expected.revisionType, revisionType );
 		}
 		else {
 			Assert.fail();
@@ -44,7 +73,7 @@ public class NotificationCheckRevisionListener implements EntityTrackingRevision
 
 	@Override
 	public void newRevision(Object revisionEntity) {
-		Assert.assertTrue( !expectedNotifications.isEmpty() );
+		Assert.assertFalse( expectedEntityNotifications.isEmpty() && expectedCollectionNotifications.isEmpty() );
 	}
 
 	private static class ChangeNotification {
