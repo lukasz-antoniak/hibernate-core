@@ -2817,6 +2817,13 @@ public long getObjectVolume()</programlisting>
 
           <para>The SQL fragment can be as complex as you want and even
           include subselects.</para>
+
+          <para>Formula calculated property is automatically populated when
+          accessing data using HQL query, <interfacename>org.hibernate.Session</interfacename>
+          interface and Criteria API. In case of native SQL queries,
+          user needs to explicitly copy desired formula expression
+          and assign column alias equal to property name, otherwise attribute
+          will remain unassigned.</para>
         </section>
 
         <section>

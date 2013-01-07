@@ -24,6 +24,7 @@
 package org.hibernate.loader;
 import java.util.Map;
 
+import org.hibernate.internal.util.collections.ArrayHelper;
 import org.hibernate.persister.entity.Loadable;
 
 /**
@@ -52,6 +53,11 @@ public class ColumnEntityAliases extends DefaultEntityAliases {
 	}
 	
 	protected String[] getPropertyAliases(Loadable persister, int j) {
-		return persister.getPropertyColumnNames(j);
+		String[] aliases = persister.getPropertyColumnNames(j);
+		if ( ArrayHelper.isAllNull( aliases ) ) {
+			// In case of @Formula property expect that user provides an alias equal to property name.
+			aliases = new String[] { persister.getPropertyNames()[j] };
+		}
+		return aliases;
 	}
 }

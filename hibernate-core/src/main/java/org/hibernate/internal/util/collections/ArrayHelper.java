@@ -250,6 +250,13 @@ public final class ArrayHelper {
 		return true;
 	}
 
+	public static boolean isAllNull(Object[] array) {
+		for ( int i=0; i<array.length; i++ ) {
+			if ( array[i] != null ) return false;
+		}
+		return true;
+	}
+
 	public static void addAll(Collection collection, Object[] array) {
 		collection.addAll( Arrays.asList( array ) );
 	}

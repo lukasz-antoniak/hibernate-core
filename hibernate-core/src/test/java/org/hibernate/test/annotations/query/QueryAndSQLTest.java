@@ -44,13 +44,14 @@ import org.hibernate.stat.Statistics;
 import org.hibernate.test.annotations.A320;
 import org.hibernate.test.annotations.A320b;
 import org.hibernate.test.annotations.Plane;
-import org.hibernate.testing.FailureExpected;
 import org.hibernate.testing.SkipForDialect;
+import org.hibernate.testing.TestForIssue;
 import org.hibernate.testing.junit4.BaseCoreFunctionalTestCase;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -95,14 +96,32 @@ public class QueryAndSQLTest extends BaseCoreFunctionalTestCase {
 	}
 
 	@Test
-	@FailureExpected(jiraKey = "HHH-2225")
-	public void testNativeQueryWithFormulaAttributeWithoutAlias() {
-		String sql = "select table_name , sysdate() from all_tables  where table_name = 'AUDIT_ACTIONS' ";
-		Session s = openSession();
-		s.beginTransaction();
-		s.createSQLQuery( sql ).addEntity( "t", AllTables.class ).list();
-		s.getTransaction().commit();
-		s.close();
+	@TestForIssue(jiraKey = "HHH-2225")
+	public void testNativeQueryWithFormulaAttributeWithAndWithoutAlias() {
+		Session session = openSession();
+		session.getTransaction().begin();
+		AllTables table = new AllTables();
+		table.setTableName( "AUDIT_ACTIONS" );
+		session.persist( table );
+		session.flush();
+		session.clear();
+
+		// Explicitly inserting @Formula expression to native SQL query.
+		String sql = "select sysdate() as daysOld, table_name from all_tables where table_name = 'AUDIT_ACTIONS' ";
+		AllTables result = (AllTables) session.createSQLQuery( sql ).addEntity( "t", AllTables.class ).uniqueResult();
+		assertEquals( table.getTableName(), result.getTableName() );
+		assertNotNull( result.getDaysOld() );
+
+		session.clear();
+
+		// Omitting @Formula expression in native SQL query (notice lack of alias).
+		sql = "select sysdate(), table_name from all_tables where table_name = 'AUDIT_ACTIONS' ";
+		result = (AllTables) session.createSQLQuery( sql ).addEntity( "t", AllTables.class ).uniqueResult();
+		assertEquals( table.getTableName(), result.getTableName() );
+		assertNull( result.getDaysOld() );
+
+		session.getTransaction().rollback();
+		session.close();
 	}
 
 	@Test
@@ -242,6 +261,7 @@ public class QueryAndSQLTest extends BaseCoreFunctionalTestCase {
 		tx = s.beginTransaction();
 		Statistics stats = sessionFactory().getStatistics();
 		stats.setStatisticsEnabled( true );
+		stats.clear();
 		Query q = s.getNamedQuery( "night&areaCached" );
 		q.setCacheable( true );
 		List result = q.list();

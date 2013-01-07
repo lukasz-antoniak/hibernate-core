@@ -26,6 +26,7 @@ package org.hibernate.persister.entity;
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,7 +92,6 @@ import org.hibernate.internal.util.collections.ArrayHelper;
 import org.hibernate.jdbc.Expectation;
 import org.hibernate.jdbc.Expectations;
 import org.hibernate.jdbc.TooManyRowsAffectedException;
-import org.hibernate.loader.entity.BatchingEntityLoader;
 import org.hibernate.loader.entity.BatchingEntityLoaderBuilder;
 import org.hibernate.loader.entity.CascadeEntityLoader;
 import org.hibernate.loader.entity.EntityLoader;
@@ -2900,7 +2900,21 @@ public abstract class AbstractEntityPersister
 					else {
 						final ResultSet propertyResultSet = propertyIsDeferred ? sequentialResultSet : rs;
 						final String[] cols = propertyIsDeferred ? propertyColumnAliases[i] : suffixedPropertyColumns[i];
-						values[i] = types[i].hydrate( propertyResultSet, cols, session, object );
+						boolean bindColumns = true;
+						if ( propertyColumnFormulaTemplates[i] != null ) {
+							// Checking whether columns exist in retrieved result set. In case of native SQL queries,
+							// @Formula expression can be omitted or needs to bo explicitly copied to statement string
+							// (with alias equal to property name) by the user.
+							for ( String col : cols ) {
+								if ( ! aliasExistsInResultSet( propertyResultSet, col ) ) {
+									bindColumns = false;
+									break;
+								}
+							}
+						}
+						if ( bindColumns ) {
+							values[i] = types[i].hydrate( propertyResultSet, cols, session, object );
+						}
 					}
 				}
 				else {
@@ -2920,6 +2934,17 @@ public abstract class AbstractEntityPersister
 				sequentialSelect.close();
 			}
 		}
+	}
+
+	private boolean aliasExistsInResultSet(ResultSet resultSet, String columnName) throws SQLException {
+		ResultSetMetaData metadata = resultSet.getMetaData();
+		int colNum = metadata.getColumnCount();
+		for ( int i = 1; i < colNum + 1; ++i ) {
+			if ( columnName.equalsIgnoreCase( metadata.getColumnLabel( i ) ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected boolean useInsertSelectIdentity() {
@@ -2969,8 +2994,8 @@ public abstract class AbstractEntityPersister
 	public String getIdentitySelectString() {
 		//TODO: cache this in an instvar
 		return getFactory().getDialect().getIdentitySelectString(
-				getTableName(0),
-				getKeyColumns(0)[0],
+				getTableName( 0 ),
+				getKeyColumns( 0 )[0],
 				getIdentifierType().sqlTypes( getFactory() )[0]
 		);
 	}
