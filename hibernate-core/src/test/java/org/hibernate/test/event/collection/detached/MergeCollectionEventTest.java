@@ -180,6 +180,7 @@ public class MergeCollectionEventTest extends BaseCoreFunctionalTestCase {
 
 		List<Character> alias1CharactersSnapshot = copy( alias1.getCharacters() );
 		List<Character> alias2CharactersSnapshot = copy( alias2.getCharacters() );
+		List<Alias> paulAliasesSnapshot = copy( paul.getAliases() );
 
 		listener.reset();
 
@@ -189,27 +190,19 @@ public class MergeCollectionEventTest extends BaseCoreFunctionalTestCase {
 
 		s.flush();
 
+		// pre collection update events contain state that has been saved during last flush
 		assertEquals( 8, listener.getEventEntryList().size() ); // 4 collections x 2 events per
 		checkListener( 0, PreCollectionUpdateEvent.class, alias1, alias1CharactersSnapshot );
 		checkListener( 1, PostCollectionUpdateEvent.class, alias1, alias1CharactersSnapshot );
-//		checkListener( 2, PreCollectionUpdateEvent.class, paul, Collections.EMPTY_LIST );
-//		checkListener( 3, PostCollectionUpdateEvent.class, paul, paul.getAliases() );
+		checkListener( 2, PreCollectionUpdateEvent.class, paul, paulAliasesSnapshot );
+		checkListener( 3, PostCollectionUpdateEvent.class, paul, paulAliasesSnapshot );
 		checkListener( 4, PreCollectionUpdateEvent.class, alias2, alias2CharactersSnapshot );
-		checkListener( 5, PostCollectionUpdateEvent.class, alias2, alias2.getCharacters() );
-//		checkListener( 6, PreCollectionUpdateEvent.class, paulo, Collections.EMPTY_LIST );
-//		checkListener( 7, PostCollectionUpdateEvent.class, paulo, paul.getAliases() );
+		checkListener( 5, PostCollectionUpdateEvent.class, alias2, alias2CharactersSnapshot );
+		checkListener( 6, PreCollectionUpdateEvent.class, paulo, paulAliasesSnapshot );
+		checkListener( 7, PostCollectionUpdateEvent.class, paulo, paulAliasesSnapshot );
 
 		s.getTransaction().commit();
 		s.close();
-
-//
-//		checkListener(listeners, listeners.getInitializeCollectionListener(),
-//					  mce, null, eventCount++);
-//		checkListener(listeners, listeners.getPreCollectionUpdateListener(),
-//					  mce, oldRefentities1, eventCount++);
-//		checkListener(listeners, listeners.getPostCollectionUpdateListener(),
-//					  mce, mce.getRefEntities1(), eventCount++);
-
 	}
 
 
