@@ -22,6 +22,7 @@
  * Boston, MA  02110-1301  USA
  */
 package org.hibernate.envers.query;
+
 import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;

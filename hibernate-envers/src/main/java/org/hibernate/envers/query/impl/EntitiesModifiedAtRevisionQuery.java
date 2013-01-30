@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.envers.configuration.AuditConfiguration;
-import org.hibernate.envers.configuration.AuditEntitiesConfiguration;
+import org.hibernate.envers.configuration.internal.AuditEntitiesConfiguration;
 import org.hibernate.envers.query.criteria.AuditCriterion;
-import org.hibernate.envers.reader.AuditReaderImplementor;
+import org.hibernate.envers.internal.reader.AuditReaderImplementor;
 
 /**
  * In comparison to {@link EntitiesAtRevisionQuery} this query returns an empty collection if an entity

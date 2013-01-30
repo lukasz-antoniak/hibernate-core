@@ -24,9 +24,9 @@
 package org.hibernate.envers.event;
 
 import org.hibernate.envers.configuration.AuditConfiguration;
-import org.hibernate.envers.synchronization.AuditProcess;
-import org.hibernate.envers.synchronization.work.AddWorkUnit;
-import org.hibernate.envers.synchronization.work.AuditWorkUnit;
+import org.hibernate.envers.internal.synchronization.AuditProcess;
+import org.hibernate.envers.internal.synchronization.work.AddWorkUnit;
+import org.hibernate.envers.internal.synchronization.work.AuditWorkUnit;
 import org.hibernate.event.spi.PostInsertEvent;
 import org.hibernate.event.spi.PostInsertEventListener;
 import org.hibernate.persister.entity.EntityPersister;

@@ -28,10 +28,10 @@ import java.util.Map;
 
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.configuration.AuditConfiguration;
-import org.hibernate.envers.configuration.AuditEntitiesConfiguration;
+import org.hibernate.envers.configuration.internal.AuditEntitiesConfiguration;
 import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.query.criteria.AuditCriterion;
-import org.hibernate.envers.reader.AuditReaderImplementor;
+import org.hibernate.envers.internal.reader.AuditReaderImplementor;
 import org.hibernate.proxy.HibernateProxy;
 
 /**

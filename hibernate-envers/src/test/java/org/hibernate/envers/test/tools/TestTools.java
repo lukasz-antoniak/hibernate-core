@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.envers.enhanced.SequenceIdRevisionEntity;
-import org.hibernate.envers.configuration.GlobalConfiguration;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 
@@ -83,20 +82,16 @@ public class TestTools {
 	public static List<Integer> extractRevisionNumbers(List queryResults) {
 		List<Integer> result = new ArrayList<Integer>();
 		for (Object queryResult : queryResults) {
-			result.add(((SequenceIdRevisionEntity) ((Object[]) queryResult)[1])
-					.getId());
+			result.add(((SequenceIdRevisionEntity) ((Object[]) queryResult)[1]).getId());
 		}
 		return result;
 	}
 
-	public static Set<String> extractModProperties(
-			PersistentClass persistentClass) {
-		return extractModProperties(persistentClass,
-				GlobalConfiguration.DEFAULT_MODIFIED_FLAG_SUFFIX);
+	public static Set<String> extractModProperties(PersistentClass persistentClass) {
+		return extractModProperties(persistentClass, "_MOD");
 	}
 
-	public static Set<String> extractModProperties(
-			PersistentClass persistentClass, String suffix) {
+	public static Set<String> extractModProperties(PersistentClass persistentClass, String suffix) {
 		Set<String> result = new HashSet<String>();
 		Iterator iterator = persistentClass.getPropertyIterator();
 

@@ -24,7 +24,7 @@
 
 package org.hibernate.envers.query.property;
 import org.hibernate.envers.configuration.AuditConfiguration;
-import org.hibernate.envers.configuration.metadata.MetadataTools;
+import org.hibernate.envers.configuration.internal.metadata.MetadataTools;
 
 /**
  * PropertyNameGetter for modified flags

@@ -22,10 +22,11 @@
  * Boston, MA  02110-1301  USA
  */
 package org.hibernate.envers.query.criteria;
+
 import org.hibernate.envers.configuration.AuditConfiguration;
 import org.hibernate.envers.query.property.PropertyNameGetter;
-import org.hibernate.envers.tools.query.Parameters;
-import org.hibernate.envers.tools.query.QueryBuilder;
+import org.hibernate.envers.internal.tools.query.Parameters;
+import org.hibernate.envers.internal.tools.query.QueryBuilder;
 
 /**
  * @author Adam Warski (adam at warski dot org)

@@ -6,7 +6,7 @@ import org.hibernate.envers.test.Priority;
 import org.hibernate.envers.test.integration.entityNames.manyToManyAudited.Car;
 import org.hibernate.envers.test.integration.entityNames.manyToManyAudited.Person;
 import org.hibernate.envers.test.tools.TestTools;
-import org.hibernate.envers.tools.Pair;
+import org.hibernate.envers.internal.tools.Pair;
 import org.junit.Test;
 
 import java.util.ArrayList;

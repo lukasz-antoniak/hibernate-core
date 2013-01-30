@@ -30,14 +30,14 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.configuration.AuditConfiguration;
-import org.hibernate.envers.configuration.AuditEntitiesConfiguration;
-import org.hibernate.envers.entities.mapper.relation.MiddleIdData;
+import org.hibernate.envers.configuration.internal.AuditEntitiesConfiguration;
+import org.hibernate.envers.internal.entities.mapper.relation.MiddleIdData;
 import org.hibernate.envers.query.criteria.AuditCriterion;
-import org.hibernate.envers.reader.AuditReaderImplementor;
+import org.hibernate.envers.internal.reader.AuditReaderImplementor;
 
-import static org.hibernate.envers.entities.mapper.relation.query.QueryConstants.REFERENCED_ENTITY_ALIAS;
-import static org.hibernate.envers.entities.mapper.relation.query.QueryConstants.REFERENCED_ENTITY_ALIAS_DEF_AUD_STR;
-import static org.hibernate.envers.entities.mapper.relation.query.QueryConstants.REVISION_PARAMETER;
+import static org.hibernate.envers.internal.entities.mapper.relation.query.QueryConstants.REFERENCED_ENTITY_ALIAS;
+import static org.hibernate.envers.internal.entities.mapper.relation.query.QueryConstants.REFERENCED_ENTITY_ALIAS_DEF_AUD_STR;
+import static org.hibernate.envers.internal.entities.mapper.relation.query.QueryConstants.REVISION_PARAMETER;
 
 /**
  * @author Adam Warski (adam at warski dot org)

@@ -24,9 +24,9 @@
 package org.hibernate.envers.event;
 
 import org.hibernate.envers.configuration.AuditConfiguration;
-import org.hibernate.envers.synchronization.AuditProcess;
-import org.hibernate.envers.synchronization.work.AuditWorkUnit;
-import org.hibernate.envers.synchronization.work.DelWorkUnit;
+import org.hibernate.envers.internal.synchronization.AuditProcess;
+import org.hibernate.envers.internal.synchronization.work.AuditWorkUnit;
+import org.hibernate.envers.internal.synchronization.work.DelWorkUnit;
 import org.hibernate.event.spi.PostDeleteEvent;
 import org.hibernate.event.spi.PostDeleteEventListener;
 import org.hibernate.persister.entity.EntityPersister;

@@ -34,18 +34,18 @@ import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.envers.configuration.AuditConfiguration;
-import org.hibernate.envers.entities.EntityInstantiator;
+import org.hibernate.envers.internal.entities.EntityInstantiator;
 import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.hibernate.envers.query.order.AuditOrder;
 import org.hibernate.envers.query.projection.AuditProjection;
-import org.hibernate.envers.reader.AuditReaderImplementor;
-import org.hibernate.envers.tools.Pair;
-import org.hibernate.envers.tools.Triple;
-import org.hibernate.envers.tools.query.QueryBuilder;
+import org.hibernate.envers.internal.reader.AuditReaderImplementor;
+import org.hibernate.envers.internal.tools.Pair;
+import org.hibernate.envers.internal.tools.Triple;
+import org.hibernate.envers.internal.tools.query.QueryBuilder;
 
-import static org.hibernate.envers.entities.mapper.relation.query.QueryConstants.REFERENCED_ENTITY_ALIAS;
+import static org.hibernate.envers.internal.entities.mapper.relation.query.QueryConstants.REFERENCED_ENTITY_ALIAS;
 
 /**
  * @author Adam Warski (adam at warski dot org)

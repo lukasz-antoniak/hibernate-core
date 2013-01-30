@@ -40,8 +40,7 @@
             which stores the historical data, whenever you commit a transaction. Envers automatically creates audit
             tables if <literal>hibernate.hbm2ddl.auto</literal> option is set to <literal>create</literal>,
             <literal>create-drop</literal> or <literal>update</literal>. Otherwise, to export complete database schema
-            programatically, use <literal>org.hibernate.tool.EnversSchemaGenerator</literal>. Appropriate DDL
-            statements can be also generated with Ant task described later in this manual.
+            programatically, use <literal>org.hibernate.tool.EnversSchemaGenerator</literal>.
         </para>
 
         <para>
@@ -1172,13 +1171,10 @@ query.add(AuditEntity.relatedId("address").eq(relatedEntityId));]]></programlist
         <title>Generating schema with Ant</title>
 
         <para>
-            If you'd like to generate the database schema file with the Hibernate Tools Ant task,
-            you'll probably notice that the generated file doesn't contain definitions of audit
-            tables. To generate also the audit tables, you simply need to use
-            <literal>org.hibernate.tool.ant.EnversHibernateToolTask</literal> instead of the usual
-            <literal>org.hibernate.tool.ant.HibernateToolTask</literal>. The former class extends
-            the latter, and only adds generation of the version entities. So you can use the task
-            just as you used to.
+            If you'd like to generate the database schema DDL script, use Hibernate Tools Ant task
+            (<literal>org.hibernate.tool.ant.HibernateToolTask</literal>) and make sure that Envers
+            JAR appears in the classpath. Automatic Envers discovery and integration requires
+            Hibernate Tools version 4.0.0.CR1 or above.
         </para>
 
         <para>
@@ -1188,7 +1184,7 @@ query.add(AuditEntity.relatedId("address").eq(relatedEntityId));]]></programlist
         <programlisting><![CDATA[<target name="schemaexport" depends="build-demo"
   description="Exports a generated schema to DB and file">
   <taskdef name="hibernatetool"
-    classname="org.hibernate.tool.ant.EnversHibernateToolTask"
+    classname="org.hibernate.tool.ant.HibernateToolTask"
     classpathref="build.demo.classpath"/>
 
   <hibernatetool destdir=".">

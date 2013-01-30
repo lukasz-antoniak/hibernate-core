@@ -21,8 +21,8 @@
  * 51 Franklin Street, Fifth Floor
  * Boston, MA  02110-1301  USA
  */
-
 package org.hibernate.envers.query.criteria;
+
 import java.util.Collection;
 
 import org.hibernate.criterion.MatchMode;
@@ -33,7 +33,7 @@ import org.hibernate.envers.query.projection.AuditProjection;
 import org.hibernate.envers.query.projection.PropertyAuditProjection;
 import org.hibernate.envers.query.property.ModifiedFlagPropertyName;
 import org.hibernate.envers.query.property.PropertyNameGetter;
-import org.hibernate.envers.tools.Triple;
+import org.hibernate.envers.internal.tools.Triple;
 
 /**
  * Create restrictions, projections and specify order for a property of an audited entity.

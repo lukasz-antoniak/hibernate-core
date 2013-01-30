@@ -14,7 +14,7 @@ import org.hibernate.envers.test.Priority;
 import org.hibernate.envers.test.entities.StrIntTestEntity;
 import org.hibernate.envers.test.entities.StrTestEntity;
 import org.hibernate.envers.test.tools.TestTools;
-import org.hibernate.envers.tools.Pair;
+import org.hibernate.envers.internal.tools.Pair;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.Table;
 

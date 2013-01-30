@@ -28,13 +28,13 @@ import java.util.Set;
 
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.envers.configuration.AuditConfiguration;
-import org.hibernate.envers.entities.RelationDescription;
-import org.hibernate.envers.entities.RelationType;
-import org.hibernate.envers.entities.mapper.id.IdMapper;
+import org.hibernate.envers.internal.entities.RelationDescription;
+import org.hibernate.envers.internal.entities.RelationType;
+import org.hibernate.envers.internal.entities.mapper.id.IdMapper;
 import org.hibernate.envers.exception.AuditException;
-import org.hibernate.envers.synchronization.AuditProcess;
-import org.hibernate.envers.synchronization.work.CollectionChangeWorkUnit;
-import org.hibernate.envers.tools.Tools;
+import org.hibernate.envers.internal.synchronization.AuditProcess;
+import org.hibernate.envers.internal.synchronization.work.CollectionChangeWorkUnit;
+import org.hibernate.envers.internal.tools.Tools;
 import org.hibernate.persister.entity.EntityPersister;
 import org.hibernate.proxy.HibernateProxy;
 

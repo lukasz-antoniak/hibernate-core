@@ -40,7 +40,6 @@ import org.hibernate.Session;
 import org.hibernate.dialect.MySQL5Dialect;
 import org.hibernate.dialect.SybaseASE15Dialect;
 import org.hibernate.envers.enhanced.SequenceIdRevisionEntity;
-import org.hibernate.envers.strategy.ValidityAuditStrategy;
 import org.hibernate.envers.test.BaseEnversJPAFunctionalTestCase;
 import org.hibernate.envers.test.Priority;
 import org.hibernate.envers.test.entities.manytomany.sametable.Child1Entity;
@@ -50,7 +49,7 @@ import org.hibernate.envers.test.tools.TestTools;
 
 /**
  * Test which checks that the revision end timestamp is correctly set for
- * {@link ValidityAuditStrategy}.
+ * {@link org.hibernate.envers.strategy.ValidityAuditStrategy}.
  * 
  * @author Erik-Berndt Scheper
  */
