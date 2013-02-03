@@ -40,7 +40,7 @@
             which stores the historical data, whenever you commit a transaction. Envers automatically creates audit
             tables if <literal>hibernate.hbm2ddl.auto</literal> option is set to <literal>create</literal>,
             <literal>create-drop</literal> or <literal>update</literal>. Otherwise, to export complete database schema
-            programatically, use <literal>org.hibernate.envers.tool.EnversSchemaGenerator</literal>.
+            programatically, use <literal>org.hibernate.envers.tool.hbm2ddl.EnversSchemaGenerator</literal>.
         </para>
 
         <para>

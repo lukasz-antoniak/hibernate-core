@@ -1,4 +1,4 @@
-package org.hibernate.envers.tool;
+package org.hibernate.envers.tool.hbm2ddl;
 
 import java.sql.Connection;
 import java.util.Properties;
