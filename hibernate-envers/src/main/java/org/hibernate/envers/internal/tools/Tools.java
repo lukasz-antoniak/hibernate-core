@@ -184,24 +184,6 @@ public class Tools {
     }
 
     /**
-     * @param properties Properties from which to read.
-     * @param propertyName The name of the property.
-     * @param legacyPropertyName Legacy name of the property. The value of this property is read if value for
-     * {@code propertyName} is not set.
-     * @param defaultValue Default value returned if a value neither for {@code propertyName} or
-     * {@code legacyPropertyName} is set.
-     * @return The value of the property, legacy proparty or the default value, if neither of the values are not set.
-     */
-    public static String getProperty(Properties properties, String propertyName, String legacyPropertyName, String defaultValue) {
-        String value = properties.getProperty(propertyName, null);
-        if (value == null) {
-            return properties.getProperty(legacyPropertyName, defaultValue);
-        } else {
-            return value;
-        }
-    }
-
-    /**
      * @return Java class mapped to specified entity name.
      */
     public static Class getEntityClass(SessionImplementor sessionImplementor, Session session, String entityName) {

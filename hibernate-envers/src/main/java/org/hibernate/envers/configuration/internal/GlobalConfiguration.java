@@ -26,8 +26,11 @@ package org.hibernate.envers.configuration.internal;
 import java.util.Properties;
 
 import org.hibernate.MappingException;
+import org.hibernate.cfg.Environment;
+import org.hibernate.dialect.HSQLDialect;
 import org.hibernate.envers.RevisionListener;
-import org.hibernate.envers.configuration.EnversEnvironment;
+import org.hibernate.envers.configuration.EnversSettings;
+import org.hibernate.internal.util.config.ConfigurationHelper;
 
 import static org.hibernate.envers.internal.tools.Tools.getProperty;
 
@@ -39,28 +42,28 @@ import static org.hibernate.envers.internal.tools.Tools.getProperty;
  */
 public class GlobalConfiguration {
 	// Should a revision be generated when a not-owned relation field changes
-    private final boolean generateRevisionsForCollections;
+	private final boolean generateRevisionsForCollections;
 
-    // Should the optimistic locking property of an entity be considered unversioned
-    private final boolean doNotAuditOptimisticLockingField;
+	// Should the optimistic locking property of an entity be considered unversioned
+	private final boolean doNotAuditOptimisticLockingField;
 
 	// Should entity data be stored when it is deleted
 	private final boolean storeDataAtDelete;
 
-    // The default name of the schema of audit tables.
-    private final String defaultSchemaName;
+	// The default name of the schema of audit tables.
+	private final String defaultSchemaName;
 
-    // The default name of the catalog of the audit tables.
-    private final String defaultCatalogName;
+	// The default name of the catalog of the audit tables.
+	private final String defaultCatalogName;
 
-    // Should Envers track (persist) entity names that have been changed during each revision.
-    private boolean trackEntitiesChangedInRevisionEnabled;
+	// Should Envers track (persist) entity names that have been changed during each revision.
+	private boolean trackEntitiesChangedInRevision;
 
-    // Revision listener class name.
-    private final Class<? extends RevisionListener> revisionListenerClass;
+	// Revision listener class name.
+	private final Class<? extends RevisionListener> revisionListenerClass;
 
 	// Should Envers use modified property flags by default
-    private boolean globalWithModifiedFlag;
+	private boolean globalWithModifiedFlag;
 
 	// Indicates that user defined global behavior for modified flags feature
 	private boolean hasGlobalSettingForWithModifiedFlag;
@@ -68,114 +71,101 @@ public class GlobalConfiguration {
 	// Suffix to be used for modified flags columns
 	private String modifiedFlagSuffix;
 
-    // Use revision entity with native id generator
-    private final boolean useRevisionEntityWithNativeId;
+	// Use revision entity with native id generator
+	private final boolean useRevisionEntityWithNativeId;
 
-    /*
-     Which operator to use in correlated subqueries (when we want a property to be equal to the result of
-     a correlated subquery, for example: e.p <operator> (select max(e2.p) where e2.p2 = e.p2 ...).
-     Normally, this should be "=". However, HSQLDB has an issue related to that, so as a workaround,
-     "in" is used. See {@link org.hibernate.envers.test.various.HsqlTest}.
-     */
-    private final String correlatedSubqueryOperator;
+	/*
+	 Which operator to use in correlated subqueries (when we want a property to be equal to the result of
+	 a correlated subquery, for example: e.p <operator> (select max(e2.p) where e2.p2 = e.p2 ...).
+	 Normally, this should be "=". However, HSQLDB has an issue related to that, so as a workaround,
+	 "in" is used. See {@link org.hibernate.envers.test.various.HsqlTest}.
+	*/
+	private final String correlatedSubqueryOperator;
 
-    public GlobalConfiguration(Properties properties) {
-        String generateRevisionsForCollectionsStr = getProperty(properties,
-                "org.hibernate.envers.revision_on_collection_change",
-                "org.hibernate.envers.revisionOnCollectionChange",
-                "true");
-        generateRevisionsForCollections = Boolean.parseBoolean(generateRevisionsForCollectionsStr);
+	public GlobalConfiguration(Properties properties) {
+		generateRevisionsForCollections = ConfigurationHelper.getBoolean(
+				EnversSettings.REVISION_ON_COLLECTION_CHANGE, properties, true
+		);
 
-        String ignoreOptimisticLockingPropertyStr = getProperty(properties,
-                "org.hibernate.envers.do_not_audit_optimistic_locking_field",
-                "org.hibernate.envers.doNotAuditOptimisticLockingField",
-                "true");
-        doNotAuditOptimisticLockingField = Boolean.parseBoolean(ignoreOptimisticLockingPropertyStr);
+		doNotAuditOptimisticLockingField = ConfigurationHelper.getBoolean(
+				EnversSettings.DO_NOT_AUDIT_OPTIMISTIC_LOCKING_FIELD, properties, true
+		);
 
-		String storeDataDeletedEntityStr = getProperty(properties,
-                "org.hibernate.envers.store_data_at_delete",
-                "org.hibernate.envers.storeDataAtDelete",
-                "false");
-		storeDataAtDelete = Boolean.parseBoolean(storeDataDeletedEntityStr);
+		storeDataAtDelete = ConfigurationHelper.getBoolean( EnversSettings.STORE_DATA_AT_DELETE, properties, false );
 
-        defaultSchemaName = properties.getProperty("org.hibernate.envers.default_schema", null);
-        defaultCatalogName = properties.getProperty("org.hibernate.envers.default_catalog", null);
+		defaultSchemaName = properties.getProperty( EnversSettings.DEFAULT_SCHEMA, null );
+		defaultCatalogName = properties.getProperty( EnversSettings.DEFAULT_CATALOG, null );
 
-        correlatedSubqueryOperator = "org.hibernate.dialect.HSQLDialect".equals(
-                properties.getProperty("hibernate.dialect")) ? "in" : "=";
+		correlatedSubqueryOperator = HSQLDialect.class.getName()
+				.equals( properties.get( Environment.DIALECT ) ) ? "in" : "=";
 
-        String trackEntitiesChangedInRevisionEnabledStr = getProperty(properties,
-        		"org.hibernate.envers.track_entities_changed_in_revision",
-        		"org.hibernate.envers.track_entities_changed_in_revision",
-        		"false");
-        trackEntitiesChangedInRevisionEnabled = Boolean.parseBoolean(trackEntitiesChangedInRevisionEnabledStr);
+		trackEntitiesChangedInRevision = ConfigurationHelper.getBoolean(
+				EnversSettings.TRACK_ENTITIES_CHANGED_IN_REVISION, properties, false
+		);
 
-        String useRevisionEntityWithNativeIdStr = getProperty(properties,
-        		"org.hibernate.envers.use_revision_entity_with_native_id",
-        		"org.hibernate.envers.use_revision_entity_with_native_id",
-        		"true");
-        useRevisionEntityWithNativeId = Boolean.parseBoolean(useRevisionEntityWithNativeIdStr);
+		useRevisionEntityWithNativeId = ConfigurationHelper.getBoolean(
+				EnversSettings.USE_REVISION_ENTITY_WITH_NATIVE_ID, properties, true
+		);
 
-		hasGlobalSettingForWithModifiedFlag =
-				properties.getProperty(EnversEnvironment.GLOBAL_WITH_MODIFIED_FLAG_PROPERTY) != null;
-		String usingModifiedFlagStr = getProperty(properties,
-				EnversEnvironment.GLOBAL_WITH_MODIFIED_FLAG_PROPERTY,
-				EnversEnvironment.GLOBAL_WITH_MODIFIED_FLAG_PROPERTY,
-        		"false");
-        globalWithModifiedFlag = Boolean.parseBoolean(usingModifiedFlagStr);
+		hasGlobalSettingForWithModifiedFlag = properties.get( EnversSettings.GLOBAL_WITH_MODIFIED_FLAG ) != null;
+		globalWithModifiedFlag = ConfigurationHelper.getBoolean(
+				EnversSettings.GLOBAL_WITH_MODIFIED_FLAG, properties, false
+		);
+		modifiedFlagSuffix = ConfigurationHelper.getString(
+				EnversSettings.MODIFIED_FLAG_SUFFIX, properties, "_MOD"
+		);
 
-		modifiedFlagSuffix =
-				getProperty(properties, EnversEnvironment.MODIFIED_FLAG_SUFFIX_PROPERTY,
-						EnversEnvironment.MODIFIED_FLAG_SUFFIX_PROPERTY, "_MOD");
+		String revisionListenerClassName = properties.getProperty( EnversSettings.REVISION_LISTENER, null );
+		if ( revisionListenerClassName != null ) {
+			try {
+				revisionListenerClass = (Class<? extends RevisionListener>) Thread.currentThread()
+											.getContextClassLoader().loadClass( revisionListenerClassName );
+			}
+			catch ( ClassNotFoundException e ) {
+				throw new MappingException( "Revision listener class not found: " + revisionListenerClassName + ".", e );
+			}
+		}
+		else {
+			revisionListenerClass = null;
+		}
+	}
 
-		String revisionListenerClassName = properties.getProperty("org.hibernate.envers.revision_listener", null);
-        if (revisionListenerClassName != null) {
-            try {
-                revisionListenerClass = (Class<? extends RevisionListener>) Thread.currentThread().getContextClassLoader().loadClass(revisionListenerClassName);
-            } catch (ClassNotFoundException e) {
-                throw new MappingException("Revision listener class not found: " + revisionListenerClassName + ".", e);
-            }
-        } else {
-            revisionListenerClass = null;
-        }
-    }
+	public boolean isGenerateRevisionsForCollections() {
+		return generateRevisionsForCollections;
+	}
 
-    public boolean isGenerateRevisionsForCollections() {
-        return generateRevisionsForCollections;
-    }
+	public boolean isDoNotAuditOptimisticLockingField() {
+		return doNotAuditOptimisticLockingField;
+	}
 
-    public boolean isDoNotAuditOptimisticLockingField() {
-        return doNotAuditOptimisticLockingField;
-    }
-
-    public String getCorrelatedSubqueryOperator() {
-        return correlatedSubqueryOperator;
-    }
+	public String getCorrelatedSubqueryOperator() {
+		return correlatedSubqueryOperator;
+	}
 
 	public boolean isStoreDataAtDelete() {
 		return storeDataAtDelete;
 	}
 
-    public String getDefaultSchemaName() {
-        return defaultSchemaName;
-    }
+	public String getDefaultSchemaName() {
+		return defaultSchemaName;
+	}
 
-    public String getDefaultCatalogName() {
-        return defaultCatalogName;
-    }
+	public String getDefaultCatalogName() {
+		return defaultCatalogName;
+	}
 
-    public boolean isTrackEntitiesChangedInRevisionEnabled() {
-        return trackEntitiesChangedInRevisionEnabled;
-    }
+	public boolean isTrackEntitiesChangedInRevision() {
+		return trackEntitiesChangedInRevision;
+	}
 
-    public void setTrackEntitiesChangedInRevisionEnabled(boolean trackEntitiesChangedInRevisionEnabled) {
-        this.trackEntitiesChangedInRevisionEnabled = trackEntitiesChangedInRevisionEnabled;
-    }
+	public void setTrackEntitiesChangedInRevision(boolean trackEntitiesChangedInRevision) {
+		this.trackEntitiesChangedInRevision = trackEntitiesChangedInRevision;
+	}
 
-    public Class<? extends RevisionListener> getRevisionListenerClass() {
-        return revisionListenerClass;
-    }
-	
+	public Class<? extends RevisionListener> getRevisionListenerClass() {
+		return revisionListenerClass;
+	}
+
 	public boolean hasSettingForUsingModifiedFlag() {
 		return hasGlobalSettingForWithModifiedFlag;
 	}
@@ -188,7 +178,7 @@ public class GlobalConfiguration {
 		return modifiedFlagSuffix;
 	}
 
-    public boolean isUseRevisionEntityWithNativeId() {
-        return useRevisionEntityWithNativeId;
-    }
+	public boolean isUseRevisionEntityWithNativeId() {
+		return useRevisionEntityWithNativeId;
+	}
 }

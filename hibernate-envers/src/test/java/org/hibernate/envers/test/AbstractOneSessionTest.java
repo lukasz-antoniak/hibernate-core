@@ -13,6 +13,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.configuration.EnversSettings;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.testing.AfterClassOnce;
 import org.hibernate.testing.BeforeClassOnce;
@@ -23,7 +24,6 @@ import org.hibernate.testing.ServiceRegistryBuilder;
  * auditReader must be used for the hole test.
  *
  * @author Hern&aacute;n Chanfreau
- *
  */
 public abstract class AbstractOneSessionTest extends AbstractEnversTest  {
 	protected Configuration config;
@@ -40,10 +40,10 @@ public abstract class AbstractOneSessionTest extends AbstractEnversTest  {
 
         String auditStrategy = getAuditStrategy();
         if (auditStrategy != null && !"".equals(auditStrategy)) {
-            config.setProperty("org.hibernate.envers.audit_strategy", auditStrategy);
+            config.setProperty(EnversSettings.AUDIT_STRATEGY, auditStrategy);
         }
         config.setProperty( Environment.USE_NEW_ID_GENERATOR_MAPPINGS, "true" );
-        config.setProperty("org.hibernate.envers.use_revision_entity_with_native_id", "false");
+        config.setProperty(EnversSettings.USE_REVISION_ENTITY_WITH_NATIVE_ID, "false");
         addProperties(config);
 
         this.initMappings();
@@ -101,12 +101,7 @@ public abstract class AbstractOneSessionTest extends AbstractEnversTest  {
 		return session;
 	}
 
-
-
 	protected AuditReader getAuditReader() {
 		return auditReader;
 	}
-
-
-
 }

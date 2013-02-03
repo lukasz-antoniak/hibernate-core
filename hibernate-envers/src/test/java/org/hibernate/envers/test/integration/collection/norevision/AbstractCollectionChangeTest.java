@@ -2,6 +2,7 @@ package org.hibernate.envers.test.integration.collection.norevision;
 
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.envers.configuration.EnversSettings;
 import org.hibernate.envers.test.BaseEnversFunctionalTestCase;
 import org.hibernate.envers.test.Priority;
 import org.junit.Test;
@@ -13,7 +14,7 @@ public abstract class AbstractCollectionChangeTest extends BaseEnversFunctionalT
 
     @Override
     protected void configure(Configuration configuration) {
-        configuration.setProperty("org.hibernate.envers.revision_on_collection_change", getCollectionChangeValue());
+        configuration.setProperty(EnversSettings.REVISION_ON_COLLECTION_CHANGE, getCollectionChangeValue());
     }
 
     @Override

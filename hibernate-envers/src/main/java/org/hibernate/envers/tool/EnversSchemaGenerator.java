@@ -1,4 +1,4 @@
-package org.hibernate.tool;
+package org.hibernate.envers.tool;
 
 import java.sql.Connection;
 import java.util.Properties;

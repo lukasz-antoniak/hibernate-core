@@ -106,7 +106,7 @@ public class RevisionInfoConfiguration {
                 revisionInfoTimestampType.getName(), true, false);
         MetadataTools.addColumn(timestampProperty, "REVTSTMP", null, null, null, null, null, null, false);
 
-        if (globalCfg.isTrackEntitiesChangedInRevisionEnabled()) {
+        if (globalCfg.isTrackEntitiesChangedInRevision()) {
             generateEntityNamesTrackingTableMapping(class_mapping, "modifiedEntityNames",
                                                     globalCfg.getDefaultSchemaName(), globalCfg.getDefaultCatalogName(),
                                                     "REVCHANGES", "REV", "ENTITYNAME", "string");
@@ -297,7 +297,7 @@ public class RevisionInfoConfiguration {
                 revisionInfoClass = pc.getMappedClass();
                 Class<? extends RevisionListener> revisionListenerClass = getRevisionListenerClass(revisionEntity.value());
                 revisionInfoTimestampType = pc.getProperty(revisionInfoTimestampData.getName()).getType();
-                if (globalCfg.isTrackEntitiesChangedInRevisionEnabled()
+                if (globalCfg.isTrackEntitiesChangedInRevision()
                         || (globalCfg.isUseRevisionEntityWithNativeId() && DefaultTrackingModifiedEntitiesRevisionEntity.class.isAssignableFrom(revisionInfoClass))
                         || (!globalCfg.isUseRevisionEntityWithNativeId() && SequenceIdTrackingModifiedEntitiesRevisionEntity.class.isAssignableFrom(revisionInfoClass))
                         || modifiedEntityNamesFound.isSet()) {
@@ -306,7 +306,7 @@ public class RevisionInfoConfiguration {
                     revisionInfoGenerator = new DefaultTrackingModifiedEntitiesRevisionInfoGenerator(revisionInfoEntityName,
                             revisionInfoClass, revisionListenerClass, revisionInfoTimestampData, isTimestampAsDate(),
                             modifiedEntityNamesData);
-                    globalCfg.setTrackEntitiesChangedInRevisionEnabled(true);
+                    globalCfg.setTrackEntitiesChangedInRevision(true);
                 } else {
                     revisionInfoGenerator = new DefaultRevisionInfoGenerator(revisionInfoEntityName, revisionInfoClass,
                             revisionListenerClass, revisionInfoTimestampData, isTimestampAsDate());
@@ -320,7 +320,7 @@ public class RevisionInfoConfiguration {
         Class<? extends RevisionListener> revisionListenerClass = getRevisionListenerClass(RevisionListener.class);
 
         if (revisionInfoGenerator == null) {
-            if (globalCfg.isTrackEntitiesChangedInRevisionEnabled()) {
+            if (globalCfg.isTrackEntitiesChangedInRevision()) {
                 revisionInfoClass = globalCfg.isUseRevisionEntityWithNativeId() ? DefaultTrackingModifiedEntitiesRevisionEntity.class
                                                                                 : SequenceIdTrackingModifiedEntitiesRevisionEntity.class;
                 revisionInfoEntityName = revisionInfoClass.getName();
@@ -341,8 +341,8 @@ public class RevisionInfoConfiguration {
                         revisionInfoTimestampData.getName(), isTimestampAsDate()),
                 generateRevisionInfoRelationMapping(),
                 new RevisionInfoNumberReader(revisionInfoClass, revisionInfoIdData),
-                globalCfg.isTrackEntitiesChangedInRevisionEnabled() ? new ModifiedEntityNamesReader(revisionInfoClass, modifiedEntityNamesData)
-                                                                    : null,
+                globalCfg.isTrackEntitiesChangedInRevision() ? new ModifiedEntityNamesReader(revisionInfoClass, modifiedEntityNamesData)
+                                                             : null,
                 revisionInfoEntityName, revisionInfoClass, revisionInfoTimestampData);
     }
 

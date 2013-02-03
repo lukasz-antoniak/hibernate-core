@@ -4,8 +4,9 @@ import org.hibernate.Session;
 import org.hibernate.envers.test.BaseEnversFunctionalTestCase;
 import org.hibernate.envers.test.Priority;
 import org.hibernate.envers.test.entities.StrTestEntity;
+import org.hibernate.envers.tool.EnversSchemaGenerator;
 import org.hibernate.testing.TestForIssue;
-import org.hibernate.tool.EnversSchemaGenerator;
+
 import org.junit.Assert;
 import org.junit.Test;
 

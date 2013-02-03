@@ -40,7 +40,7 @@
             which stores the historical data, whenever you commit a transaction. Envers automatically creates audit
             tables if <literal>hibernate.hbm2ddl.auto</literal> option is set to <literal>create</literal>,
             <literal>create-drop</literal> or <literal>update</literal>. Otherwise, to export complete database schema
-            programatically, use <literal>org.hibernate.tool.EnversSchemaGenerator</literal>.
+            programatically, use <literal>org.hibernate.envers.tool.EnversSchemaGenerator</literal>.
         </para>
 
         <para>
@@ -299,7 +299,7 @@
                             When set to false, such column can be added to selected entities or properties using the
                             <literal>@Audited</literal> annotation.
                             For more information refer to <xref linkend="envers-tracking-properties-changes"/>
-                            and <xref linkend="envers-envers-tracking-properties-changes-queries"/>.
+                            and <xref linkend="envers-tracking-properties-changes-queries"/>.
                         </entry>
                     </row>
                     <row>
@@ -734,7 +734,7 @@ Set<ModifiedEntityTypeEntity> modifiedEntityTypes = revEntity.getModifiedEntityT
         </para>
         <para>
             To see how "Modified Flags" can be utilized, check out the very
-            simple query API that uses them: <xref linkend="envers-envers-tracking-properties-changes-queries"/>.
+            simple query API that uses them: <xref linkend="envers-tracking-properties-changes-queries"/>.
         </para>
     </section>
 
@@ -928,7 +928,7 @@ query.add(AuditEntity.relatedId("address").eq(relatedEntityId));]]></programlist
 
         </section>
 
-        <section xml:id="envers-envers-tracking-properties-changes-queries">
+        <section xml:id="envers-tracking-properties-changes-queries">
 
             <title>Querying for revisions of entity that modified given property</title>
 
@@ -1067,7 +1067,7 @@ query.add(AuditEntity.relatedId("address").eq(relatedEntityId));]]></programlist
                     <para>
                         Create subclasses for appropriate event listeners. For example, if you want to
                         conditionally audit entity insertions, extend the
-                        <literal>org.hibernate.envers.eventEnversPostInsertEventListenerImpl</literal>
+                        <literal>org.hibernate.envers.event.EnversPostInsertEventListenerImpl</literal>
                         class. Place the conditional-auditing logic in the subclasses, call the super method if
                         auditing should be performed.
                     </para>

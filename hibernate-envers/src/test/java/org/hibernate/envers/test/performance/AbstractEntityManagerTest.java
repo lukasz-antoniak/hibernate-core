@@ -29,6 +29,7 @@ import java.util.Properties;
 import javax.persistence.EntityManager;
 
 import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
+import org.hibernate.envers.configuration.EnversSettings;
 import org.hibernate.jpa.test.PersistenceUnitDescriptorAdapter;
 import org.hibernate.envers.test.AbstractEnversTest;
 import org.junit.Before;
@@ -101,10 +102,10 @@ public abstract class AbstractEntityManagerTest extends AbstractEnversTest {
 		if ( createSchema() ) {
 			configurationProperties.setProperty( Environment.HBM2DDL_AUTO, "create-drop" );
 			configurationProperties.setProperty( Environment.USE_NEW_ID_GENERATOR_MAPPINGS, "true" );
-			configurationProperties.setProperty("org.hibernate.envers.use_revision_entity_with_native_id", "false");
+			configurationProperties.setProperty( EnversSettings.USE_REVISION_ENTITY_WITH_NATIVE_ID, "false" );
 		}
         if (auditStrategy != null && !"".equals(auditStrategy)) {
-            configurationProperties.setProperty("org.hibernate.envers.audit_strategy", auditStrategy);
+            configurationProperties.setProperty(EnversSettings.AUDIT_STRATEGY, auditStrategy);
         }
 
         addConfigurationProperties( configurationProperties );

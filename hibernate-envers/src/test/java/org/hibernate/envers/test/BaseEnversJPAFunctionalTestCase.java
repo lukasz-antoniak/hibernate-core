@@ -36,6 +36,7 @@ import org.jboss.logging.Logger;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.H2Dialect;
+import org.hibernate.envers.configuration.EnversSettings;
 import org.hibernate.jpa.test.PersistenceUnitDescriptorAdapter;
 import org.hibernate.engine.transaction.internal.jta.JtaStatusHelper;
 import org.hibernate.envers.AuditReader;
@@ -126,14 +127,14 @@ public abstract class BaseEnversJPAFunctionalTestCase extends AbstractEnversTest
 		}
 
 		if ( StringHelper.isNotEmpty( getAuditStrategy() ) ) {
-			settings.put( "org.hibernate.envers.audit_strategy", getAuditStrategy() );
+			settings.put( EnversSettings.AUDIT_STRATEGY, getAuditStrategy() );
 		}
 
 		if ( ! isAudit() ) {
 			settings.put( EnversIntegrator.AUTO_REGISTER, "false" );
 		}
 
-		settings.put( "org.hibernate.envers.use_revision_entity_with_native_id", "false" );
+		settings.put( EnversSettings.USE_REVISION_ENTITY_WITH_NATIVE_ID, "false" );
 
 		settings.put( org.hibernate.cfg.AvailableSettings.USE_NEW_ID_GENERATOR_MAPPINGS, "true" );
 		settings.put( org.hibernate.cfg.AvailableSettings.DIALECT, getDialect().getClass().getName() );

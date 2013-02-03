@@ -2,6 +2,7 @@ package org.hibernate.envers.test.integration.notupdatable;
 
 import junit.framework.Assert;
 
+import org.hibernate.envers.configuration.EnversSettings;
 import org.hibernate.envers.test.BaseEnversJPAFunctionalTestCase;
 import org.hibernate.envers.test.Priority;
 import org.hibernate.testing.TestForIssue;
@@ -21,7 +22,7 @@ public class PropertyNotUpdatableTest extends BaseEnversJPAFunctionalTestCase {
 
     @Override
     protected void addConfigOptions(Map options) {
-        options.put("org.hibernate.envers.store_data_at_delete", "true");
+        options.put(EnversSettings.STORE_DATA_AT_DELETE, "true");
     }
 
     @Override
