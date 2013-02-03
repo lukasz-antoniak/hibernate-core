@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.collection.spi.PersistentCollection;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.mapper.PropertyMapper;
 import org.hibernate.envers.internal.entities.mapper.relation.lazy.initializor.Initializor;
 import org.hibernate.envers.internal.entities.mapper.relation.lazy.initializor.ListCollectionInitializor;

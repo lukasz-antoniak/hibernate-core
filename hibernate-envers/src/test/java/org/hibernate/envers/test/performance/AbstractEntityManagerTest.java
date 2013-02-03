@@ -30,6 +30,7 @@ import javax.persistence.EntityManager;
 
 import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.envers.configuration.EnversSettings;
+import org.hibernate.envers.event.spi.EnversIntegrator;
 import org.hibernate.jpa.test.PersistenceUnitDescriptorAdapter;
 import org.hibernate.envers.test.AbstractEnversTest;
 import org.junit.Before;
@@ -42,7 +43,6 @@ import org.hibernate.jpa.boot.spi.Bootstrap;
 import org.hibernate.jpa.internal.EntityManagerFactoryImpl;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.event.EnversIntegrator;
 import org.hibernate.boot.registry.internal.StandardServiceRegistryImpl;
 import org.hibernate.testing.AfterClassOnce;
 import org.hibernate.testing.BeforeClassOnce;

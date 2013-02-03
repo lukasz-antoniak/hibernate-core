@@ -30,7 +30,7 @@ import java.util.Map;
 
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.PropertyData;
 import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.internal.reader.AuditReaderImplementor;

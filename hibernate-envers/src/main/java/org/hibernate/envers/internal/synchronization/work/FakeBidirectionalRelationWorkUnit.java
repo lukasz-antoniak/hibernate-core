@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.envers.RevisionType;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.RelationDescription;
 
 /**

@@ -21,31 +21,31 @@
  * 51 Franklin Street, Fifth Floor
  * Boston, MA  02110-1301  USA
  */
-package org.hibernate.envers.event;
+package org.hibernate.envers.event.spi;
 
 import org.hibernate.engine.spi.CollectionEntry;
-import org.hibernate.envers.configuration.AuditConfiguration;
-import org.hibernate.event.spi.PostCollectionRecreateEvent;
-import org.hibernate.event.spi.PostCollectionRecreateEventListener;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
+import org.hibernate.event.spi.PreCollectionRemoveEvent;
+import org.hibernate.event.spi.PreCollectionRemoveEventListener;
 
 /**
  * @author Adam Warski (adam at warski dot org)
  * @author HernпїЅn Chanfreau
  * @author Steve Ebersole
  */
-public class EnversPostCollectionRecreateEventListenerImpl
-		extends  BaseEnversCollectionEventListener
-		implements PostCollectionRecreateEventListener {
+public class EnversPreCollectionRemoveEventListenerImpl
+		extends BaseEnversCollectionEventListener
+		implements PreCollectionRemoveEventListener {
 
-	protected EnversPostCollectionRecreateEventListenerImpl(AuditConfiguration enversConfiguration) {
+	protected EnversPreCollectionRemoveEventListenerImpl(AuditConfiguration enversConfiguration) {
 		super( enversConfiguration );
 	}
 
 	@Override
-	public void onPostRecreateCollection(PostCollectionRecreateEvent event) {
+	public void onPreRemoveCollection(PreCollectionRemoveEvent event) {
         CollectionEntry collectionEntry = getCollectionEntry( event );
-        if ( ! collectionEntry.getLoadedPersister().isInverse() ) {
-            onCollectionAction( event, event.getCollection(), null, collectionEntry );
+        if ( collectionEntry != null && !collectionEntry.getLoadedPersister().isInverse() ) {
+            onCollectionAction( event, null, collectionEntry.getSnapshot(), collectionEntry );
         }
 	}
 }

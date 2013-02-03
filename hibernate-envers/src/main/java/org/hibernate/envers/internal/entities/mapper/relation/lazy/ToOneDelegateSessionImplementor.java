@@ -24,7 +24,7 @@
 package org.hibernate.envers.internal.entities.mapper.relation.lazy;
 
 import org.hibernate.HibernateException;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.mapper.relation.ToOneEntityLoader;
 import org.hibernate.envers.internal.reader.AuditReaderImplementor;
 

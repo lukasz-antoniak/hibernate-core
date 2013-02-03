@@ -21,15 +21,31 @@
  * 51 Franklin Street, Fifth Floor
  * Boston, MA  02110-1301  USA
  */
-package org.hibernate.envers.event;
+package org.hibernate.envers.event.spi;
 
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.engine.spi.CollectionEntry;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
+import org.hibernate.event.spi.PostCollectionRecreateEvent;
+import org.hibernate.event.spi.PostCollectionRecreateEventListener;
 
 /**
- * Marker interface for Envers listeners for duplication handling.
- *
+ * @author Adam Warski (adam at warski dot org)
+ * @author HernпїЅn Chanfreau
  * @author Steve Ebersole
  */
-public interface EnversListener {
-	public AuditConfiguration getAuditConfiguration();
+public class EnversPostCollectionRecreateEventListenerImpl
+		extends  BaseEnversCollectionEventListener
+		implements PostCollectionRecreateEventListener {
+
+	protected EnversPostCollectionRecreateEventListenerImpl(AuditConfiguration enversConfiguration) {
+		super( enversConfiguration );
+	}
+
+	@Override
+	public void onPostRecreateCollection(PostCollectionRecreateEvent event) {
+        CollectionEntry collectionEntry = getCollectionEntry( event );
+        if ( ! collectionEntry.getLoadedPersister().isInverse() ) {
+            onCollectionAction( event, event.getCollection(), null, collectionEntry );
+        }
+	}
 }

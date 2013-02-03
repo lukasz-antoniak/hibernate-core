@@ -27,7 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 import java.util.SortedSet;
 
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.mapper.relation.MiddleComponentData;
 import org.hibernate.envers.internal.entities.mapper.relation.query.RelationQueryGenerator;
 import org.hibernate.envers.exception.AuditException;

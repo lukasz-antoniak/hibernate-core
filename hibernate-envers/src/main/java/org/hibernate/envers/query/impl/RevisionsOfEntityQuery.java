@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.envers.RevisionType;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.configuration.internal.AuditEntitiesConfiguration;
 import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.query.criteria.AuditCriterion;

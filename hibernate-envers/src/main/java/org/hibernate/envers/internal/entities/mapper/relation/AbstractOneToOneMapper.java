@@ -6,7 +6,7 @@ import javax.persistence.NoResultException;
 
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.PropertyData;
 import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.internal.reader.AuditReaderImplementor;

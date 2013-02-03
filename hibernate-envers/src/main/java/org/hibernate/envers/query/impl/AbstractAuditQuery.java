@@ -33,7 +33,7 @@ import org.hibernate.FlushMode;
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.EntityInstantiator;
 import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.query.AuditQuery;

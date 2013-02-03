@@ -21,14 +21,14 @@
  * 51 Franklin Street, Fifth Floor
  * Boston, MA  02110-1301  USA
  */
-package org.hibernate.envers.event;
+package org.hibernate.envers.event.spi;
 
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.synchronization.AuditProcess;
+import org.hibernate.envers.internal.synchronization.work.AddWorkUnit;
 import org.hibernate.envers.internal.synchronization.work.AuditWorkUnit;
-import org.hibernate.envers.internal.synchronization.work.ModWorkUnit;
-import org.hibernate.event.spi.PostUpdateEvent;
-import org.hibernate.event.spi.PostUpdateEventListener;
+import org.hibernate.event.spi.PostInsertEvent;
+import org.hibernate.event.spi.PostInsertEventListener;
 import org.hibernate.persister.entity.EntityPersister;
 
 /**
@@ -36,30 +36,26 @@ import org.hibernate.persister.entity.EntityPersister;
  * @author HernпїЅn Chanfreau
  * @author Steve Ebersole
  */
-public class EnversPostUpdateEventListenerImpl extends BaseEnversEventListener implements PostUpdateEventListener {
-	protected EnversPostUpdateEventListenerImpl(AuditConfiguration enversConfiguration) {
+public class EnversPostInsertEventListenerImpl extends BaseEnversEventListener implements PostInsertEventListener {
+	public EnversPostInsertEventListenerImpl(AuditConfiguration enversConfiguration) {
 		super( enversConfiguration );
 	}
 
-	@Override
-	public void onPostUpdate(PostUpdateEvent event) {
+    public void onPostInsert(PostInsertEvent event) {
         String entityName = event.getPersister().getEntityName();
 
-        if ( getAuditConfiguration().getEntCfg().isVersioned(entityName) ) {
+        if ( getAuditConfiguration().getEntCfg().isVersioned( entityName ) ) {
             checkIfTransactionInProgress(event.getSession());
 
             AuditProcess auditProcess = getAuditConfiguration().getSyncManager().get(event.getSession());
 
-			final Object[] newDbState = postUpdateDBState( event );
-
-            AuditWorkUnit workUnit = new ModWorkUnit(
+            AuditWorkUnit workUnit = new AddWorkUnit(
 					event.getSession(),
 					event.getPersister().getEntityName(),
 					getAuditConfiguration(),
                     event.getId(),
 					event.getPersister(),
-					newDbState,
-					event.getOldState()
+					event.getState()
 			);
             auditProcess.addWorkUnit( workUnit );
 
@@ -68,27 +64,12 @@ public class EnversPostUpdateEventListenerImpl extends BaseEnversEventListener i
 						auditProcess,
 						event.getPersister(),
 						entityName,
-						newDbState,
-                        event.getOldState(),
+						event.getState(),
+                        null,
 						event.getSession()
 				);
             }
         }
-	}
-
-	private Object[] postUpdateDBState(PostUpdateEvent event) {
-		Object[] newDbState = event.getState().clone();
-		if ( event.getOldState() != null ) {
-			EntityPersister entityPersister = event.getPersister();
-			for ( int i = 0; i < entityPersister.getPropertyNames().length; ++i ) {
-				if ( !entityPersister.getPropertyUpdateability()[i] ) {
-					// Assuming that PostUpdateEvent#getOldState() returns database state of the record before modification.
-					// Otherwise, we would have to execute SQL query to be sure of @Column(updatable = false) column value.
-					newDbState[i] = event.getOldState()[i];
-				}
-			}
-		}
-		return newDbState;
 	}
 
 	@Override

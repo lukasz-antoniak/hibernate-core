@@ -21,7 +21,7 @@
  * 51 Franklin Street, Fifth Floor
  * Boston, MA  02110-1301  USA
  */
-package org.hibernate.envers.configuration;
+package org.hibernate.envers.configuration.spi;
 
 import java.util.Map;
 import java.util.Properties;

@@ -21,14 +21,14 @@
  * 51 Franklin Street, Fifth Floor
  * Boston, MA  02110-1301  USA
  */
-package org.hibernate.envers.event;
+package org.hibernate.envers.event.spi;
 
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.synchronization.AuditProcess;
-import org.hibernate.envers.internal.synchronization.work.AddWorkUnit;
 import org.hibernate.envers.internal.synchronization.work.AuditWorkUnit;
-import org.hibernate.event.spi.PostInsertEvent;
-import org.hibernate.event.spi.PostInsertEventListener;
+import org.hibernate.envers.internal.synchronization.work.DelWorkUnit;
+import org.hibernate.event.spi.PostDeleteEvent;
+import org.hibernate.event.spi.PostDeleteEventListener;
 import org.hibernate.persister.entity.EntityPersister;
 
 /**
@@ -36,26 +36,27 @@ import org.hibernate.persister.entity.EntityPersister;
  * @author HernпїЅn Chanfreau
  * @author Steve Ebersole
  */
-public class EnversPostInsertEventListenerImpl extends BaseEnversEventListener implements PostInsertEventListener {
-	public EnversPostInsertEventListenerImpl(AuditConfiguration enversConfiguration) {
+public class EnversPostDeleteEventListenerImpl extends BaseEnversEventListener implements PostDeleteEventListener {
+	protected EnversPostDeleteEventListenerImpl(AuditConfiguration enversConfiguration) {
 		super( enversConfiguration );
 	}
 
-    public void onPostInsert(PostInsertEvent event) {
+	@Override
+	public void onPostDelete(PostDeleteEvent event) {
         String entityName = event.getPersister().getEntityName();
 
         if ( getAuditConfiguration().getEntCfg().isVersioned( entityName ) ) {
             checkIfTransactionInProgress(event.getSession());
 
-            AuditProcess auditProcess = getAuditConfiguration().getSyncManager().get(event.getSession());
+            AuditProcess auditProcess = getAuditConfiguration().getSyncManager().get( event.getSession() );
 
-            AuditWorkUnit workUnit = new AddWorkUnit(
+            AuditWorkUnit workUnit = new DelWorkUnit(
 					event.getSession(),
 					event.getPersister().getEntityName(),
 					getAuditConfiguration(),
                     event.getId(),
 					event.getPersister(),
-					event.getState()
+					event.getDeletedState()
 			);
             auditProcess.addWorkUnit( workUnit );
 
@@ -64,12 +65,12 @@ public class EnversPostInsertEventListenerImpl extends BaseEnversEventListener i
 						auditProcess,
 						event.getPersister(),
 						entityName,
-						event.getState(),
-                        null,
+						null,
+                        event.getDeletedState(),
 						event.getSession()
 				);
-            }
-        }
+			}
+		}
 	}
 
 	@Override

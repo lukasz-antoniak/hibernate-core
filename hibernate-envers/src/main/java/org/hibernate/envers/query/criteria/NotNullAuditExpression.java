@@ -23,7 +23,7 @@
  */
 package org.hibernate.envers.query.criteria;
 
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.RelationDescription;
 import org.hibernate.envers.query.property.PropertyNameGetter;
 import org.hibernate.envers.internal.tools.query.Parameters;

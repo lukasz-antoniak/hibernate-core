@@ -23,7 +23,7 @@
  */
 package org.hibernate.envers.query;
 
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.query.impl.EntitiesAtRevisionQuery;
 import org.hibernate.envers.query.impl.EntitiesModifiedAtRevisionQuery;
 import org.hibernate.envers.query.impl.RevisionsOfEntityQuery;

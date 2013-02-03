@@ -1048,7 +1048,7 @@ query.add(AuditEntity.relatedId("address").eq(relatedEntityId));]]></programlist
         <title>Conditional auditing</title>
         <para>
             Envers persists audit data in reaction to various Hibernate events (e.g. post update, post insert, and
-            so on), using a series of even listeners from the <literal>org.hibernate.envers.event</literal>
+            so on), using a series of even listeners from the <literal>org.hibernate.envers.event.spi</literal>
             package. By default, if the Envers jar is in the classpath, the event listeners are auto-registered with
             Hibernate.
         </para>
@@ -1067,7 +1067,7 @@ query.add(AuditEntity.relatedId("address").eq(relatedEntityId));]]></programlist
                     <para>
                         Create subclasses for appropriate event listeners. For example, if you want to
                         conditionally audit entity insertions, extend the
-                        <literal>org.hibernate.envers.event.EnversPostInsertEventListenerImpl</literal>
+                        <literal>org.hibernate.envers.event.spi.EnversPostInsertEventListenerImpl</literal>
                         class. Place the conditional-auditing logic in the subclasses, call the super method if
                         auditing should be performed.
                     </para>
@@ -1075,7 +1075,7 @@ query.add(AuditEntity.relatedId("address").eq(relatedEntityId));]]></programlist
                 <listitem>
                     <para>
                         Create your own implementation of <literal>org.hibernate.integrator.spi.Integrator</literal>,
-                        similar to <literal>org.hibernate.envers.event.EnversIntegrator</literal>. Use your event
+                        similar to <literal>org.hibernate.envers.event.spi.EnversIntegrator</literal>. Use your event
                         listener classes instead of the default ones.
                     </para>
                 </listitem>

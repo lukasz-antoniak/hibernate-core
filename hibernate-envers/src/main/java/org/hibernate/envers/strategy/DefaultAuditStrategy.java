@@ -3,7 +3,7 @@ package org.hibernate.envers.strategy;
 import java.io.Serializable;
 
 import org.hibernate.Session;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.configuration.internal.GlobalConfiguration;
 import org.hibernate.envers.internal.entities.mapper.PersistentCollectionChangeData;
 import org.hibernate.envers.internal.entities.mapper.relation.MiddleComponentData;

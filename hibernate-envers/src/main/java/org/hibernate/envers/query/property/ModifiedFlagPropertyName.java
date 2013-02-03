@@ -23,7 +23,7 @@
  */
 
 package org.hibernate.envers.query.property;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.configuration.internal.metadata.MetadataTools;
 
 /**

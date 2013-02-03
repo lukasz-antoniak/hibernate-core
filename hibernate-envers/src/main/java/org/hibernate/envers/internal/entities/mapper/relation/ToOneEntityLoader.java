@@ -2,7 +2,7 @@ package org.hibernate.envers.internal.entities.mapper.relation;
 
 import java.io.Serializable;
 
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.mapper.relation.lazy.ToOneDelegateSessionImplementor;
 import org.hibernate.envers.internal.reader.AuditReaderImplementor;
 import org.hibernate.persister.entity.EntityPersister;

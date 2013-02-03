@@ -29,7 +29,7 @@ import java.util.Map;
 
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.envers.RevisionType;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 
 /**
  * @author Adam Warski (adam at warski dot org)

@@ -21,7 +21,7 @@
  * 51 Franklin Street, Fifth Floor
  * Boston, MA  02110-1301  USA
  */
-package org.hibernate.envers.event;
+package org.hibernate.envers.event.spi;
 
 import java.io.Serializable;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.Set;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.engine.spi.CollectionEntry;
 import org.hibernate.envers.RevisionType;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.EntityConfiguration;
 import org.hibernate.envers.internal.entities.RelationDescription;
 import org.hibernate.envers.internal.entities.mapper.PersistentCollectionChangeData;
@@ -71,7 +71,7 @@ public abstract class BaseEnversCollectionEventListener extends BaseEnversEventL
         }
         if ( getAuditConfiguration().getEntCfg().isVersioned( entityName ) ) {
             checkIfTransactionInProgress(event.getSession());
-            
+
             AuditProcess auditProcess = getAuditConfiguration().getSyncManager().get(event.getSession());
 
             String ownerEntityName = ((AbstractCollectionPersister) collectionEntry.getLoadedPersister()).getOwnerEntityName();
@@ -126,7 +126,7 @@ public abstract class BaseEnversCollectionEventListener extends BaseEnversEventL
     /**
      * Looks up a relation description corresponding to the given property in the given entity. If no description is
      * found in the given entity, the parent entity is checked (so that inherited relations work).
-	 *
+     *
      * @param entityName Name of the entity, in which to start looking.
      * @param referencingPropertyName The name of the property.
 	 * 

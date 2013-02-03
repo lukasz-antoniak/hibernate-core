@@ -21,31 +21,25 @@
  * 51 Franklin Street, Fifth Floor
  * Boston, MA  02110-1301  USA
  */
-package org.hibernate.envers.event;
+package org.hibernate.envers.event.spi;
 
-import org.hibernate.engine.spi.CollectionEntry;
-import org.hibernate.envers.configuration.AuditConfiguration;
-import org.hibernate.event.spi.PreCollectionUpdateEvent;
-import org.hibernate.event.spi.PreCollectionUpdateEventListener;
+import org.hibernate.event.service.spi.DuplicationStrategy;
 
 /**
- * @author Adam Warski (adam at warski dot org)
- * @author HernпїЅn Chanfreau
+ * Event listener duplication strategy for envers
+ *
  * @author Steve Ebersole
  */
-public class EnversPreCollectionUpdateEventListenerImpl
-		extends BaseEnversCollectionEventListener
-		implements PreCollectionUpdateEventListener {
+public class EnversListenerDuplicationStrategy implements DuplicationStrategy {
+	public static final EnversListenerDuplicationStrategy INSTANCE = new EnversListenerDuplicationStrategy();
 
-	protected EnversPreCollectionUpdateEventListenerImpl(AuditConfiguration enversConfiguration) {
-		super( enversConfiguration );
+	@Override
+	public boolean areMatch(Object listener, Object original) {
+		return listener.getClass().equals( original ) && EnversListener.class.isInstance( listener );
 	}
 
 	@Override
-	public void onPreUpdateCollection(PreCollectionUpdateEvent event) {
-        CollectionEntry collectionEntry = getCollectionEntry( event );
-        if ( ! collectionEntry.getLoadedPersister().isInverse() ) {
-            onCollectionAction( event, event.getCollection(), collectionEntry.getSnapshot(), collectionEntry );
-        }
+	public Action getAction() {
+		return Action.KEEP_ORIGINAL;
 	}
 }

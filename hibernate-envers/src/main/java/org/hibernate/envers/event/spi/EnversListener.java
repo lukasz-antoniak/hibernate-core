@@ -21,31 +21,15 @@
  * 51 Franklin Street, Fifth Floor
  * Boston, MA  02110-1301  USA
  */
-package org.hibernate.envers.event;
+package org.hibernate.envers.event.spi;
 
-import org.hibernate.engine.spi.CollectionEntry;
-import org.hibernate.envers.configuration.AuditConfiguration;
-import org.hibernate.event.spi.PreCollectionRemoveEvent;
-import org.hibernate.event.spi.PreCollectionRemoveEventListener;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 
 /**
- * @author Adam Warski (adam at warski dot org)
- * @author HernпїЅn Chanfreau
+ * Marker interface for Envers listeners for duplication handling.
+ *
  * @author Steve Ebersole
  */
-public class EnversPreCollectionRemoveEventListenerImpl
-		extends BaseEnversCollectionEventListener
-		implements PreCollectionRemoveEventListener {
-
-	protected EnversPreCollectionRemoveEventListenerImpl(AuditConfiguration enversConfiguration) {
-		super( enversConfiguration );
-	}
-
-	@Override
-	public void onPreRemoveCollection(PreCollectionRemoveEvent event) {
-        CollectionEntry collectionEntry = getCollectionEntry( event );
-        if ( collectionEntry != null && !collectionEntry.getLoadedPersister().isInverse() ) {
-            onCollectionAction( event, null, collectionEntry.getSnapshot(), collectionEntry );
-        }
-	}
+public interface EnversListener {
+	public AuditConfiguration getAuditConfiguration();
 }

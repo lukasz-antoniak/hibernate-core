@@ -26,7 +26,7 @@ package org.hibernate.envers.internal.entities.mapper.relation;
 import java.util.Comparator;
 import java.util.SortedMap;
 
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.mapper.relation.lazy.initializor.Initializor;
 import org.hibernate.envers.internal.entities.mapper.relation.lazy.initializor.SortedMapCollectionInitializor;
 import org.hibernate.envers.internal.reader.AuditReaderImplementor;

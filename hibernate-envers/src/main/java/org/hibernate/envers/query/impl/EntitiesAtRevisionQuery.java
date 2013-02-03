@@ -29,7 +29,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.envers.RevisionType;
-import org.hibernate.envers.configuration.AuditConfiguration;
+import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.configuration.internal.AuditEntitiesConfiguration;
 import org.hibernate.envers.internal.entities.mapper.relation.MiddleIdData;
 import org.hibernate.envers.query.criteria.AuditCriterion;
