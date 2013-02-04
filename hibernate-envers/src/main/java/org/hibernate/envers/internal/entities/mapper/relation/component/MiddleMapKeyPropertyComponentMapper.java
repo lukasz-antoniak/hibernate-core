@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.hibernate.envers.internal.entities.EntityInstantiator;
 import org.hibernate.envers.internal.tools.query.Parameters;
-import org.hibernate.envers.internal.tools.reflection.ReflectionTools;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 
 /**
  * A component mapper for the @MapKey mapping with the name parameter specified: the value of the map's key

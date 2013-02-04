@@ -29,7 +29,7 @@ import java.util.Map;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.configuration.spi.AuditConfiguration;
-import org.hibernate.envers.internal.tools.Tools;
+import org.hibernate.envers.internal.tools.ArraysTools;
 import org.hibernate.persister.entity.EntityPersister;
 
 /**
@@ -56,7 +56,7 @@ public class AddWorkUnit extends AbstractAuditWorkUnit implements AuditWorkUnit 
 
         this.data = data;
         final String[] propertyNames = sessionImplementor.getFactory().getEntityPersister(getEntityName()).getPropertyNames();
-        this.state = Tools.mapToArray(data, propertyNames);
+        this.state = ArraysTools.mapToArray(data, propertyNames);
     }
 
     public boolean containsWork() {

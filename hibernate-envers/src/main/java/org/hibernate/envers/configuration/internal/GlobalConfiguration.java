@@ -26,13 +26,14 @@ package org.hibernate.envers.configuration.internal;
 import java.util.Properties;
 
 import org.hibernate.MappingException;
+import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
+import org.hibernate.boot.registry.classloading.spi.ClassLoadingException;
 import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.HSQLDialect;
 import org.hibernate.envers.RevisionListener;
 import org.hibernate.envers.configuration.EnversSettings;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.internal.util.config.ConfigurationHelper;
-
-import static org.hibernate.envers.internal.tools.Tools.getProperty;
 
 /**
  * @author Adam Warski (adam at warski dot org)
@@ -82,7 +83,7 @@ public class GlobalConfiguration {
 	*/
 	private final String correlatedSubqueryOperator;
 
-	public GlobalConfiguration(Properties properties) {
+	public GlobalConfiguration(Properties properties, ClassLoaderService classLoaderService) {
 		generateRevisionsForCollections = ConfigurationHelper.getBoolean(
 				EnversSettings.REVISION_ON_COLLECTION_CHANGE, properties, true
 		);
@@ -118,10 +119,9 @@ public class GlobalConfiguration {
 		String revisionListenerClassName = properties.getProperty( EnversSettings.REVISION_LISTENER, null );
 		if ( revisionListenerClassName != null ) {
 			try {
-				revisionListenerClass = (Class<? extends RevisionListener>) Thread.currentThread()
-											.getContextClassLoader().loadClass( revisionListenerClassName );
+				revisionListenerClass = ReflectionTools.loadClass( revisionListenerClassName, classLoaderService );
 			}
-			catch ( ClassNotFoundException e ) {
+			catch ( ClassLoadingException e ) {
 				throw new MappingException( "Revision listener class not found: " + revisionListenerClassName + ".", e );
 			}
 		}

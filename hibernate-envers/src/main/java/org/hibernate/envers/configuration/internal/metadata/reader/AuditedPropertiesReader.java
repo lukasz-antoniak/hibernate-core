@@ -26,8 +26,8 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.envers.configuration.internal.GlobalConfiguration;
 import org.hibernate.envers.configuration.internal.metadata.MetadataTools;
 import org.hibernate.envers.internal.tools.MappingTools;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.envers.internal.tools.StringTools;
-import org.hibernate.envers.internal.tools.Tools;
 import org.hibernate.mapping.Component;
 import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Value;
@@ -201,7 +201,7 @@ public class AuditedPropertiesReader {
      * @return Property object.
      */
     private XProperty getProperty(XClass clazz, String propertyName) {
-        XProperty property = Tools.getProperty(clazz, propertyName);
+        XProperty property = ReflectionTools.getProperty(clazz, propertyName);
         if (property == null) {
             throw new MappingException("Property '" + propertyName + "' not found in class " + clazz.getName() + ". " +
                                        "Please revise Envers annotations applied to class " + persistentPropertiesSource.getXClass() + ".");

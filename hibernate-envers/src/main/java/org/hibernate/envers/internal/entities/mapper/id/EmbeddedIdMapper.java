@@ -30,7 +30,7 @@ import java.util.Map;
 
 import org.hibernate.envers.internal.entities.PropertyData;
 import org.hibernate.envers.exception.AuditException;
-import org.hibernate.envers.internal.tools.reflection.ReflectionTools;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.internal.util.ReflectHelper;
 import org.hibernate.property.Getter;
 import org.hibernate.property.Setter;
@@ -41,7 +41,7 @@ import org.hibernate.property.Setter;
 public class EmbeddedIdMapper extends AbstractCompositeIdMapper implements SimpleIdMapperBuilder {
     private PropertyData idPropertyData;
 
-    public EmbeddedIdMapper(PropertyData idPropertyData, String compositeIdClass) {
+    public EmbeddedIdMapper(PropertyData idPropertyData, Class compositeIdClass) {
         super(compositeIdClass);
 
         this.idPropertyData = idPropertyData;

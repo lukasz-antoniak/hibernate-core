@@ -8,7 +8,7 @@ import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.internal.revisioninfo.RevisionInfoGenerator;
 import org.hibernate.envers.internal.synchronization.work.AuditWorkUnit;
 import org.hibernate.envers.internal.synchronization.work.PersistentCollectionChangeWorkUnit;
-import org.hibernate.envers.internal.tools.Tools;
+import org.hibernate.envers.internal.tools.EntityTools;
 
 /**
  * Notifies {@link RevisionInfoGenerator} about changes made in the current revision.
@@ -36,7 +36,7 @@ public class EntityChangeNotifier {
             // Notify about a change in collection owner entity.
             entityId = ((PersistentCollectionChangeWorkUnit.PersistentCollectionChangeWorkUnitId) entityId).getOwnerId();
         }
-        Class entityClass = Tools.getEntityClass(sessionImplementor, session, vwu.getEntityName());
+        Class entityClass = EntityTools.getEntityClass(sessionImplementor, session, vwu.getEntityName());
         revisionInfoGenerator.entityChanged(entityClass, vwu.getEntityName(), entityId, vwu.getRevisionType(),
                                             currentRevisionData);
     }

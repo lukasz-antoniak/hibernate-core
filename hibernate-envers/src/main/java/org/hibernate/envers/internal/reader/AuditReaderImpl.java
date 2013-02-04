@@ -48,7 +48,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import static org.hibernate.envers.internal.tools.ArgumentsTools.checkNotNull;
 import static org.hibernate.envers.internal.tools.ArgumentsTools.checkPositive;
-import static org.hibernate.envers.internal.tools.Tools.getTargetClassIfProxied;
+import static org.hibernate.envers.internal.tools.EntityTools.getTargetClassIfProxied;
 
 /**
  * @author Adam Warski (adam at warski dot org)

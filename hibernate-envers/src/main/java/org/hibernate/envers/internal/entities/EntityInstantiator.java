@@ -28,7 +28,7 @@ import org.hibernate.envers.internal.entities.mapper.id.IdMapper;
 import org.hibernate.envers.internal.entities.mapper.relation.lazy.ToOneDelegateSessionImplementor;
 import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.internal.reader.AuditReaderImplementor;
-import org.hibernate.envers.internal.tools.reflection.ReflectionTools;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.internal.util.ReflectHelper;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
@@ -96,7 +96,7 @@ public class EntityInstantiator {
         		entCfg = verCfg.getEntCfg().getNotVersionEntityConfiguration(entityName);
         	}
 
-            Class<?> cls = ReflectionTools.loadClass(entCfg.getEntityClassName());
+            Class<?> cls = ReflectionTools.loadClass(entCfg.getEntityClassName(), verCfg.getClassLoaderService());
             ret = ReflectHelper.getDefaultConstructor(cls).newInstance();
         } catch (Exception e) {
             throw new AuditException(e);
@@ -127,7 +127,7 @@ public class EntityInstantiator {
                 final Serializable entityId = initializer.getIdentifier();
                 if (verCfg.getEntCfg().isVersioned(entityName)) {
                     final String entityClassName = verCfg.getEntCfg().get(entityName).getEntityClassName();
-                    final ToOneDelegateSessionImplementor delegate = new ToOneDelegateSessionImplementor(versionsReader, ReflectionTools.loadClass(entityClassName), entityId, revision, verCfg);
+                    final ToOneDelegateSessionImplementor delegate = new ToOneDelegateSessionImplementor(versionsReader, ReflectionTools.loadClass(entityClassName, verCfg.getClassLoaderService()), entityId, revision, verCfg);
                     originalId.put(key,
                             versionsReader.getSessionImplementor().getFactory().getEntityPersister(entityName).createProxy(entityId, delegate));
                 }

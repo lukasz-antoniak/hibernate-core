@@ -12,7 +12,7 @@ import org.hibernate.envers.internal.entities.PropertyData;
 import org.hibernate.envers.internal.entities.mapper.PersistentCollectionChangeData;
 import org.hibernate.envers.internal.entities.mapper.PropertyMapper;
 import org.hibernate.envers.internal.reader.AuditReaderImplementor;
-import org.hibernate.envers.internal.tools.reflection.ReflectionTools;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.property.Setter;
 
 /**
@@ -59,7 +59,7 @@ public abstract class AbstractToOneMapper implements PropertyMapper {
             entCfg = verCfg.getEntCfg().getNotVersionEntityConfiguration(entityName);
             isRelationAudited = false;
         }
-        Class entityClass = ReflectionTools.loadClass(entCfg.getEntityClassName());
+        Class entityClass = ReflectionTools.loadClass(entCfg.getEntityClassName(), verCfg.getClassLoaderService());
         return new EntityInfo(entityClass, entityName, isRelationAudited);
     }
 

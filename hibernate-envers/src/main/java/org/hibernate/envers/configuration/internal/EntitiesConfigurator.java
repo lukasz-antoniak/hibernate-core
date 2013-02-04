@@ -39,6 +39,7 @@ import org.dom4j.io.XMLWriter;
 
 import org.hibernate.MappingException;
 import org.hibernate.annotations.common.reflection.ReflectionManager;
+import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.envers.configuration.internal.metadata.AuditEntityNameRegister;
 import org.hibernate.envers.configuration.internal.metadata.AuditMetadataGenerator;
@@ -57,7 +58,7 @@ import org.hibernate.mapping.PersistentClass;
 public class EntitiesConfigurator {
     public EntitiesConfigurations configure(Configuration cfg, ReflectionManager reflectionManager,
                                             GlobalConfiguration globalCfg, AuditEntitiesConfiguration verEntCfg,
-                                            AuditStrategy auditStrategy,
+                                            AuditStrategy auditStrategy, ClassLoaderService classLoaderService,
                                             Document revisionInfoXmlMapping, Element revisionInfoRelationMapping) {
         // Creating a name register to capture all audit entity names created.
         AuditEntityNameRegister auditEntityNameRegister = new AuditEntityNameRegister();
@@ -85,7 +86,7 @@ public class EntitiesConfigurator {
         classesAuditingData.updateCalculatedFields();
 
         AuditMetadataGenerator auditMetaGen = new AuditMetadataGenerator(cfg, globalCfg, verEntCfg, auditStrategy,
-                revisionInfoRelationMapping, auditEntityNameRegister);
+                classLoaderService, revisionInfoRelationMapping, auditEntityNameRegister);
 
         // First pass
         for (Map.Entry<PersistentClass, ClassAuditingData> pcDatasEntry : classesAuditingData.getAllClassAuditedData()) {

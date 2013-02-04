@@ -34,7 +34,7 @@ import org.hibernate.envers.internal.entities.mapper.id.IdMapper;
 import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.internal.synchronization.AuditProcess;
 import org.hibernate.envers.internal.synchronization.work.CollectionChangeWorkUnit;
-import org.hibernate.envers.internal.tools.Tools;
+import org.hibernate.envers.internal.tools.EntityTools;
 import org.hibernate.persister.entity.EntityPersister;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -84,7 +84,7 @@ public abstract class BaseEnversEventListener implements EnversListener {
 				Object oldValue = oldState == null ? null : oldState[i];
 				Object newValue = newState == null ? null : newState[i];
 
-				if (!Tools.entitiesEqual( session, relDesc.getToEntityName(), oldValue, newValue )) {
+				if (!EntityTools.entitiesEqual(session, relDesc.getToEntityName(), oldValue, newValue)) {
 					// We have to generate changes both in the old collection (size decreses) and new collection
 					// (size increases).
 					if (newValue != null) {
@@ -111,7 +111,7 @@ public abstract class BaseEnversEventListener implements EnversListener {
 		    toEntityName = session.bestGuessEntityName(value);
 		    id = hibernateProxy.getHibernateLazyInitializer().getIdentifier();
             // We've got to initialize the object from the proxy to later read its state.
-            value = Tools.getTargetFromProxy(session.getFactory(), hibernateProxy);
+            value = EntityTools.getTargetFromProxy(session.getFactory(), hibernateProxy);
 		} else {
 	        toEntityName =  session.guessEntityName(value);
 

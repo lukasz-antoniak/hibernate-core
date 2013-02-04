@@ -16,7 +16,7 @@ import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.query.criteria.RevisionTypeAuditExpression;
 import org.hibernate.envers.internal.tools.Pair;
-import org.hibernate.envers.internal.tools.Tools;
+import org.hibernate.envers.internal.tools.EntityTools;
 
 import static org.hibernate.envers.internal.tools.ArgumentsTools.checkNotNull;
 import static org.hibernate.envers.internal.tools.ArgumentsTools.checkPositive;
@@ -93,7 +93,7 @@ public class CrossTypeRevisionChangesReaderImpl implements CrossTypeRevisionChan
                 // Generate result that contains entity names and corresponding Java classes.
                 Set<Pair<String, Class>> result = new HashSet<Pair<String, Class>>();
                 for (String entityName : entityNames) {
-                    result.add(Pair.make(entityName, Tools.getEntityClass(sessionImplementor, session, entityName)));
+                    result.add(Pair.make(entityName, EntityTools.getEntityClass(sessionImplementor, session, entityName)));
                 }
                 return result;
             }

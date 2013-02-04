@@ -26,7 +26,7 @@ package org.hibernate.envers.internal.tools;
 /**
  * @author Adam Warski (adam at warski dot org)
  */
-public class ArgumentsTools {
+public abstract class ArgumentsTools {
     public static void checkNotNull(Object o, String paramName) {
         if (o == null) {
             throw new IllegalArgumentException(paramName + " cannot be null.");

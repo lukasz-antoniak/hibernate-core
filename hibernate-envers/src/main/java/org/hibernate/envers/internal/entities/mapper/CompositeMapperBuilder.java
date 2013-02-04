@@ -28,6 +28,6 @@ import org.hibernate.envers.internal.entities.PropertyData;
  * @author Adam Warski (adam at warski dot org)
  */
 public interface CompositeMapperBuilder extends SimpleMapperBuilder {    
-    public CompositeMapperBuilder addComponent(PropertyData propertyData, String componentClassName);
+    public CompositeMapperBuilder addComponent(PropertyData propertyData, Class componentClass);
     public void addComposite(PropertyData propertyData, PropertyMapper propertyMapper);
 }

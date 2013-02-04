@@ -22,6 +22,7 @@
  * Boston, MA  02110-1301  USA
  */
 package org.hibernate.envers.configuration.internal.metadata;
+
 import java.util.Iterator;
 
 import org.dom4j.Element;
@@ -38,6 +39,7 @@ import org.hibernate.envers.internal.entities.mapper.id.EmbeddedIdMapper;
 import org.hibernate.envers.internal.entities.mapper.id.MultipleIdMapper;
 import org.hibernate.envers.internal.entities.mapper.id.SimpleIdMapperBuilder;
 import org.hibernate.envers.internal.entities.mapper.id.SingleIdMapper;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.mapping.Component;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
@@ -108,7 +110,10 @@ public final class IdMetadataGenerator {
         if (id_mapper != null) {
             // Multiple id
 
-            mapper = new MultipleIdMapper(((Component) pc.getIdentifier()).getComponentClassName());
+            Class componentClass = ReflectionTools.loadClass(
+                    ( (Component) pc.getIdentifier() ).getComponentClassName(), mainGenerator.getClassLoaderService()
+            );
+            mapper = new MultipleIdMapper( componentClass );
             if (!addIdProperties(rel_id_mapping, (Iterator<Property>) id_mapper.getPropertyIterator(), mapper, false, audited)) {
                 return null;
             }
@@ -122,7 +127,10 @@ public final class IdMetadataGenerator {
 
             Component id_component = (Component) id_prop.getValue();
 
-            mapper = new EmbeddedIdMapper(getIdPropertyData(id_prop), id_component.getComponentClassName());
+            Class embeddableClass = ReflectionTools.loadClass(
+                    id_component.getComponentClassName(), mainGenerator.getClassLoaderService()
+            );
+            mapper = new EmbeddedIdMapper(getIdPropertyData(id_prop), embeddableClass);
             if (!addIdProperties(rel_id_mapping, (Iterator<Property>) id_component.getPropertyIterator(), mapper, false, audited)) {
                 return null;
             }

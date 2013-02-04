@@ -43,7 +43,7 @@ import org.hibernate.envers.internal.revisioninfo.RevisionInfoQueryCreator;
 import org.hibernate.envers.strategy.ValidityAuditStrategy;
 import org.hibernate.envers.strategy.AuditStrategy;
 import org.hibernate.envers.internal.synchronization.AuditProcessManager;
-import org.hibernate.envers.internal.tools.reflection.ReflectionTools;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.internal.util.ReflectHelper;
 import org.hibernate.property.Getter;
 import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
@@ -95,6 +95,10 @@ public class AuditConfiguration {
 		return auditStrategy;
 	}
 
+	public ClassLoaderService getClassLoaderService() {
+		return classLoaderService;
+	}
+
 	public AuditConfiguration(Configuration cfg) {
 		this( cfg, null );
 	}
@@ -103,7 +107,7 @@ public class AuditConfiguration {
 		Properties properties = cfg.getProperties();
 
 		ReflectionManager reflectionManager = cfg.getReflectionManager();
-		globalCfg = new GlobalConfiguration( properties );
+		globalCfg = new GlobalConfiguration( properties, classLoaderService );
 		RevisionInfoConfiguration revInfoCfg = new RevisionInfoConfiguration( globalCfg );
 		RevisionInfoConfigurationResult revInfoCfgResult = revInfoCfg.configure( cfg, reflectionManager );
 		auditEntCfg = new AuditEntitiesConfiguration( properties, revInfoCfgResult.getRevisionInfoEntityName() );
@@ -117,26 +121,16 @@ public class AuditConfiguration {
 				revInfoCfgResult.getRevisionInfoTimestampData()
 		);
 		entCfg = new EntitiesConfigurator().configure(
-				cfg, reflectionManager, globalCfg, auditEntCfg, auditStrategy,
+				cfg, reflectionManager, globalCfg, auditEntCfg, auditStrategy, classLoaderService,
 				revInfoCfgResult.getRevisionInfoXmlMapping(), revInfoCfgResult.getRevisionInfoRelationMapping()
 		);
 	}
 
 	private AuditStrategy initializeAuditStrategy(Class<?> revisionInfoClass, PropertyData revisionInfoTimestampData) {
-		AuditStrategy strategy;
+		AuditStrategy strategy = null;
 
 		try {
-
-			Class<?> auditStrategyClass = null;
-			if ( classLoaderService != null ) {
-				auditStrategyClass = classLoaderService.classForName( auditEntCfg.getAuditStrategyName() );
-			}
-			else {
-				auditStrategyClass = Thread.currentThread()
-						.getContextClassLoader()
-						.loadClass( auditEntCfg.getAuditStrategyName() );
-			}
-
+			Class<?> auditStrategyClass = ReflectionTools.loadClass( auditEntCfg.getAuditStrategyName(), classLoaderService );
 			strategy = (AuditStrategy) ReflectHelper.getDefaultConstructor(auditStrategyClass).newInstance();
 		}
 		catch ( Exception e ) {
@@ -155,10 +149,7 @@ public class AuditConfiguration {
 		return strategy;
 	}
 
-	//
-
-	private static Map<Configuration, AuditConfiguration> cfgs
-			= new WeakHashMap<Configuration, AuditConfiguration>();
+	private static Map<Configuration, AuditConfiguration> cfgs = new WeakHashMap<Configuration, AuditConfiguration>();
 
 	public synchronized static AuditConfiguration getFor(Configuration cfg) {
 		return getFor( cfg, null );

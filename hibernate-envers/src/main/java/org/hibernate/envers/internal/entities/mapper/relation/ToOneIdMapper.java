@@ -31,7 +31,7 @@ import org.hibernate.envers.configuration.spi.AuditConfiguration;
 import org.hibernate.envers.internal.entities.PropertyData;
 import org.hibernate.envers.internal.entities.mapper.id.IdMapper;
 import org.hibernate.envers.internal.reader.AuditReaderImplementor;
-import org.hibernate.envers.internal.tools.Tools;
+import org.hibernate.envers.internal.tools.EntityTools;
 
 /**
  * @author Adam Warski (adam at warski dot org)
@@ -81,7 +81,7 @@ public class ToOneIdMapper extends AbstractToOneMapper {
 
     protected boolean checkModified(SessionImplementor session, Object newObj, Object oldObj) {
         //noinspection SimplifiableConditionalExpression
-        return nonInsertableFake ? false : !Tools.entitiesEqual(session, referencedEntityName, newObj, oldObj);
+        return nonInsertableFake ? false : !EntityTools.entitiesEqual(session, referencedEntityName, newObj, oldObj);
     }
 
     public void nullSafeMapToEntityFromMap(AuditConfiguration verCfg, Object obj, Map data, Object primaryKey,

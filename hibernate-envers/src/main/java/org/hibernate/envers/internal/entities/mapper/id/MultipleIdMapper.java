@@ -35,7 +35,7 @@ import org.hibernate.internal.util.ReflectHelper;
  * @author Adam Warski (adam at warski dot org)
  */
 public class MultipleIdMapper extends AbstractCompositeIdMapper implements SimpleIdMapperBuilder {
-    public MultipleIdMapper(String compositeIdClass) {
+    public MultipleIdMapper(Class compositeIdClass) {
         super(compositeIdClass);
     }
 
@@ -76,8 +76,7 @@ public class MultipleIdMapper extends AbstractCompositeIdMapper implements Simpl
 
         Object ret;
         try {
-            final Class clazz = Thread.currentThread().getContextClassLoader().loadClass(compositeIdClass);
-            ret = ReflectHelper.getDefaultConstructor(clazz).newInstance();
+            ret = ReflectHelper.getDefaultConstructor(compositeIdClass).newInstance();
         } catch (Exception e) {
             throw new AuditException(e);
         }

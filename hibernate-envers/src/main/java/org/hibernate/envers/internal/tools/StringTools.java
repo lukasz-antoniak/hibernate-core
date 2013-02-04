@@ -28,7 +28,7 @@ import java.util.Iterator;
 /**
  * @author Adam Warski (adam at warski dot org)
  */
-public class StringTools {
+public abstract class StringTools {
     public static boolean isEmpty(String s) {
         return s == null || "".equals(s);
     }

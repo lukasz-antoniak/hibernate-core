@@ -23,7 +23,7 @@
  */
 package org.hibernate.envers.internal.revisioninfo;
 import org.hibernate.envers.internal.entities.PropertyData;
-import org.hibernate.envers.internal.tools.reflection.ReflectionTools;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.property.Getter;
 
 /**

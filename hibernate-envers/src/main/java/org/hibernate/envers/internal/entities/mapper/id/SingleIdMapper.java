@@ -28,7 +28,7 @@ import java.util.Map;
 
 import org.hibernate.envers.internal.entities.PropertyData;
 import org.hibernate.envers.exception.AuditException;
-import org.hibernate.envers.internal.tools.reflection.ReflectionTools;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.property.Getter;
 import org.hibernate.property.Setter;
 import org.hibernate.proxy.HibernateProxy;

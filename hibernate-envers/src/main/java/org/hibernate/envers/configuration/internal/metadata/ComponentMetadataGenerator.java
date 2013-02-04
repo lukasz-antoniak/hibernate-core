@@ -6,6 +6,7 @@ import org.dom4j.Element;
 import org.hibernate.envers.configuration.internal.metadata.reader.ComponentAuditingData;
 import org.hibernate.envers.configuration.internal.metadata.reader.PropertyAuditingData;
 import org.hibernate.envers.internal.entities.mapper.CompositeMapperBuilder;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.mapping.Component;
 import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Value;
@@ -27,8 +28,8 @@ public final class ComponentMetadataGenerator {
 							 EntityXmlMappingData xmlMappingData, boolean firstPass) {
 		Component prop_component = (Component) value;
 
-		CompositeMapperBuilder componentMapper = mapper.addComponent(propertyAuditingData.getPropertyData(),
-				prop_component.getComponentClassName());
+		Class componentClass = ReflectionTools.loadClass( prop_component.getComponentClassName(), mainGenerator.getClassLoaderService() );
+		CompositeMapperBuilder componentMapper = mapper.addComponent(propertyAuditingData.getPropertyData(), componentClass);
 
 		// The property auditing data must be for a component.
 		ComponentAuditingData componentAuditingData = (ComponentAuditingData) propertyAuditingData;

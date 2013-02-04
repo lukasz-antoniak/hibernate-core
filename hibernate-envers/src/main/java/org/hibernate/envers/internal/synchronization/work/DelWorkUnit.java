@@ -29,7 +29,7 @@ import java.util.Map;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.configuration.spi.AuditConfiguration;
-import org.hibernate.envers.internal.tools.Tools;
+import org.hibernate.envers.internal.tools.ArraysTools;
 import org.hibernate.persister.entity.EntityPersister;
 
 /**
@@ -70,7 +70,7 @@ public class DelWorkUnit extends AbstractAuditWorkUnit implements AuditWorkUnit 
     }
 
     public AuditWorkUnit merge(AddWorkUnit second) {
-        if (Tools.arraysEqual(second.getState(), state)) {
+        if (ArraysTools.arraysEqual(second.getState(), state)) {
             return null; // Return null if object's state has not changed.
         }
         return new ModWorkUnit(sessionImplementor, entityName, verCfg, id, entityPersister, second.getState(), state); 

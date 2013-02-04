@@ -34,7 +34,7 @@ import org.hibernate.envers.internal.reader.AuditReaderImplementor;
 import org.hibernate.envers.internal.tools.MappingTools;
 import org.hibernate.envers.internal.tools.Pair;
 import org.hibernate.envers.internal.tools.Tools;
-import org.hibernate.envers.internal.tools.reflection.ReflectionTools;
+import org.hibernate.envers.internal.tools.ReflectionTools;
 import org.hibernate.property.Getter;
 
 /**
@@ -57,13 +57,13 @@ public class MultiPropertyMapper implements ExtendedPropertyMapper {
         propertyDatas.put(propertyData.getName(), propertyData);
     }
 
-    public CompositeMapperBuilder addComponent(PropertyData propertyData, String componentClassName) {
+    public CompositeMapperBuilder addComponent(PropertyData propertyData, Class componentClass) {
         if (properties.get(propertyData) != null) {
 			// This is needed for second pass to work properly in the components mapper
             return (CompositeMapperBuilder) properties.get(propertyData);
         }
 
-        ComponentPropertyMapper componentMapperBuilder = new ComponentPropertyMapper(propertyData, componentClassName);
+        ComponentPropertyMapper componentMapperBuilder = new ComponentPropertyMapper(propertyData, componentClass);
 		addComposite(propertyData, componentMapperBuilder);
 
         return componentMapperBuilder;

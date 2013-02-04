@@ -35,11 +35,10 @@ import org.hibernate.internal.util.ReflectHelper;
  */
 public abstract class AbstractCompositeIdMapper extends AbstractIdMapper implements SimpleIdMapperBuilder {
     protected Map<PropertyData, SingleIdMapper> ids;
-    protected String compositeIdClass;
+    protected Class compositeIdClass;
 
-    protected AbstractCompositeIdMapper(String compositeIdClass) {
+    protected AbstractCompositeIdMapper(Class compositeIdClass) {
         ids = Tools.newLinkedHashMap();
-        
         this.compositeIdClass = compositeIdClass;
     }
 
@@ -54,8 +53,7 @@ public abstract class AbstractCompositeIdMapper extends AbstractIdMapper impleme
 
         Object ret;
         try {
-            final Class clazz = Thread.currentThread().getContextClassLoader().loadClass(compositeIdClass);
-            ret = ReflectHelper.getDefaultConstructor(clazz).newInstance();
+            ret = ReflectHelper.getDefaultConstructor(compositeIdClass).newInstance();
         } catch (Exception e) {
             throw new AuditException(e);
         }

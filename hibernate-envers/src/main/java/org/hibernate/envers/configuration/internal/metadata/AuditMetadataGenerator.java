@@ -30,6 +30,7 @@ import org.dom4j.Element;
 import org.jboss.logging.Logger;
 
 import org.hibernate.MappingException;
+import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.envers.configuration.internal.AuditEntitiesConfiguration;
@@ -78,6 +79,7 @@ public final class AuditMetadataGenerator {
     private final GlobalConfiguration globalCfg;
     private final AuditEntitiesConfiguration verEntCfg;
     private final AuditStrategy auditStrategy;
+    private final ClassLoaderService classLoaderService;
     private final Element revisionInfoRelationMapping;
 
     /*
@@ -101,13 +103,14 @@ public final class AuditMetadataGenerator {
 
     public AuditMetadataGenerator(Configuration cfg, GlobalConfiguration globalCfg,
                                   AuditEntitiesConfiguration verEntCfg,
-                                  AuditStrategy auditStrategy,
+                                  AuditStrategy auditStrategy, ClassLoaderService classLoaderService,
                                   Element revisionInfoRelationMapping,
                                   AuditEntityNameRegister auditEntityNameRegister) {
         this.cfg = cfg;
         this.globalCfg = globalCfg;
         this.verEntCfg = verEntCfg;
         this.auditStrategy = auditStrategy;
+        this.classLoaderService = classLoaderService;
         this.revisionInfoRelationMapping = revisionInfoRelationMapping;
 
         this.basicMetadataGenerator = new BasicMetadataGenerator();
@@ -547,6 +550,10 @@ public final class AuditMetadataGenerator {
 
     AuditStrategy getAuditStrategy() {
         return auditStrategy;
+    }
+
+    ClassLoaderService getClassLoaderService() {
+        return classLoaderService;
     }
 
     AuditEntityNameRegister getAuditEntityNameRegister() {
