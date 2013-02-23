@@ -22,6 +22,7 @@
  * Boston, MA  02110-1301  USA
  */
 package org.hibernate.envers.entities.mapper.relation;
+
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -39,7 +40,6 @@ import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.configuration.AuditConfiguration;
 import org.hibernate.envers.entities.PropertyData;
 import org.hibernate.envers.entities.mapper.PersistentCollectionChangeData;
-import org.hibernate.envers.entities.mapper.PropertyMapper;
 import org.hibernate.envers.entities.mapper.relation.lazy.initializor.Initializor;
 import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.reader.AuditReaderImplementor;
@@ -51,16 +51,19 @@ import org.hibernate.property.Setter;
  * @author Adam Warski (adam at warski dot org)
  * @author Michal Skowronek (mskowr at o2 dot pl)
  */
-public abstract class AbstractCollectionMapper<T> implements PropertyMapper {
+public abstract class AbstractCollectionMapper<T> implements CollectionPropertyMapper {
     protected final CommonCollectionMapperData commonCollectionMapperData;    
     protected final Class<? extends T> collectionClass;
+	protected final boolean revisionTypeInId;
 
     private final Constructor<? extends T> proxyConstructor;
 
     protected AbstractCollectionMapper(CommonCollectionMapperData commonCollectionMapperData,
-                                       Class<? extends T> collectionClass, Class<? extends T> proxyClass) {
+                                       Class<? extends T> collectionClass, Class<? extends T> proxyClass,
+									   boolean revisionTypeInId) {
         this.commonCollectionMapperData = commonCollectionMapperData;
         this.collectionClass = collectionClass;
+		this.revisionTypeInId = revisionTypeInId;
 
         try {
             proxyConstructor = proxyClass.getConstructor(Initializor.class);
@@ -74,13 +77,14 @@ public abstract class AbstractCollectionMapper<T> implements PropertyMapper {
 
     /**
      * Maps the changed collection element to the given map.
+	 * @param idData Map to which composite-id data should be added.
      * @param data Where to map the data.
      * @param changed The changed collection element to map.
      */
-    protected abstract void mapToMapFromObject(Map<String, Object> data, Object changed);
+    protected abstract void mapToMapFromObject(SessionImplementor session, Map<String, Object> idData, Map<String, Object> data, Object changed);
 
-    private void addCollectionChanges(List<PersistentCollectionChangeData> collectionChanges, Set<Object> changed,
-                                      RevisionType revisionType, Serializable id) {
+    private void addCollectionChanges(SessionImplementor session, List<PersistentCollectionChangeData> collectionChanges,
+									  Set<Object> changed, RevisionType revisionType, Serializable id) {
         for (Object changedObj : changed) {
             Map<String, Object> entityData = new HashMap<String, Object>();
             Map<String, Object> originalId = new HashMap<String, Object>();
@@ -92,18 +96,18 @@ public abstract class AbstractCollectionMapper<T> implements PropertyMapper {
             commonCollectionMapperData.getReferencingIdData().getPrefixedMapper().mapToMapFromId(originalId, id);
 
             // Mapping collection element and index (if present).
-            mapToMapFromObject(originalId, changedObj);
+            mapToMapFromObject(session, originalId, entityData, changedObj);
 
-            entityData.put(commonCollectionMapperData.getVerEntCfg().getRevisionTypePropName(), revisionType);
+			(revisionTypeInId ? originalId : entityData).put(commonCollectionMapperData.getVerEntCfg().getRevisionTypePropName(), revisionType);
         }
     }
 
     @SuppressWarnings({"unchecked"})
-    public List<PersistentCollectionChangeData> mapCollectionChanges(String referencingPropertyName,
+    public List<PersistentCollectionChangeData> mapCollectionChanges(SessionImplementor session,
+																	 String referencingPropertyName,
                                                                      PersistentCollection newColl,
                                                                      Serializable oldColl, Serializable id) {
-        if (!commonCollectionMapperData.getCollectionReferencingPropertyData().getName()
-                .equals(referencingPropertyName)) {
+        if (!commonCollectionMapperData.getCollectionReferencingPropertyData().getName().equals(referencingPropertyName)) {
             return null;
         }
 
@@ -119,14 +123,14 @@ public abstract class AbstractCollectionMapper<T> implements PropertyMapper {
 		// removeAll in AbstractSet has an implementation that is hashcode-change sensitive (as opposed to addAll).
         if (oldColl != null) { added.removeAll(new HashSet(oldCollection)); }
 
-        addCollectionChanges(collectionChanges, added, RevisionType.ADD, id);
+        addCollectionChanges(session, collectionChanges, added, RevisionType.ADD, id);
 
         Set<Object> deleted = new HashSet<Object>();
         if (oldColl != null) { deleted.addAll(oldCollection); }
 		// The same as above - re-hashing new collection.
         if (newColl != null) { deleted.removeAll(new HashSet(newCollection)); }
 
-        addCollectionChanges(collectionChanges, deleted, RevisionType.DEL, id);
+        addCollectionChanges(session, collectionChanges, deleted, RevisionType.DEL, id);
 
         return collectionChanges;
     }
@@ -146,7 +150,7 @@ public abstract class AbstractCollectionMapper<T> implements PropertyMapper {
 			} else if (isFromNullToEmptyOrFromEmptyToNull((PersistentCollection) newObj, (Serializable) oldObj)) {
                 data.put(propertyData.getModifiedFlagPropertyName(), true);
 			} else {
-				List<PersistentCollectionChangeData> changes = mapCollectionChanges(
+				List<PersistentCollectionChangeData> changes = mapCollectionChanges(session,
                         commonCollectionMapperData.getCollectionReferencingPropertyData().getName(),
 						(PersistentCollection) newObj, (Serializable) oldObj, null);
                 data.put(propertyData.getModifiedFlagPropertyName(), !changes.isEmpty());

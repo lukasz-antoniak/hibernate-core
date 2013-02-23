@@ -57,6 +57,7 @@ public final class TwoEntityQueryGenerator implements RelationQueryGenerator {
                                    String versionsMiddleEntityName,
                                    MiddleIdData referencingIdData,
                                    MiddleIdData referencedIdData,
+								   boolean revisionTypeInId,
                                    MiddleComponentData... componentDatas) {
         this.referencingIdData = referencingIdData;
 
@@ -118,12 +119,13 @@ public final class TwoEntityQueryGenerator implements RelationQueryGenerator {
         // --> based on auditStrategy (see above)
         auditStrategy.addAssociationAtRevisionRestriction(qb, revisionPropertyPath,
         		verEntCfg.getRevisionEndFieldName(), true, referencingIdData, versionsMiddleEntityName,
-        		eeOriginalIdPropertyPath, revisionPropertyPath, originalIdPropertyName, componentDatas);
+        		eeOriginalIdPropertyPath, revisionPropertyPath, originalIdPropertyName, MIDDLE_ENTITY_ALIAS, componentDatas);
 
         // ee.revision_type != DEL
-        rootParameters.addWhereWithNamedParam(verEntCfg.getRevisionTypePropName(), "!=", DEL_REVISION_TYPE_PARAMETER);
+		String revisionTypePropName = (revisionTypeInId ? verEntCfg.getOriginalIdPropName() + "." + verEntCfg.getRevisionTypePropName() : verEntCfg.getRevisionTypePropName());
+        rootParameters.addWhereWithNamedParam(revisionTypePropName, "!=", DEL_REVISION_TYPE_PARAMETER);
         // e.revision_type != DEL
-        rootParameters.addWhereWithNamedParam(REFERENCED_ENTITY_ALIAS + "." + verEntCfg.getRevisionTypePropName(), false, "!=", DEL_REVISION_TYPE_PARAMETER);
+        rootParameters.addWhereWithNamedParam(REFERENCED_ENTITY_ALIAS + "." + revisionTypePropName, false, "!=", DEL_REVISION_TYPE_PARAMETER);
 
         StringBuilder sb = new StringBuilder();
         qb.build(sb, Collections.<String, Object>emptyMap());

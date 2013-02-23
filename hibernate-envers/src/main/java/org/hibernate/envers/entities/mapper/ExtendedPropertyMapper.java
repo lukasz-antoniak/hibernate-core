@@ -31,4 +31,5 @@ import org.hibernate.engine.spi.SessionImplementor;
  */
 public interface ExtendedPropertyMapper extends PropertyMapper, CompositeMapperBuilder {
     public boolean map(SessionImplementor session, Map<String, Object> data, String[] propertyNames, Object[] newState, Object[] oldState);
+	public PropertyMapper getMapper(String propertyName);
 }
