@@ -23,7 +23,6 @@ import org.hibernate.envers.configuration.AuditConfiguration;
 import org.hibernate.envers.configuration.AuditEntitiesConfiguration;
 import org.hibernate.envers.configuration.GlobalConfiguration;
 import org.hibernate.envers.entities.mapper.PersistentCollectionChangeData;
-import org.hibernate.envers.entities.mapper.relation.CollectionPropertyMapper;
 import org.hibernate.envers.entities.mapper.relation.MiddleComponentData;
 import org.hibernate.envers.entities.mapper.relation.MiddleIdData;
 import org.hibernate.envers.synchronization.SessionCacheCleaner;
@@ -244,11 +243,10 @@ public class ValidityAuditStrategy implements AuditStrategy {
 
         final String originalIdPropName = auditCfg.getAuditEntCfg().getOriginalIdPropName();
         final Map<String, Object> originalId = (Map<String, Object>) persistentCollectionChangeData.getData().get(originalIdPropName);
-		final CollectionPropertyMapper collectionPropertyMapper = (CollectionPropertyMapper) auditCfg.getEntCfg().get(entityName).getPropertyMapper().getMapper(propertyName);
 		final String revisionFieldName = auditCfg.getAuditEntCfg().getRevisionFieldName();
 		final String revisionTypePropName = auditCfg.getAuditEntCfg().getRevisionTypePropName();
 
-		// Adding a parameter for each id component, except the rev number
+		// Adding a parameter for each id component, except the rev number and type.
         for (Map.Entry<String, Object> originalIdEntry : originalId.entrySet()) {
             if (!revisionFieldName.equals(originalIdEntry.getKey()) && !revisionTypePropName.equals(originalIdEntry.getKey())) {
                 qb.getRootParameters().addWhereWithParam(originalIdPropName + "." + originalIdEntry.getKey(),
@@ -270,13 +268,6 @@ public class ValidityAuditStrategy implements AuditStrategy {
 				}
 			}
 		}
-//		if (collectionPropertyMapper != null && collectionPropertyMapper.needsDataComparison()) {
-//			for (Map.Entry<String, Object> dataEntry : persistentCollectionChangeData.getData().entrySet()) {
-//				if (!originalIdPropName.equals(dataEntry.getKey())) {
-//					qb.getRootParameters().addWhereWithParam(dataEntry.getKey(), true, "=", dataEntry.getValue());
-//				}
-//			}
-//		}
 
         addEndRevisionNullRestriction(auditCfg, qb.getRootParameters());
 

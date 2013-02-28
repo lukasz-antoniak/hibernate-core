@@ -77,9 +77,4 @@ public class MapCollectionMapper<T extends Map> extends AbstractCollectionMapper
         elementComponentData.getComponentMapper().mapToMapFromObject(session, idData, data, ((Map.Entry) changed).getValue());
         indexComponentData.getComponentMapper().mapToMapFromObject(session, idData, data, ((Map.Entry) changed).getKey());
     }
-
-	@Override
-	public boolean needsDataComparison() {
-		return elementComponentData.getComponentMapper().needsDataComparison();
-	}
 }

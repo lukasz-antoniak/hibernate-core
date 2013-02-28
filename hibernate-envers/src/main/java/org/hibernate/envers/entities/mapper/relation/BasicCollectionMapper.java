@@ -71,9 +71,4 @@ public class BasicCollectionMapper<T extends Collection> extends AbstractCollect
     protected void mapToMapFromObject(SessionImplementor session, Map<String, Object> idData, Map<String, Object> data, Object changed) {
         elementComponentData.getComponentMapper().mapToMapFromObject(session, idData, data, changed);
     }
-
-	@Override
-	public boolean needsDataComparison() {
-		return elementComponentData.getComponentMapper().needsDataComparison();
-	}
 }

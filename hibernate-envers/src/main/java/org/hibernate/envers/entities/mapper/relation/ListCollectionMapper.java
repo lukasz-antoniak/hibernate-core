@@ -83,9 +83,4 @@ public final class ListCollectionMapper extends AbstractCollectionMapper<List> i
         elementComponentData.getComponentMapper().mapToMapFromObject(session, idData, data, indexValuePair.getSecond());
         indexComponentData.getComponentMapper().mapToMapFromObject(session, idData, data, indexValuePair.getFirst());
     }
-
-	@Override
-	public boolean needsDataComparison() {
-		return elementComponentData.getComponentMapper().needsDataComparison();
-	}
 }

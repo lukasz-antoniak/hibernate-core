@@ -40,6 +40,7 @@ import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.configuration.AuditConfiguration;
 import org.hibernate.envers.entities.PropertyData;
 import org.hibernate.envers.entities.mapper.PersistentCollectionChangeData;
+import org.hibernate.envers.entities.mapper.PropertyMapper;
 import org.hibernate.envers.entities.mapper.relation.lazy.initializor.Initializor;
 import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.reader.AuditReaderImplementor;
@@ -51,7 +52,7 @@ import org.hibernate.property.Setter;
  * @author Adam Warski (adam at warski dot org)
  * @author Michal Skowronek (mskowr at o2 dot pl)
  */
-public abstract class AbstractCollectionMapper<T> implements CollectionPropertyMapper {
+public abstract class AbstractCollectionMapper<T> implements PropertyMapper {
     protected final CommonCollectionMapperData commonCollectionMapperData;    
     protected final Class<? extends T> collectionClass;
 	protected final boolean revisionTypeInId;
