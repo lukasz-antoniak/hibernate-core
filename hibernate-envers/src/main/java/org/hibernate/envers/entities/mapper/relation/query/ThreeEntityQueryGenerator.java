@@ -49,9 +49,8 @@ import static org.hibernate.envers.entities.mapper.relation.query.QueryConstants
  * Selects data from a relation middle-table and a two related versions entity.
  * @author Adam Warski (adam at warski dot org)
  */
-public final class ThreeEntityQueryGenerator implements RelationQueryGenerator {
+public final class ThreeEntityQueryGenerator extends AbstractRelationQueryGenerator {
     private final String queryString;
-    private final MiddleIdData referencingIdData;
 
     public ThreeEntityQueryGenerator(GlobalConfiguration globalCfg,
                                      AuditEntitiesConfiguration verEntCfg,
@@ -62,7 +61,7 @@ public final class ThreeEntityQueryGenerator implements RelationQueryGenerator {
                                      MiddleIdData indexIdData,
 									 boolean revisionTypeInId,
                                      MiddleComponentData... componentDatas) {
-        this.referencingIdData = referencingIdData;
+		super( verEntCfg, referencingIdData, revisionTypeInId );
 
         /*
          * The query that we need to create:
@@ -161,7 +160,7 @@ public final class ThreeEntityQueryGenerator implements RelationQueryGenerator {
         		eeOriginalIdPropertyPath, revisionPropertyPath, originalIdPropertyName, MIDDLE_ENTITY_ALIAS, componentDatas);
 
         // ee.revision_type != DEL
-		String revisionTypePropName = (revisionTypeInId ? verEntCfg.getOriginalIdPropName() + "." + verEntCfg.getRevisionTypePropName() : verEntCfg.getRevisionTypePropName());
+		String revisionTypePropName = getRevisionTypePath();
         rootParameters.addWhereWithNamedParam(revisionTypePropName, "!=", DEL_REVISION_TYPE_PARAMETER);
         // e.revision_type != DEL
         rootParameters.addWhereWithNamedParam(REFERENCED_ENTITY_ALIAS + "." + revisionTypePropName, false, "!=", DEL_REVISION_TYPE_PARAMETER);
@@ -173,14 +172,8 @@ public final class ThreeEntityQueryGenerator implements RelationQueryGenerator {
         queryString = sb.toString();
     }
 
-    public Query getQuery(AuditReaderImplementor versionsReader, Object primaryKey, Number revision) {
-        Query query = versionsReader.getSession().createQuery(queryString);
-        query.setParameter(REVISION_PARAMETER, revision);
-        query.setParameter(DEL_REVISION_TYPE_PARAMETER, RevisionType.DEL);
-        for (QueryParameterData paramData: referencingIdData.getPrefixedMapper().mapToQueryParametersFromId(primaryKey)) {
-            paramData.setParameterValue(query);
-        }
-
-        return query;
-    }
+	@Override
+	protected String getQueryString() {
+		return queryString;
+	}
 }

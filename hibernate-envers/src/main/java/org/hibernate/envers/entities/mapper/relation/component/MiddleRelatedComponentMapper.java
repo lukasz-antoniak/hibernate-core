@@ -51,8 +51,4 @@ public final class MiddleRelatedComponentMapper implements MiddleComponentMapper
     public void addMiddleEqualToQuery(Parameters parameters, String idPrefix1, String prefix1, String idPrefix2, String prefix2) {
         relatedIdData.getPrefixedMapper().addIdsEqualToQuery(parameters, idPrefix1, idPrefix2);
     }
-
-	public boolean needsDataComparison() {
-		return false;
-	}
 }

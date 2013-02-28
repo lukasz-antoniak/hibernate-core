@@ -57,8 +57,4 @@ public final class MiddleMapKeyIdComponentMapper implements MiddleComponentMappe
     public void addMiddleEqualToQuery(Parameters parameters, String idPrefix1, String prefix1, String idPrefix2, String prefix2) {
         // Doing nothing.
     }
-
-	public boolean needsDataComparison() {
-		return false;
-	}
 }

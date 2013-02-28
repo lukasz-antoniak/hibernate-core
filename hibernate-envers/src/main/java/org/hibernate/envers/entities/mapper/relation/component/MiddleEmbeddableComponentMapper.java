@@ -89,9 +89,4 @@ public class MiddleEmbeddableComponentMapper implements MiddleComponentMapper, C
 	public Map<PropertyData, PropertyMapper> getProperties() {
 		return delegate.getProperties();
 	}
-
-	@Override
-	public boolean needsDataComparison() {
-		return true;
-	}
 }

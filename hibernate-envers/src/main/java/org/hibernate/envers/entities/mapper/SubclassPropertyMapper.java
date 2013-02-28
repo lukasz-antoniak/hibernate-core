@@ -116,9 +116,4 @@ public class SubclassPropertyMapper implements ExtendedPropertyMapper {
 		joinedProperties.putAll(main.getProperties());
 		return joinedProperties;
 	}
-
-	public PropertyMapper getMapper(String propertyName) {
-		PropertyMapper mapper = main.getMapper(propertyName);
-		return mapper != null ? mapper : parentMapper.getMapper(propertyName);
-	}
 }

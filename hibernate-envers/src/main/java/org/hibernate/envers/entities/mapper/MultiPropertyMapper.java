@@ -187,8 +187,4 @@ public class MultiPropertyMapper implements ExtendedPropertyMapper {
 	public Map<PropertyData, PropertyMapper> getProperties() {
 		return properties;
 	}
-
-	public PropertyMapper getMapper(String propertyName) {
-		return properties.get(propertyDatas.get(propertyName));
-	}
 }

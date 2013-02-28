@@ -211,7 +211,7 @@ public final class CollectionMetadataGenerator {
         // Generating the query generator - it should read directly from the related entity.
         RelationQueryGenerator queryGenerator = new OneAuditEntityQueryGenerator(mainGenerator.getGlobalCfg(),
                 mainGenerator.getVerEntCfg(), mainGenerator.getAuditStrategy(),
-                referencingIdData, referencedEntityName, referencedIdData);
+                referencingIdData, referencedEntityName, referencedIdData, isEmbeddableElementType());
 
         // Creating common mapper data.
         CommonCollectionMapperData commonCollectionMapperData = new CommonCollectionMapperData(

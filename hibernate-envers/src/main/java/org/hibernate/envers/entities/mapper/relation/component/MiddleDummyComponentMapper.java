@@ -42,9 +42,4 @@ public final class MiddleDummyComponentMapper implements MiddleComponentMapper {
 
     public void addMiddleEqualToQuery(Parameters parameters, String idPrefix1, String prefix1, String idPrefix2, String prefix2) {
     }
-
-	@Override
-	public boolean needsDataComparison() {
-		return false;
-	}
 }

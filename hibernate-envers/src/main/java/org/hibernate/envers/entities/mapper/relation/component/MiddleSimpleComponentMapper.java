@@ -54,8 +54,4 @@ public final class MiddleSimpleComponentMapper implements MiddleComponentMapper 
     public void addMiddleEqualToQuery(Parameters parameters, String idPrefix1, String prefix1, String idPrefix2, String prefix2) {
         parameters.addWhere(idPrefix1 + "." + propertyName, false, "=", idPrefix2 + "." + propertyName, false);
     }
-
-	public boolean needsDataComparison() {
-		return false;
-	}
 }

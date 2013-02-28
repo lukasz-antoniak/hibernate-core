@@ -46,15 +46,11 @@ public final class MiddleStraightComponentMapper implements MiddleComponentMappe
         return data.get(propertyName);
     }
 
-    public void mapToMapFromObject(SessionImplementor session, Map<String, Object> idData, Map<String, Object> data, Object obj) {
+	public void mapToMapFromObject(SessionImplementor session, Map<String, Object> idData, Map<String, Object> data, Object obj) {
 		idData.put(propertyName, obj);
-    }
+	}
 
     public void addMiddleEqualToQuery(Parameters parameters, String idPrefix1, String prefix1, String idPrefix2, String prefix2) {
         throw new UnsupportedOperationException("Cannot use this mapper with a middle table!");
     }
-
-	public boolean needsDataComparison() {
-		return false;
-	}
 }

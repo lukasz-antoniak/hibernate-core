@@ -67,10 +67,4 @@ public interface MiddleComponentMapper {
      * @param prefix2 Second alias of the entity + prefix to add to the properties.
      */
     void addMiddleEqualToQuery(Parameters parameters, String idPrefix1, String prefix1, String idPrefix2, String prefix2);
-
-	/**
-	 * Checks if the query needs to compare data outside of the primary key.
-	 * This is only the case for {@link ElementCollection} of {@link Embeddable} objects.
-	 */
-	boolean needsDataComparison();
 }
