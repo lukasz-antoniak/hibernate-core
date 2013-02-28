@@ -472,11 +472,11 @@ public final class CollectionMetadataGenerator {
             return new MiddleComponentData(new MiddleRelatedComponentMapper(referencedIdData),
                     queryGeneratorBuilder.getCurrentIndex());
 		} else if ( type instanceof ComponentType ) {
-			// Collection of embeddable or component elements.
+			// Collection of embeddable elements.
 			final Component component = (Component) value;
 			final MiddleEmbeddableComponentMapper componentMapper = new MiddleEmbeddableComponentMapper( new MultiPropertyMapper(), component.getComponentClassName() );
 
-			final Element parent = xmlMapping.getParent();
+			final Element parentXmlMapping = xmlMapping.getParent();
 			final ComponentAuditingData auditData = new ComponentAuditingData();
 			final ReflectionManager reflectionManager = mainGenerator.getCfg().getReflectionManager();
 
@@ -490,16 +490,16 @@ public final class CollectionMetadataGenerator {
 			for ( String auditedPropertyName : auditData.getPropertyNames() ) {
 				PropertyAuditingData nestedAuditingData = auditData.getPropertyAuditingData( auditedPropertyName );
 				mainGenerator.addValue(
-						parent, component.getProperty( auditedPropertyName ).getValue(), componentMapper, prefix,
-						xmlMappingData, nestedAuditingData, true, true, true
+						parentXmlMapping, component.getProperty( auditedPropertyName ).getValue(), componentMapper,
+						prefix, xmlMappingData, nestedAuditingData, true, true, true
 				);
 			}
 
-			// Emulating the second pass so that the relations (many-to-one) can be mapped too.
+			// Emulating second pass so that the relations can be mapped too.
 			for ( String auditedPropertyName : auditData.getPropertyNames() ) {
 				PropertyAuditingData nestedAuditingData = auditData.getPropertyAuditingData( auditedPropertyName );
 				mainGenerator.addValue(
-						parent, component.getProperty( auditedPropertyName ).getValue(),
+						parentXmlMapping, component.getProperty( auditedPropertyName ).getValue(),
 						componentMapper, referencingEntityName, xmlMappingData, nestedAuditingData,
 						true, false, true
 				);

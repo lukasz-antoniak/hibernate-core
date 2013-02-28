@@ -47,6 +47,8 @@ public class EmbeddableListEntity1 {
 	@GeneratedValue
 	private Integer id;
 
+	private String otherData;
+
 	@ElementCollection
 	@OrderColumn
 	@CollectionTable(name = "EmbListEnt1_list")
@@ -71,6 +73,14 @@ public class EmbeddableListEntity1 {
 		this.componentList = componentList;
 	}
 
+	public String getOtherData() {
+		return otherData;
+	}
+
+	public void setOtherData(String otherData) {
+		this.otherData = otherData;
+	}
+
 	public boolean equals(Object o) {
 		if ( this == o ) return true;
 		if ( !( o instanceof EmbeddableListEntity1 ) ) return false;
@@ -87,6 +97,6 @@ public class EmbeddableListEntity1 {
 	}
 
 	public String toString() {
-		return "ELE1(id = " + id + ", componentList = " + componentList + ")";
+		return "ELE1(id = " + id + ", otherData = " + otherData + ", componentList = " + componentList + ")";
 	}
 }

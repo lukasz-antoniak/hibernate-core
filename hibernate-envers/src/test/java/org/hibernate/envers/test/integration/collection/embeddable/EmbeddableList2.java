@@ -130,10 +130,6 @@ public class EmbeddableList2 extends BaseEnversJPAFunctionalTestCase {
 		em.close();
 	}
 
-	private Number getCurrentDateRevision() {
-		return getAuditReader().getRevisionNumberForDate( new Date() );
-	}
-
 	@Test
 	public void testRevisionsCounts() {
 		assertEquals(

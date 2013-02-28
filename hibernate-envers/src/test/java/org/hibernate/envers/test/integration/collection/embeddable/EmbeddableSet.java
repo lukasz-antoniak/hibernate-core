@@ -104,7 +104,7 @@ public class EmbeddableSet extends BaseEnversJPAFunctionalTestCase {
 	}
 
 	@Test
-	public void testHistoryOfEcse1() {
+	public void testHistoryOfEse1() {
 		EmbeddableSetEntity rev1 = getAuditReader().find( EmbeddableSetEntity.class, ese1_id, 1 );
 		EmbeddableSetEntity rev2 = getAuditReader().find( EmbeddableSetEntity.class, ese1_id, 2 );
 		EmbeddableSetEntity rev3 = getAuditReader().find( EmbeddableSetEntity.class, ese1_id, 3 );

@@ -74,19 +74,19 @@ public class EmbeddableList1 extends BaseEnversJPAFunctionalTestCase {
 		ele1.getComponentList().remove( c3_2 );
 		em.getTransaction().commit();
 
-		// Revision 2 (ecle1: adding one element)
+		// Revision 2 (ele1: adding one element)
 		em.getTransaction().begin();
 		ele1 = em.find( EmbeddableListEntity1.class, ele1.getId() );
 		ele1.getComponentList().add( c3_2 );
 		em.getTransaction().commit();
 
-		// Revision 3 (ecle1: adding one existing element)
+		// Revision 3 (ele1: adding one existing element)
 		em.getTransaction().begin();
 		ele1 = em.find( EmbeddableListEntity1.class, ele1.getId() );
 		ele1.getComponentList().add( c3_1 );
 		em.getTransaction().commit();
 
-		// Revision 4 (ecle1: removing one existing element)
+		// Revision 4 (ele1: removing one existing element)
 		em.getTransaction().begin();
 		ele1 = em.find( EmbeddableListEntity1.class, ele1.getId() );
 		ele1.getComponentList().remove( c3_2 );
@@ -103,7 +103,7 @@ public class EmbeddableList1 extends BaseEnversJPAFunctionalTestCase {
 	}
 
 	@Test
-	public void testHistoryOfEcle1() {
+	public void testHistoryOfEle1() {
 		EmbeddableListEntity1 rev1 = getAuditReader().find( EmbeddableListEntity1.class, ele1_id, 1 );
 		EmbeddableListEntity1 rev2 = getAuditReader().find( EmbeddableListEntity1.class, ele1_id, 2 );
 		EmbeddableListEntity1 rev3 = getAuditReader().find( EmbeddableListEntity1.class, ele1_id, 3 );

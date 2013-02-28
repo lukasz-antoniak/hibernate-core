@@ -1306,8 +1306,8 @@ query.add(AuditEntity.relatedId("address").eq(relatedEntityId));]]></programlist
             <orderedlist>
                 <listitem>
                     <para>
-                        Bag semantics with <interfacename>@CollectionId</interfacename> annotation
-                        (JIRA ticket HHH-3950).
+                        Bag style collection which identifier column has been defined using
+                        <interfacename>@CollectionId</interfacename> annotation (JIRA ticket HHH-3950).
                     </para>
                 </listitem>
             </orderedlist>
