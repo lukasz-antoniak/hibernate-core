@@ -9,6 +9,7 @@ import org.hibernate.envers.test.Priority;
 import org.hibernate.envers.test.entities.collection.EmbeddableListEntity1;
 import org.hibernate.envers.test.entities.components.Component3;
 import org.hibernate.envers.test.entities.components.Component4;
+import org.hibernate.testing.TestForIssue;
 
 import static org.junit.Assert.assertEquals;
 import static org.hibernate.envers.test.tools.TestTools.extractRevisionNumbers;
@@ -17,6 +18,7 @@ import static org.hibernate.envers.test.tools.TestTools.makeList;
 /**
  * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
+@TestForIssue( jiraKey = "HHH-6613" )
 public class HasChangedComponentCollection extends AbstractModifiedFlagsEntityTest {
 	private Integer ele1_id = null;
 
@@ -49,28 +51,36 @@ public class HasChangedComponentCollection extends AbstractModifiedFlagsEntityTe
 		ele1.getComponentList().remove( c3_2 );
 		em.getTransaction().commit();
 
-		// Revision 2 (ele1: adding one element)
+		// Revision 2 (ele1: updating singular property and removing non-existing element)
+		em.getTransaction().begin();
+		ele1 = em.find( EmbeddableListEntity1.class, ele1.getId() );
+		ele1.setOtherData( "modified" );
+		ele1.getComponentList().remove( c3_2 );
+		ele1 = em.merge( ele1 );
+		em.getTransaction().commit();
+
+		// Revision 3 (ele1: adding one element)
 		em.getTransaction().begin();
 		ele1 = em.find( EmbeddableListEntity1.class, ele1.getId() );
 		ele1.getComponentList().add( c3_2 );
 		em.getTransaction().commit();
 
-		// Revision 3 (ele1: adding one existing element)
+		// Revision 4 (ele1: adding one existing element)
 		em.getTransaction().begin();
 		ele1 = em.find( EmbeddableListEntity1.class, ele1.getId() );
 		ele1.getComponentList().add( c3_1 );
 		em.getTransaction().commit();
 
-		// Revision 4 (ele1: removing one existing element)
+		// Revision 5 (ele1: removing one existing element)
 		em.getTransaction().begin();
 		ele1 = em.find( EmbeddableListEntity1.class, ele1.getId() );
 		ele1.getComponentList().remove( c3_2 );
 		em.getTransaction().commit();
 
-		// Revision 5 (ele1: changing singular property)
+		// Revision 6 (ele1: changing singular property only)
 		em.getTransaction().begin();
 		ele1 = em.find( EmbeddableListEntity1.class, ele1.getId() );
-		ele1.setOtherData( "modified" );
+		ele1.setOtherData( "another modification" );
 		ele1 = em.merge( ele1 );
 		em.getTransaction().commit();
 
@@ -83,10 +93,10 @@ public class HasChangedComponentCollection extends AbstractModifiedFlagsEntityTe
 	public void testHasChangedEle() {
 		List list = queryForPropertyHasChanged( EmbeddableListEntity1.class, ele1_id, "componentList" );
 		assertEquals( 4, list.size() );
-		assertEquals( makeList( 1, 2, 3, 4 ), extractRevisionNumbers( list ) );
+		assertEquals( makeList( 1, 3, 4, 5 ), extractRevisionNumbers( list ) );
 
 		list = queryForPropertyHasChanged( EmbeddableListEntity1.class, ele1_id, "otherData" );
-		assertEquals( 2, list.size() );
-		assertEquals( makeList( 1, 5 ), extractRevisionNumbers( list ) );
+		assertEquals( 3, list.size() );
+		assertEquals( makeList( 1, 2, 6 ), extractRevisionNumbers( list ) );
 	}
 }
