@@ -30,7 +30,6 @@ import javax.persistence.EntityManager;
 import org.junit.Assert;
 import org.junit.Test;
 
-import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.test.BaseEnversJPAFunctionalTestCase;
 import org.hibernate.envers.test.Priority;

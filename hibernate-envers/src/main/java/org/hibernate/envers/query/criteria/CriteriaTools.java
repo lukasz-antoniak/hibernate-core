@@ -73,7 +73,7 @@ public class CriteriaTools {
 	 * @param versionsReader Versions reader.
 	 * @param entityName Original entity name (not audited).
 	 * @param propertyName Property name or placeholder.
-	 * @return Path to property. Takes into consideration identifier placeholder used by {@link AuditId}.
+	 * @return Path to property. Handles identifier placeholder used by {@link AuditId}.
 	 */
 	public static String determinePropertyName(AuditConfiguration auditCfg, AuditReaderImplementor versionsReader,
 											   String entityName, String propertyName) {
