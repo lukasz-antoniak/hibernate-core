@@ -35,6 +35,7 @@ import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.test.BaseEnversJPAFunctionalTestCase;
 import org.hibernate.envers.test.Priority;
 import org.hibernate.envers.test.entities.IntTestEntity;
+import org.hibernate.envers.test.entities.ids.UnusualIdNamingEntity;
 import org.hibernate.envers.test.tools.TestTools;
 import org.hibernate.testing.TestForIssue;
 
@@ -45,7 +46,7 @@ import org.hibernate.testing.TestForIssue;
 public class AggregateQuery extends BaseEnversJPAFunctionalTestCase {
 	@Override
 	protected Class<?>[] getAnnotatedClasses() {
-		return new Class[] { IntTestEntity.class };
+		return new Class[] { IntTestEntity.class, UnusualIdNamingEntity.class };
 	}
 
 	@Test
@@ -66,6 +67,8 @@ public class AggregateQuery extends BaseEnversJPAFunctionalTestCase {
         // Revision 2
         em.getTransaction().begin();
         IntTestEntity ite3 = new IntTestEntity(8);
+		UnusualIdNamingEntity uine1 = new UnusualIdNamingEntity( "id1", "data1" );
+		em.persist( uine1 );
         em.persist(ite3);
         ite1 = em.find(IntTestEntity.class, id1);
         ite1.setNumber(0);
@@ -141,6 +144,16 @@ public class AggregateQuery extends BaseEnversJPAFunctionalTestCase {
 				.addOrder( AuditEntity.id().desc() )
 				.getResultList();
 		Assert.assertEquals( Arrays.asList( new IntTestEntity( 10, 2 ), new IntTestEntity( 2, 1 ) ), list );
+	}
+
+	@Test
+	@TestForIssue( jiraKey = "HHH-8036" )
+	public void testUnusualIdFieldName() {
+		UnusualIdNamingEntity entity = (UnusualIdNamingEntity) getAuditReader().createQuery()
+				.forRevisionsOfEntity( UnusualIdNamingEntity.class, true, true )
+				.add( AuditEntity.id().like( "id1" ) )
+				.getSingleResult();
+		Assert.assertEquals( new UnusualIdNamingEntity( "id1", "data1" ), entity );
 	}
 
 	@Test
