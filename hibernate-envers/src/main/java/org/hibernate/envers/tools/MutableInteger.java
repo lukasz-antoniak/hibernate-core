@@ -33,6 +33,14 @@ public class MutableInteger {
     public MutableInteger() {
     }
 
+	private MutableInteger(int value) {
+		this.value = value;
+	}
+
+	public MutableInteger deepCopy() {
+		return new MutableInteger( value );
+	}
+
     public int getAndIncrease() {
         return value++;
     }

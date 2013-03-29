@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.envers.configuration.AuditConfiguration;
 import org.hibernate.envers.entities.mapper.relation.lazy.ToOneDelegateSessionImplementor;
+import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.reader.AuditReaderImplementor;
 import org.hibernate.persister.entity.EntityPersister;
 
@@ -15,9 +16,18 @@ public class ToOneEntityLoader {
 	 * Immediately loads historical entity or its current state when excluded from audit process.
 	 */
 	public static Object loadImmediate(AuditReaderImplementor versionsReader, Class<?> entityClass, String entityName,
-									   Object entityId, Number revision, AuditConfiguration verCfg) {
+									   Object entityId, Number revision, boolean removed, AuditConfiguration verCfg) {
 		if ( verCfg.getEntCfg().getNotVersionEntityConfiguration( entityName ) == null ) {
 			// Audited relation, look up entity with Envers.
+			if ( removed ) {
+				// When user traverses removed entities graph, do not restrict revision type of referencing objects
+				// to ADD or MOD (DEL possible). See HHH-5845.
+				// TODO: Just a stub. Apply changes from pull request #496.
+				return versionsReader.createQuery().forRevisionsOfEntity( entityClass, entityName, true, true )
+						.add( AuditEntity.id().eq( entityId ) )
+						.add( AuditEntity.revisionNumber().eq( revision ) )
+						.getSingleResult();
+			}
 			return versionsReader.find( entityClass, entityName, entityId, revision );
 		}
 		else {
@@ -30,11 +40,11 @@ public class ToOneEntityLoader {
 	 * Creates proxy of referenced *-to-one entity.
 	 */
 	public static Object createProxy(AuditReaderImplementor versionsReader, Class<?> entityClass, String entityName,
-									 Object entityId, Number revision, AuditConfiguration verCfg) {
+									 Object entityId, Number revision, boolean removed, AuditConfiguration verCfg) {
 		EntityPersister persister = versionsReader.getSessionImplementor().getFactory().getEntityPersister( entityName );
 		return persister.createProxy(
 				(Serializable) entityId,
-				new ToOneDelegateSessionImplementor( versionsReader, entityClass, entityId, revision, verCfg )
+				new ToOneDelegateSessionImplementor( versionsReader, entityClass, entityId, revision, removed, verCfg )
 		);
 	}
 
@@ -43,11 +53,11 @@ public class ToOneEntityLoader {
 	 * allowed (e.g. @Proxy(lazy=false), final class).
 	 */
 	public static Object createProxyOrLoadImmediate(AuditReaderImplementor versionsReader, Class<?> entityClass, String entityName,
-													Object entityId, Number revision, AuditConfiguration verCfg) {
+													Object entityId, Number revision, boolean removed, AuditConfiguration verCfg) {
 		EntityPersister persister = versionsReader.getSessionImplementor().getFactory().getEntityPersister( entityName );
 		if ( persister.hasProxy() ) {
-			return createProxy( versionsReader, entityClass, entityName, entityId, revision, verCfg );
+			return createProxy( versionsReader, entityClass, entityName, entityId, revision, removed, verCfg );
 		}
-		return loadImmediate( versionsReader, entityClass, entityName, entityId, revision, verCfg );
+		return loadImmediate( versionsReader, entityClass, entityName, entityId, revision, removed, verCfg );
 	}
 }

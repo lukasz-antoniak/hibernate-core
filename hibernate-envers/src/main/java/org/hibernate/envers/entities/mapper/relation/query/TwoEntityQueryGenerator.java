@@ -25,14 +25,10 @@ package org.hibernate.envers.entities.mapper.relation.query;
 
 import java.util.Collections;
 
-import org.hibernate.Query;
-import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.configuration.AuditEntitiesConfiguration;
 import org.hibernate.envers.configuration.GlobalConfiguration;
-import org.hibernate.envers.entities.mapper.id.QueryParameterData;
 import org.hibernate.envers.entities.mapper.relation.MiddleComponentData;
 import org.hibernate.envers.entities.mapper.relation.MiddleIdData;
-import org.hibernate.envers.reader.AuditReaderImplementor;
 import org.hibernate.envers.strategy.AuditStrategy;
 import org.hibernate.envers.tools.query.Parameters;
 import org.hibernate.envers.tools.query.QueryBuilder;
@@ -45,94 +41,146 @@ import static org.hibernate.envers.entities.mapper.relation.query.QueryConstants
 
 /**
  * Selects data from a relation middle-table and a related versions entity.
+ *
  * @author Adam Warski (adam at warski dot org)
+ * @author Lukasz Antoniak (lukasz dot antoniak at gmail dot com)
  */
 public final class TwoEntityQueryGenerator extends AbstractRelationQueryGenerator {
-    private final String queryString;
+	private final String queryString;
+	private final String queryRemovedString;
 
-    public TwoEntityQueryGenerator(GlobalConfiguration globalCfg,
-                                   AuditEntitiesConfiguration verEntCfg,
-                                   AuditStrategy auditStrategy,
-                                   String versionsMiddleEntityName,
-                                   MiddleIdData referencingIdData,
-                                   MiddleIdData referencedIdData,
-								   boolean revisionTypeInId,
-                                   MiddleComponentData... componentDatas) {
+	public TwoEntityQueryGenerator(GlobalConfiguration globalCfg, AuditEntitiesConfiguration verEntCfg,
+								   AuditStrategy auditStrategy, String versionsMiddleEntityName,
+								   MiddleIdData referencingIdData, MiddleIdData referencedIdData,
+								   boolean revisionTypeInId, MiddleComponentData... componentData) {
 		super( verEntCfg, referencingIdData, revisionTypeInId );
 
-        /*
-         * The query that we need to create:
-         *   SELECT new list(ee, e) FROM versionsReferencedEntity e, middleEntity ee
-         *   WHERE
-         * (entities referenced by the middle table; id_ref_ed = id of the referenced entity)         
-         *     ee.id_ref_ed = e.id_ref_ed AND
-         * (only entities referenced by the association; id_ref_ing = id of the referencing entity)
-         *     ee.id_ref_ing = :id_ref_ing AND
-         *     
-         * (selecting e entities at revision :revision)
-         *   --> for DefaultAuditStrategy:
-         *     e.revision = (SELECT max(e2.revision) FROM versionsReferencedEntity e2
-         *       WHERE e2.revision <= :revision AND e2.id = e.id) 
-         *     
-         *   --> for ValidityAuditStrategy:
-         *     e.revision <= :revision and (e.endRevision > :revision or e.endRevision is null)
-         *     
-         *     AND
-         *     
-          * (the association at revision :revision)
-         *   --> for DefaultAuditStrategy:
-         *     ee.revision = (SELECT max(ee2.revision) FROM middleEntity ee2
-         *       WHERE ee2.revision <= :revision AND ee2.originalId.* = ee.originalId.*)
-         *       
-         *   --> for ValidityAuditStrategy:
-         *     ee.revision <= :revision and (ee.endRevision > :revision or ee.endRevision is null)
-         *     
-         * (only non-deleted entities and associations)
-         *     ee.revision_type != DEL AND
-         *     e.revision_type != DEL
-         */
-        String revisionPropertyPath = verEntCfg.getRevisionNumberPath();
-        String originalIdPropertyName = verEntCfg.getOriginalIdPropName();
+		/*
+		 * The query that we need to create:
+		 *   SELECT new list(ee, e) FROM versionsReferencedEntity e, middleEntity ee
+		 *   WHERE
+		 * (entities referenced by the middle table; id_ref_ed = id of the referenced entity)
+		 *     ee.id_ref_ed = e.id_ref_ed AND
+		 * (only entities referenced by the association; id_ref_ing = id of the referencing entity)
+		 *     ee.id_ref_ing = :id_ref_ing AND
+		 *
+		 * (selecting e entities at revision :revision)
+		 *   --> for DefaultAuditStrategy:
+		 *     e.revision = (SELECT max(e2.revision) FROM versionsReferencedEntity e2
+		 *       WHERE e2.revision <= :revision AND e2.id = e.id)
+		 *
+		 *   --> for ValidityAuditStrategy:
+		 *     e.revision <= :revision and (e.endRevision > :revision or e.endRevision is null)
+		 *
+		 *     AND
+		 *
+		 * (the association at revision :revision)
+		 *   --> for DefaultAuditStrategy:
+		 *     ee.revision = (SELECT max(ee2.revision) FROM middleEntity ee2
+		 *       WHERE ee2.revision <= :revision AND ee2.originalId.* = ee.originalId.*)
+		 *
+		 *   --> for ValidityAuditStrategy:
+		 *     ee.revision <= :revision and (ee.endRevision > :revision or ee.endRevision is null)
+		 *
+		 * (only non-deleted entities and associations)
+		 *     ee.revision_type != DEL AND
+		 *     e.revision_type != DEL
+		 */
+		final QueryBuilder commonPart = commonQueryPart( referencedIdData, versionsMiddleEntityName, verEntCfg.getOriginalIdPropName() );
+		final QueryBuilder validQuery = commonPart.deepCopy();
+		final QueryBuilder removedQuery = commonPart.deepCopy();
+		createValidDataRestrictions(
+				globalCfg, verEntCfg, auditStrategy, referencedIdData, versionsMiddleEntityName, validQuery,
+				validQuery.getRootParameters(), componentData
+		);
+		createValidAndRemovedDataRestrictions(
+				globalCfg, verEntCfg, auditStrategy, referencedIdData, versionsMiddleEntityName,
+				removedQuery, componentData
+		);
 
-        String eeOriginalIdPropertyPath = MIDDLE_ENTITY_ALIAS + "." + originalIdPropertyName;
+		queryString = queryToString( validQuery, Collections.<String, Object>emptyMap() );
+		queryRemovedString = queryToString( removedQuery, Collections.<String, Object>emptyMap() );
+	}
 
-        // SELECT new list(ee) FROM middleEntity ee
-        QueryBuilder qb = new QueryBuilder(versionsMiddleEntityName, MIDDLE_ENTITY_ALIAS);
-        qb.addFrom(referencedIdData.getAuditEntityName(), REFERENCED_ENTITY_ALIAS);
-        qb.addProjection("new list", MIDDLE_ENTITY_ALIAS + ", " + REFERENCED_ENTITY_ALIAS, false, false);
-        // WHERE
-        Parameters rootParameters = qb.getRootParameters();
-        // ee.id_ref_ed = e.id_ref_ed
-        referencedIdData.getPrefixedMapper().addIdsEqualToQuery(rootParameters, eeOriginalIdPropertyPath,
-        		referencedIdData.getOriginalMapper(), REFERENCED_ENTITY_ALIAS + "." + originalIdPropertyName);
-        // ee.originalId.id_ref_ing = :id_ref_ing
-        referencingIdData.getPrefixedMapper().addNamedIdEqualsToQuery(rootParameters, originalIdPropertyName, true);
+	/**
+	 * Compute common part for both queries.
+	 */
+	private QueryBuilder commonQueryPart(MiddleIdData referencedIdData, String versionsMiddleEntityName,
+										 String originalIdPropertyName) {
+		final String eeOriginalIdPropertyPath = MIDDLE_ENTITY_ALIAS + "." + originalIdPropertyName;
+		// SELECT new list(ee) FROM middleEntity ee
+		QueryBuilder qb = new QueryBuilder( versionsMiddleEntityName, MIDDLE_ENTITY_ALIAS );
+		qb.addFrom( referencedIdData.getAuditEntityName(), REFERENCED_ENTITY_ALIAS );
+		qb.addProjection( "new list", MIDDLE_ENTITY_ALIAS + ", " + REFERENCED_ENTITY_ALIAS, false, false );
+		// WHERE
+		final Parameters rootParameters = qb.getRootParameters();
+		// ee.id_ref_ed = e.id_ref_ed
+		referencedIdData.getPrefixedMapper().addIdsEqualToQuery(
+				rootParameters, eeOriginalIdPropertyPath, referencedIdData.getOriginalMapper(),
+				REFERENCED_ENTITY_ALIAS + "." + originalIdPropertyName
+		);
+		// ee.originalId.id_ref_ing = :id_ref_ing
+		referencingIdData.getPrefixedMapper().addNamedIdEqualsToQuery( rootParameters, originalIdPropertyName, true );
+		return qb;
+	}
 
-        // (selecting e entities at revision :revision)
-        // --> based on auditStrategy (see above)
-        auditStrategy.addEntityAtRevisionRestriction(globalCfg, qb, REFERENCED_ENTITY_ALIAS + "." + revisionPropertyPath,
-        		REFERENCED_ENTITY_ALIAS + "." + verEntCfg.getRevisionEndFieldName(), false,
-        		referencedIdData, revisionPropertyPath, originalIdPropertyName, REFERENCED_ENTITY_ALIAS, REFERENCED_ENTITY_ALIAS_DEF_AUD_STR);
+	/**
+	 * Creates query restrictions used to retrieve only actual data.
+	 */
+	private void createValidDataRestrictions(GlobalConfiguration globalCfg, AuditEntitiesConfiguration verEntCfg,
+											 AuditStrategy auditStrategy, MiddleIdData referencedIdData,
+											 String versionsMiddleEntityName, QueryBuilder qb, Parameters rootParameters,
+											 MiddleComponentData... componentData) {
+		final String revisionPropertyPath = verEntCfg.getRevisionNumberPath();
+		final String originalIdPropertyName = verEntCfg.getOriginalIdPropName();
+		final String eeOriginalIdPropertyPath = MIDDLE_ENTITY_ALIAS + "." + originalIdPropertyName;
+		// (selecting e entities at revision :revision)
+		// --> based on auditStrategy (see above)
+		auditStrategy.addEntityAtRevisionRestriction(
+				globalCfg, qb, rootParameters, REFERENCED_ENTITY_ALIAS + "." + revisionPropertyPath,
+				REFERENCED_ENTITY_ALIAS + "." + verEntCfg.getRevisionEndFieldName(), false, referencedIdData,
+				revisionPropertyPath, originalIdPropertyName, REFERENCED_ENTITY_ALIAS, REFERENCED_ENTITY_ALIAS_DEF_AUD_STR
+		);
+		// (with ee association at revision :revision)
+		// --> based on auditStrategy (see above)
+		auditStrategy.addAssociationAtRevisionRestriction( qb, rootParameters, revisionPropertyPath,
+				verEntCfg.getRevisionEndFieldName(), true, referencingIdData, versionsMiddleEntityName,
+				eeOriginalIdPropertyPath, revisionPropertyPath, originalIdPropertyName, MIDDLE_ENTITY_ALIAS,
+				componentData
+		);
+		final String revisionTypePropName = getRevisionTypePath();
+		// ee.revision_type != DEL
+		rootParameters.addWhereWithNamedParam( revisionTypePropName, "!=", DEL_REVISION_TYPE_PARAMETER );
+		// e.revision_type != DEL
+		rootParameters.addWhereWithNamedParam( REFERENCED_ENTITY_ALIAS + "." + revisionTypePropName, false, "!=", DEL_REVISION_TYPE_PARAMETER );
+	}
 
-        // (with ee association at revision :revision)
-        // --> based on auditStrategy (see above)
-        auditStrategy.addAssociationAtRevisionRestriction(qb, revisionPropertyPath,
-        		verEntCfg.getRevisionEndFieldName(), true, referencingIdData, versionsMiddleEntityName,
-        		eeOriginalIdPropertyPath, revisionPropertyPath, originalIdPropertyName, MIDDLE_ENTITY_ALIAS, componentDatas);
-
-        // ee.revision_type != DEL
-		String revisionTypePropName = getRevisionTypePath();
-        rootParameters.addWhereWithNamedParam(revisionTypePropName, "!=", DEL_REVISION_TYPE_PARAMETER);
-        // e.revision_type != DEL
-        rootParameters.addWhereWithNamedParam(REFERENCED_ENTITY_ALIAS + "." + revisionTypePropName, false, "!=", DEL_REVISION_TYPE_PARAMETER);
-
-        StringBuilder sb = new StringBuilder();
-        qb.build(sb, Collections.<String, Object>emptyMap());
-        queryString = sb.toString();
-    }
+	/**
+	 * Create query restrictions used to retrieve actual data and deletions that took place at exactly given revision.
+	 */
+	private void createValidAndRemovedDataRestrictions(GlobalConfiguration globalCfg, AuditEntitiesConfiguration verEntCfg,
+													   AuditStrategy auditStrategy, MiddleIdData referencedIdData,
+													   String versionsMiddleEntityName, QueryBuilder remQb,
+													   MiddleComponentData... componentData) {
+		final Parameters disjoint = remQb.getRootParameters().addSubParameters( "or" );
+		final Parameters valid = disjoint.addSubParameters( "and" ); // Restrictions to match all valid rows.
+		final Parameters removed = disjoint.addSubParameters( "and" ); // Restrictions to match all rows deleted at exactly given revision.
+		createValidDataRestrictions( globalCfg, verEntCfg, auditStrategy, referencedIdData, versionsMiddleEntityName, remQb, valid, componentData );
+		// ee.revision = :revision
+		removed.addWhereWithNamedParam( MIDDLE_ENTITY_ALIAS + "." + verEntCfg.getRevisionNumberPath(), false, "=", REVISION_PARAMETER );
+		// ee.revision_type = DEL
+		removed.addWhereWithNamedParam( getRevisionTypePath(), "=", DEL_REVISION_TYPE_PARAMETER );
+		// e.revision_type = DEL
+		removed.addWhereWithNamedParam( REFERENCED_ENTITY_ALIAS + "." + getRevisionTypePath(), false, "=", DEL_REVISION_TYPE_PARAMETER );
+	}
 
 	@Override
 	protected String getQueryString() {
 		return queryString;
+	}
+
+	@Override
+	protected String getQueryRemovedString() {
+		return queryRemovedString;
 	}
 }

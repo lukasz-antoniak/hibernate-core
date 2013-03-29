@@ -41,11 +41,10 @@ public class DefaultAuditStrategy implements AuditStrategy {
     }
 
     
-	public void addEntityAtRevisionRestriction(GlobalConfiguration globalCfg, QueryBuilder rootQueryBuilder, String revisionProperty,
-			String revisionEndProperty, boolean addAlias, MiddleIdData idData, String revisionPropertyPath, 
+	public void addEntityAtRevisionRestriction(GlobalConfiguration globalCfg, QueryBuilder rootQueryBuilder, Parameters parameters,
+			String revisionProperty, String revisionEndProperty, boolean addAlias, MiddleIdData idData, String revisionPropertyPath,
 			String originalIdPropertyName, String alias1, String alias2) {
-		Parameters rootParameters = rootQueryBuilder.getRootParameters();
-		
+
 		// create a subquery builder
         // SELECT max(e.revision) FROM versionsReferencedEntity e2
         QueryBuilder maxERevQb = rootQueryBuilder.newSubQueryBuilder(idData.getAuditEntityName(), alias2);
@@ -60,14 +59,13 @@ public class DefaultAuditStrategy implements AuditStrategy {
 		
 		// add subquery to rootParameters
         String subqueryOperator = globalCfg.getCorrelatedSubqueryOperator();
-		rootParameters.addWhere(revisionProperty, addAlias, subqueryOperator, maxERevQb);
+		parameters.addWhere(revisionProperty, addAlias, subqueryOperator, maxERevQb);
 	}
 
-	public void addAssociationAtRevisionRestriction(QueryBuilder rootQueryBuilder,  String revisionProperty, 
+	public void addAssociationAtRevisionRestriction(QueryBuilder rootQueryBuilder, Parameters parameters, String revisionProperty,
 	          String revisionEndProperty, boolean addAlias, MiddleIdData referencingIdData, String versionsMiddleEntityName,
 	          String eeOriginalIdPropertyPath, String revisionPropertyPath,
 	          String originalIdPropertyName, String alias1, MiddleComponentData... componentDatas) {
-		Parameters rootParameters = rootQueryBuilder.getRootParameters();
 
     	// SELECT max(ee2.revision) FROM middleEntity ee2
         QueryBuilder maxEeRevQb = rootQueryBuilder.newSubQueryBuilder(versionsMiddleEntityName, MIDDLE_ENTITY_ALIAS_DEF_AUD_STR);
@@ -83,8 +81,8 @@ public class DefaultAuditStrategy implements AuditStrategy {
             componentData.getComponentMapper().addMiddleEqualToQuery(maxEeRevQbParameters, eeOriginalIdPropertyPath, alias1, ee2OriginalIdPropertyPath, MIDDLE_ENTITY_ALIAS_DEF_AUD_STR);
         }
 
-		// add subquery to rootParameters
-        rootParameters.addWhere(revisionProperty, addAlias, "=", maxEeRevQb);
+		// add subquery to parameters list
+		parameters.addWhere(revisionProperty, addAlias, "=", maxEeRevQb);
 	}
 
 }

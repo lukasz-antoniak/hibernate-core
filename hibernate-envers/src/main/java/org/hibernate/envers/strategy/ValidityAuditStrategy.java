@@ -290,19 +290,17 @@ public class ValidityAuditStrategy implements AuditStrategy {
     }
 
     public void addEntityAtRevisionRestriction(GlobalConfiguration globalCfg, QueryBuilder rootQueryBuilder,
-			String revisionProperty,String revisionEndProperty, boolean addAlias,
+			Parameters parameters, String revisionProperty,String revisionEndProperty, boolean addAlias,
             MiddleIdData idData, String revisionPropertyPath, String originalIdPropertyName,
             String alias1, String alias2) {
-		Parameters rootParameters = rootQueryBuilder.getRootParameters();
-		addRevisionRestriction(rootParameters, revisionProperty, revisionEndProperty, addAlias);
+		addRevisionRestriction(parameters, revisionProperty, revisionEndProperty, addAlias);
 	}
 	
-	public void addAssociationAtRevisionRestriction(QueryBuilder rootQueryBuilder,  String revisionProperty, 
+	public void addAssociationAtRevisionRestriction(QueryBuilder rootQueryBuilder, Parameters parameters, String revisionProperty,
 		    String revisionEndProperty, boolean addAlias, MiddleIdData referencingIdData, 
 		    String versionsMiddleEntityName, String eeOriginalIdPropertyPath, String revisionPropertyPath,
 		    String originalIdPropertyName, String alias1, MiddleComponentData... componentDatas) {
-		Parameters rootParameters = rootQueryBuilder.getRootParameters();
-		addRevisionRestriction(rootParameters, revisionProperty, revisionEndProperty, addAlias);
+		addRevisionRestriction(parameters, revisionProperty, revisionEndProperty, addAlias);
 	}
     
 	public void setRevisionTimestampGetter(Getter revisionTimestampGetter) {

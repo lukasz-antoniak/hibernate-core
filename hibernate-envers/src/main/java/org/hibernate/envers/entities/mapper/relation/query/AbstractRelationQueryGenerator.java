@@ -23,12 +23,15 @@
  */
 package org.hibernate.envers.entities.mapper.relation.query;
 
+import java.util.Map;
+
 import org.hibernate.Query;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.configuration.AuditEntitiesConfiguration;
 import org.hibernate.envers.entities.mapper.id.QueryParameterData;
 import org.hibernate.envers.entities.mapper.relation.MiddleIdData;
 import org.hibernate.envers.reader.AuditReaderImplementor;
+import org.hibernate.envers.tools.query.QueryBuilder;
 
 import static org.hibernate.envers.entities.mapper.relation.query.QueryConstants.DEL_REVISION_TYPE_PARAMETER;
 import static org.hibernate.envers.entities.mapper.relation.query.QueryConstants.REVISION_PARAMETER;
@@ -52,10 +55,12 @@ public abstract class AbstractRelationQueryGenerator implements RelationQueryGen
 
 	protected abstract String getQueryString();
 
-	public Query getQuery(AuditReaderImplementor versionsReader, Object primaryKey, Number revision) {
-		Query query = versionsReader.getSession().createQuery( getQueryString() );
-		query.setParameter( REVISION_PARAMETER, revision );
+	protected abstract String getQueryRemovedString();
+
+	public Query getQuery(AuditReaderImplementor versionsReader, Object primaryKey, Number revision, boolean removed) {
+		Query query = versionsReader.getSession().createQuery( removed ? getQueryRemovedString() : getQueryString() );
 		query.setParameter( DEL_REVISION_TYPE_PARAMETER, RevisionType.DEL );
+		query.setParameter( REVISION_PARAMETER, revision );
 		for ( QueryParameterData paramData : referencingIdData.getPrefixedMapper().mapToQueryParametersFromId( primaryKey ) ) {
 			paramData.setParameterValue( query );
 		}
@@ -66,5 +71,11 @@ public abstract class AbstractRelationQueryGenerator implements RelationQueryGen
 		return revisionTypeInId
 				? verEntCfg.getOriginalIdPropName() + "." + verEntCfg.getRevisionTypePropName()
 				: verEntCfg.getRevisionTypePropName();
+	}
+
+	protected String queryToString(QueryBuilder query, Map<String, Object> queryParamValues) {
+		final StringBuilder sb = new StringBuilder();
+		query.build( sb, queryParamValues );
+		return sb.toString();
 	}
 }
