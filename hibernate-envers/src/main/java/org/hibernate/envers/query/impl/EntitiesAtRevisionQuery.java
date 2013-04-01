@@ -45,19 +45,22 @@ import static org.hibernate.envers.entities.mapper.relation.query.QueryConstants
  */
 public class EntitiesAtRevisionQuery extends AbstractAuditQuery {
     private final Number revision;
+	private final boolean selectDeleted;
 
     public EntitiesAtRevisionQuery(AuditConfiguration verCfg,
                                    AuditReaderImplementor versionsReader, Class<?> cls,
                                    Number revision) {
         super(verCfg, versionsReader, cls);
         this.revision = revision;
+		this.selectDeleted = false;
     }
-    
-	public EntitiesAtRevisionQuery(AuditConfiguration verCfg,
-			AuditReaderImplementor versionsReader, Class<?> cls, String entityName, Number revision) {
-		super(verCfg, versionsReader, cls, entityName);
+
+	public EntitiesAtRevisionQuery(AuditConfiguration verCfg, AuditReaderImplementor versionsReader, Class<?> cls,
+								   String entityName, Number revision, boolean selectDeleted) {
+		super( verCfg, versionsReader, cls, entityName );
 		this.revision = revision;
-	}    
+		this.selectDeleted = selectDeleted;
+	}
 
     @SuppressWarnings({"unchecked"})
     public List list() {
@@ -89,10 +92,12 @@ public class EntitiesAtRevisionQuery extends AbstractAuditQuery {
         // --> based on auditStrategy (see above)
         verCfg.getAuditStrategy().addEntityAtRevisionRestriction(verCfg.getGlobalCfg(), qb, qb.getRootParameters(),
 				revisionPropertyPath, verEntCfg.getRevisionEndFieldName(), true, referencedIdData,
-				revisionPropertyPath, originalIdPropertyName, REFERENCED_ENTITY_ALIAS, REFERENCED_ENTITY_ALIAS_DEF_AUD_STR);
-        
-         // e.revision_type != DEL
-         qb.getRootParameters().addWhereWithParam(verEntCfg.getRevisionTypePropName(), "<>", RevisionType.DEL);
+				revisionPropertyPath, originalIdPropertyName, REFERENCED_ENTITY_ALIAS, REFERENCED_ENTITY_ALIAS_DEF_AUD_STR, true);
+
+		if ( !selectDeleted ) {
+			// e.revision_type != DEL
+			qb.getRootParameters().addWhereWithParam(verEntCfg.getRevisionTypePropName(), "<>", RevisionType.DEL);
+		}
 
         // all specified conditions
         for (AuditCriterion criterion : criterions) {

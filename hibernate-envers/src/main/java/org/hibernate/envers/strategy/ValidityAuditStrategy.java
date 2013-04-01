@@ -292,15 +292,15 @@ public class ValidityAuditStrategy implements AuditStrategy {
     public void addEntityAtRevisionRestriction(GlobalConfiguration globalCfg, QueryBuilder rootQueryBuilder,
 			Parameters parameters, String revisionProperty,String revisionEndProperty, boolean addAlias,
             MiddleIdData idData, String revisionPropertyPath, String originalIdPropertyName,
-            String alias1, String alias2) {
-		addRevisionRestriction(parameters, revisionProperty, revisionEndProperty, addAlias);
+            String alias1, String alias2, boolean inclusive) {
+		addRevisionRestriction(parameters, revisionProperty, revisionEndProperty, addAlias, inclusive);
 	}
 	
 	public void addAssociationAtRevisionRestriction(QueryBuilder rootQueryBuilder, Parameters parameters, String revisionProperty,
 		    String revisionEndProperty, boolean addAlias, MiddleIdData referencingIdData, 
 		    String versionsMiddleEntityName, String eeOriginalIdPropertyPath, String revisionPropertyPath,
-		    String originalIdPropertyName, String alias1, MiddleComponentData... componentDatas) {
-		addRevisionRestriction(parameters, revisionProperty, revisionEndProperty, addAlias);
+		    String originalIdPropertyName, String alias1, boolean inclusive, MiddleComponentData... componentDatas) {
+		addRevisionRestriction(parameters, revisionProperty, revisionEndProperty, addAlias, inclusive);
 	}
     
 	public void setRevisionTimestampGetter(Getter revisionTimestampGetter) {
@@ -308,12 +308,12 @@ public class ValidityAuditStrategy implements AuditStrategy {
 	}
 
     private void addRevisionRestriction(Parameters rootParameters,  
-			String revisionProperty, String revisionEndProperty, boolean addAlias) {
+			String revisionProperty, String revisionEndProperty, boolean addAlias, boolean inclusive) {
     	
 		// e.revision <= _revision and (e.endRevision > _revision or e.endRevision is null)
 		Parameters subParm = rootParameters.addSubParameters("or");
-		rootParameters.addWhereWithNamedParam(revisionProperty, addAlias, "<=", REVISION_PARAMETER);
-		subParm.addWhereWithNamedParam(revisionEndProperty + ".id", addAlias, ">", REVISION_PARAMETER);
+		rootParameters.addWhereWithNamedParam(revisionProperty, addAlias, inclusive ? "<=" : "<", REVISION_PARAMETER);
+		subParm.addWhereWithNamedParam(revisionEndProperty + ".id", addAlias, inclusive ? ">" : ">=", REVISION_PARAMETER);
 		subParm.addWhere(revisionEndProperty, addAlias, "is", "null", false);
 	}
 

@@ -69,11 +69,12 @@ public interface AuditStrategy {
      * @param originalIdPropertyName name of the id property (only used for {@link ValidityAuditStrategy})
      * @param alias1 an alias used for subquery (only used for {@link ValidityAuditStrategy})
      * @param alias2 an alias used for subquery (only used for {@link ValidityAuditStrategy})
+	 * @param inclusive indicates whether revision number shall be treated as inclusive or exclusive
      */
 	void addEntityAtRevisionRestriction(GlobalConfiguration globalCfg, QueryBuilder rootQueryBuilder,
 			Parameters parameters, String revisionProperty, String revisionEndProperty, boolean addAlias,
 			MiddleIdData idData, String revisionPropertyPath, String originalIdPropertyName, String alias1,
-			String alias2);
+			String alias2, boolean inclusive);
 
 	/**
 	 * Update the rootQueryBuilder with an extra WHERE clause to restrict the revision for a middle-entity 
@@ -98,11 +99,12 @@ public interface AuditStrategy {
 	 * @param revisionPropertyPath path of the revision property (only used for {@link ValidityAuditStrategy})
 	 * @param originalIdPropertyName name of the id property (only used for {@link ValidityAuditStrategy})
 	 * @param alias1 an alias used for subqueries (only used for {@link DefaultAuditStrategy})
+	 * @param inclusive indicates whether revision number shall be treated as inclusive or exclusive
 	 * @param componentDatas information about the middle-entity relation
 	 */
 	void addAssociationAtRevisionRestriction(QueryBuilder rootQueryBuilder, Parameters parameters, String revisionProperty,
 			String revisionEndProperty, boolean addAlias, MiddleIdData referencingIdData, 
 			String versionsMiddleEntityName, String eeOriginalIdPropertyPath, String revisionPropertyPath,
-			String originalIdPropertyName, String alias1, MiddleComponentData... componentDatas);
+			String originalIdPropertyName, String alias1, boolean inclusive, MiddleComponentData... componentDatas);
 
 }

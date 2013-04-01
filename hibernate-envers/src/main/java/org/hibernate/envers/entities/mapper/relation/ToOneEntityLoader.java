@@ -23,9 +23,9 @@ public class ToOneEntityLoader {
 				// When user traverses removed entities graph, do not restrict revision type of referencing objects
 				// to ADD or MOD (DEL possible). See HHH-5845.
 				// TODO: Just a stub. Apply changes from pull request #496.
-				return versionsReader.createQuery().forRevisionsOfEntity( entityClass, entityName, true, true )
+				// TODO: Parent is always removed after child.
+				return versionsReader.createQuery().forEntitiesAtRevision( entityClass, entityName, revision, true )
 						.add( AuditEntity.id().eq( entityId ) )
-						.add( AuditEntity.revisionNumber().eq( revision ) )
 						.getSingleResult();
 			}
 			return versionsReader.find( entityClass, entityName, entityId, revision );

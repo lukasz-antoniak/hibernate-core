@@ -43,7 +43,7 @@ public class DefaultAuditStrategy implements AuditStrategy {
     
 	public void addEntityAtRevisionRestriction(GlobalConfiguration globalCfg, QueryBuilder rootQueryBuilder, Parameters parameters,
 			String revisionProperty, String revisionEndProperty, boolean addAlias, MiddleIdData idData, String revisionPropertyPath,
-			String originalIdPropertyName, String alias1, String alias2) {
+			String originalIdPropertyName, String alias1, String alias2, boolean inclusive) {
 
 		// create a subquery builder
         // SELECT max(e.revision) FROM versionsReferencedEntity e2
@@ -52,10 +52,10 @@ public class DefaultAuditStrategy implements AuditStrategy {
         // WHERE
         Parameters maxERevQbParameters = maxERevQb.getRootParameters();
         // e2.revision <= :revision
-        maxERevQbParameters.addWhereWithNamedParam(revisionPropertyPath, "<=", REVISION_PARAMETER);
+        maxERevQbParameters.addWhereWithNamedParam(revisionPropertyPath, inclusive ? "<=" : "<", REVISION_PARAMETER);
         // e2.id_ref_ed = e.id_ref_ed
         idData.getOriginalMapper().addIdsEqualToQuery(maxERevQbParameters,
-                alias1 + "." + originalIdPropertyName, alias2 +"." + originalIdPropertyName);
+                alias1 + "." + originalIdPropertyName, alias2 + "." + originalIdPropertyName);
 		
 		// add subquery to rootParameters
         String subqueryOperator = globalCfg.getCorrelatedSubqueryOperator();
@@ -65,7 +65,7 @@ public class DefaultAuditStrategy implements AuditStrategy {
 	public void addAssociationAtRevisionRestriction(QueryBuilder rootQueryBuilder, Parameters parameters, String revisionProperty,
 	          String revisionEndProperty, boolean addAlias, MiddleIdData referencingIdData, String versionsMiddleEntityName,
 	          String eeOriginalIdPropertyPath, String revisionPropertyPath,
-	          String originalIdPropertyName, String alias1, MiddleComponentData... componentDatas) {
+	          String originalIdPropertyName, String alias1, boolean inclusive, MiddleComponentData... componentDatas) {
 
     	// SELECT max(ee2.revision) FROM middleEntity ee2
         QueryBuilder maxEeRevQb = rootQueryBuilder.newSubQueryBuilder(versionsMiddleEntityName, MIDDLE_ENTITY_ALIAS_DEF_AUD_STR);
@@ -73,7 +73,7 @@ public class DefaultAuditStrategy implements AuditStrategy {
         // WHERE
         Parameters maxEeRevQbParameters = maxEeRevQb.getRootParameters();
         // ee2.revision <= :revision
-        maxEeRevQbParameters.addWhereWithNamedParam(revisionPropertyPath, "<=", REVISION_PARAMETER);
+        maxEeRevQbParameters.addWhereWithNamedParam(revisionPropertyPath, inclusive ? "<=" : "<", REVISION_PARAMETER);
         // ee2.originalId.* = ee.originalId.*
         String ee2OriginalIdPropertyPath = MIDDLE_ENTITY_ALIAS_DEF_AUD_STR + "." + originalIdPropertyName;
         referencingIdData.getPrefixedMapper().addIdsEqualToQuery(maxEeRevQbParameters, eeOriginalIdPropertyPath, ee2OriginalIdPropertyPath);

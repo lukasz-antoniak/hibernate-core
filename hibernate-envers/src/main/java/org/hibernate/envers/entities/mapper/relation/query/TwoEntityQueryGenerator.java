@@ -91,7 +91,7 @@ public final class TwoEntityQueryGenerator extends AbstractRelationQueryGenerato
 		final QueryBuilder removedQuery = commonPart.deepCopy();
 		createValidDataRestrictions(
 				globalCfg, verEntCfg, auditStrategy, referencedIdData, versionsMiddleEntityName, validQuery,
-				validQuery.getRootParameters(), componentData
+				validQuery.getRootParameters(), true, componentData
 		);
 		createValidAndRemovedDataRestrictions(
 				globalCfg, verEntCfg, auditStrategy, referencedIdData, versionsMiddleEntityName,
@@ -130,25 +130,25 @@ public final class TwoEntityQueryGenerator extends AbstractRelationQueryGenerato
 	private void createValidDataRestrictions(GlobalConfiguration globalCfg, AuditEntitiesConfiguration verEntCfg,
 											 AuditStrategy auditStrategy, MiddleIdData referencedIdData,
 											 String versionsMiddleEntityName, QueryBuilder qb, Parameters rootParameters,
-											 MiddleComponentData... componentData) {
+											 boolean inclusive, MiddleComponentData... componentData) {
 		final String revisionPropertyPath = verEntCfg.getRevisionNumberPath();
 		final String originalIdPropertyName = verEntCfg.getOriginalIdPropName();
 		final String eeOriginalIdPropertyPath = MIDDLE_ENTITY_ALIAS + "." + originalIdPropertyName;
+		final String revisionTypePropName = getRevisionTypePath();
 		// (selecting e entities at revision :revision)
 		// --> based on auditStrategy (see above)
 		auditStrategy.addEntityAtRevisionRestriction(
 				globalCfg, qb, rootParameters, REFERENCED_ENTITY_ALIAS + "." + revisionPropertyPath,
-				REFERENCED_ENTITY_ALIAS + "." + verEntCfg.getRevisionEndFieldName(), false, referencedIdData,
-				revisionPropertyPath, originalIdPropertyName, REFERENCED_ENTITY_ALIAS, REFERENCED_ENTITY_ALIAS_DEF_AUD_STR
+				REFERENCED_ENTITY_ALIAS + "." + verEntCfg.getRevisionEndFieldName(), false, referencedIdData, revisionPropertyPath,
+				originalIdPropertyName, REFERENCED_ENTITY_ALIAS, REFERENCED_ENTITY_ALIAS_DEF_AUD_STR, inclusive
 		);
 		// (with ee association at revision :revision)
 		// --> based on auditStrategy (see above)
 		auditStrategy.addAssociationAtRevisionRestriction( qb, rootParameters, revisionPropertyPath,
 				verEntCfg.getRevisionEndFieldName(), true, referencingIdData, versionsMiddleEntityName,
 				eeOriginalIdPropertyPath, revisionPropertyPath, originalIdPropertyName, MIDDLE_ENTITY_ALIAS,
-				componentData
+				inclusive, componentData
 		);
-		final String revisionTypePropName = getRevisionTypePath();
 		// ee.revision_type != DEL
 		rootParameters.addWhereWithNamedParam( revisionTypePropName, "!=", DEL_REVISION_TYPE_PARAMETER );
 		// e.revision_type != DEL
@@ -165,9 +165,13 @@ public final class TwoEntityQueryGenerator extends AbstractRelationQueryGenerato
 		final Parameters disjoint = remQb.getRootParameters().addSubParameters( "or" );
 		final Parameters valid = disjoint.addSubParameters( "and" ); // Restrictions to match all valid rows.
 		final Parameters removed = disjoint.addSubParameters( "and" ); // Restrictions to match all rows deleted at exactly given revision.
-		createValidDataRestrictions( globalCfg, verEntCfg, auditStrategy, referencedIdData, versionsMiddleEntityName, remQb, valid, componentData );
-		// ee.revision = :revision
-		removed.addWhereWithNamedParam( MIDDLE_ENTITY_ALIAS + "." + verEntCfg.getRevisionNumberPath(), false, "=", REVISION_PARAMETER );
+		final String revisionPropertyPath = verEntCfg.getRevisionNumberPath();
+		// Excluding current revision, because we need to match data valid at the previous one.
+		createValidDataRestrictions( globalCfg, verEntCfg, auditStrategy, referencedIdData, versionsMiddleEntityName, remQb, valid, false, componentData );
+		// ee.revision = :delrevision
+		removed.addWhereWithNamedParam( revisionPropertyPath, "=", REVISION_PARAMETER );
+		// e.revision = :delrevision
+		removed.addWhereWithNamedParam( REFERENCED_ENTITY_ALIAS + "." + revisionPropertyPath, false, "=", REVISION_PARAMETER );
 		// ee.revision_type = DEL
 		removed.addWhereWithNamedParam( getRevisionTypePath(), "=", DEL_REVISION_TYPE_PARAMETER );
 		// e.revision_type = DEL

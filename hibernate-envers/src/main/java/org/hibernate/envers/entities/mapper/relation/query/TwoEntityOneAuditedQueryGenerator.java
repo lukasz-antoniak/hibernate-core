@@ -124,7 +124,7 @@ public final class TwoEntityOneAuditedQueryGenerator extends AbstractRelationQue
 		auditStrategy.addAssociationAtRevisionRestriction(
 				qb, rootParameters, revisionPropertyPath, verEntCfg.getRevisionEndFieldName(), true,
 				referencingIdData, versionsMiddleEntityName, eeOriginalIdPropertyPath, revisionPropertyPath,
-				originalIdPropertyName, MIDDLE_ENTITY_ALIAS, componentData
+				originalIdPropertyName, MIDDLE_ENTITY_ALIAS, true, componentData
 		);
 		// ee.revision_type != DEL
 		rootParameters.addWhereWithNamedParam( getRevisionTypePath(), "!=", DEL_REVISION_TYPE_PARAMETER );

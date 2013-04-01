@@ -74,7 +74,7 @@ public final class OneEntityQueryGenerator extends AbstractRelationQueryGenerato
 		final QueryBuilder validQuery = commonPart.deepCopy();
 		final QueryBuilder removedQuery = commonPart.deepCopy();
 		createValidDataRestrictions(
-				verEntCfg, auditStrategy, versionsMiddleEntityName, validQuery, validQuery.getRootParameters(), componentData
+				verEntCfg, auditStrategy, versionsMiddleEntityName, validQuery, validQuery.getRootParameters(), true, componentData
 		);
 		createValidAndRemovedDataRestrictions( verEntCfg, auditStrategy, versionsMiddleEntityName, removedQuery, componentData );
 
@@ -100,7 +100,7 @@ public final class OneEntityQueryGenerator extends AbstractRelationQueryGenerato
 	 */
 	private void createValidDataRestrictions(AuditEntitiesConfiguration verEntCfg, AuditStrategy auditStrategy,
 											 String versionsMiddleEntityName, QueryBuilder qb,
-											 Parameters rootParameters, MiddleComponentData... componentData) {
+											 Parameters rootParameters, boolean inclusive, MiddleComponentData... componentData) {
 		final String revisionPropertyPath = verEntCfg.getRevisionNumberPath();
 		final String originalIdPropertyName = verEntCfg.getOriginalIdPropName();
 		final String eeOriginalIdPropertyPath = MIDDLE_ENTITY_ALIAS + "." + originalIdPropertyName;
@@ -109,7 +109,7 @@ public final class OneEntityQueryGenerator extends AbstractRelationQueryGenerato
 		auditStrategy.addAssociationAtRevisionRestriction(
 				qb, rootParameters, revisionPropertyPath, verEntCfg.getRevisionEndFieldName(), true,
 				referencingIdData, versionsMiddleEntityName, eeOriginalIdPropertyPath, revisionPropertyPath,
-				originalIdPropertyName, MIDDLE_ENTITY_ALIAS, componentData
+				originalIdPropertyName, MIDDLE_ENTITY_ALIAS, inclusive, componentData
 		);
 		// ee.revision_type != DEL
 		rootParameters.addWhereWithNamedParam( getRevisionTypePath(), "!=", DEL_REVISION_TYPE_PARAMETER );
@@ -124,11 +124,12 @@ public final class OneEntityQueryGenerator extends AbstractRelationQueryGenerato
 		final Parameters disjoint = remQb.getRootParameters().addSubParameters( "or" );
 		final Parameters valid = disjoint.addSubParameters( "and" ); // Restrictions to match all valid rows.
 		final Parameters removed = disjoint.addSubParameters( "and" ); // Restrictions to match all rows deleted at exactly given revision.
-		createValidDataRestrictions( verEntCfg, auditStrategy, versionsMiddleEntityName, remQb, valid, componentData );
+		// Excluding current revision, because we need to match data valid at the previous one.
+		createValidDataRestrictions( verEntCfg, auditStrategy, versionsMiddleEntityName, remQb, valid, false, componentData );
 		// ee.revision = :revision
-		removed.addWhereWithNamedParam( verEntCfg.getRevisionNumberPath(), false, "=", REVISION_PARAMETER );
+		removed.addWhereWithNamedParam( verEntCfg.getRevisionNumberPath(), "=", REVISION_PARAMETER );
 		// ee.revision_type = DEL
-		removed.addWhereWithNamedParam( getRevisionTypePath(), false, "=", DEL_REVISION_TYPE_PARAMETER );
+		removed.addWhereWithNamedParam( getRevisionTypePath(), "=", DEL_REVISION_TYPE_PARAMETER );
 	}
 
 	@Override

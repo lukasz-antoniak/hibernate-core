@@ -74,11 +74,16 @@ public class AuditQueryCreator {
      * projection is added.
      */
     public AuditQuery forEntitiesAtRevision(Class<?> c, String entityName, Number revision) {
-        checkNotNull(revision, "Entity revision");
-        checkPositive(revision, "Entity revision");
-        c = getTargetClassIfProxied(c);
-        return new EntitiesAtRevisionQuery(auditCfg, auditReaderImplementor, c, entityName, revision);
+		return forEntitiesAtRevision( c, entityName, revision, false );
     }
+
+	// TODO: JavaDoc.
+	public AuditQuery forEntitiesAtRevision(Class<?> c, String entityName, Number revision, boolean selectDeleted) {
+		checkNotNull(revision, "Entity revision");
+		checkPositive(revision, "Entity revision");
+		c = getTargetClassIfProxied(c);
+		return new EntitiesAtRevisionQuery(auditCfg, auditReaderImplementor, c, entityName, revision, selectDeleted);
+	}
 
     /**
      * Creates a query, which will return entities modified at the specified revision.
