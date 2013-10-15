@@ -444,6 +444,15 @@ public class ActionQueue {
 		return insertions.size();
 	}
 
+	public TransactionCompletionProcesses getTransactionCompletionProcesses() {
+		return new TransactionCompletionProcesses( beforeTransactionProcesses, afterTransactionProcesses );
+	}
+
+	public void setTransactionCompletionProcesses(TransactionCompletionProcesses processes, boolean shared) {
+		beforeTransactionProcesses.setProcesses( processes.beforeTransactionCompletionProcesses, shared );
+		afterTransactionProcesses.setProcesses( processes.afterTransactionCompletionProcesses, shared );
+	}
+
 	@SuppressWarnings({ "unchecked" })
 	public void sortCollectionActions() {
 		if ( session.getFactory().getSettings().isOrderUpdatesEnabled() ) {
@@ -498,11 +507,11 @@ public class ActionQueue {
 
 	@SuppressWarnings({ "UnusedDeclaration" })
 	public boolean hasAfterTransactionActions() {
-		return afterTransactionProcesses.processes.size() > 0;
+		return afterTransactionProcesses.hasActions();
 	}
 
 	public boolean hasBeforeTransactionActions() {
-		return beforeTransactionProcesses.processes.size() > 0;
+		return beforeTransactionProcesses.hasActions();
 	}
 
 	public boolean hasAnyQueuedActions() {
@@ -676,48 +685,66 @@ public class ActionQueue {
 		return rtn;
 	}
 
-	private static class BeforeTransactionCompletionProcessQueue {
-		private SessionImplementor session;
+	private static abstract class AbstractTransactionCompletionProcessQueue<T> {
+		protected SessionImplementor session;
 		// Concurrency handling required when transaction completion process is dynamically registered
 		// inside event listener (HHH-7478).
-		private Queue<BeforeTransactionCompletionProcess> processes = new ConcurrentLinkedQueue<BeforeTransactionCompletionProcess>();
+		protected Queue<T> processes = new ConcurrentLinkedQueue<T>();
+		protected boolean isTransactionCompletionProcessesShared = false; // Flag indicating that process queue is shared with parent session.
 
-		private BeforeTransactionCompletionProcessQueue(SessionImplementor session) {
+		private AbstractTransactionCompletionProcessQueue(SessionImplementor session) {
 			this.session = session;
 		}
 
-		public void register(BeforeTransactionCompletionProcess process) {
+		public void register(T process) {
 			if ( process == null ) {
 				return;
 			}
 			processes.add( process );
 		}
 
-		public void beforeTransactionCompletion() {
-			for ( BeforeTransactionCompletionProcess process : processes ) {
-				try {
-					process.doBeforeTransactionCompletion( session );
-				}
-				catch (HibernateException he) {
-					throw he;
-				}
-				catch (Exception e) {
-					throw new AssertionFailure( "Unable to perform beforeTransactionCompletion callback", e );
-				}
-			}
-			processes.clear();
+		public Queue<T> getProcesses() {
+			return processes;
+		}
+
+		public boolean hasActions() {
+			return isTransactionCompletionProcessesShared ? false : !processes.isEmpty();
+		}
+
+		public void setProcesses(Queue<T> processes, boolean shared) {
+			this.processes = processes;
+			this.isTransactionCompletionProcessesShared = shared;
 		}
 	}
 
-	private static class AfterTransactionCompletionProcessQueue {
-		private SessionImplementor session;
+	private static class BeforeTransactionCompletionProcessQueue extends AbstractTransactionCompletionProcessQueue<BeforeTransactionCompletionProcess> {
+		private BeforeTransactionCompletionProcessQueue(SessionImplementor session) {
+			super( session );
+		}
+
+		public void beforeTransactionCompletion() {
+			if ( !isTransactionCompletionProcessesShared ) {
+				// Execute completion actions only in transaction owner (aka parent session).
+				while ( !processes.isEmpty() ) {
+					try {
+						processes.poll().doBeforeTransactionCompletion( session );
+					}
+					catch (HibernateException he) {
+						throw he;
+					}
+					catch (Exception e) {
+						throw new AssertionFailure( "Unable to perform beforeTransactionCompletion callback", e );
+					}
+				}
+			}
+		}
+	}
+
+	private static class AfterTransactionCompletionProcessQueue extends AbstractTransactionCompletionProcessQueue<AfterTransactionCompletionProcess> {
 		private Set<String> querySpacesToInvalidate = new HashSet<String>();
-		// Concurrency handling required when transaction completion process is dynamically registered
-		// inside event listener (HHH-7478).
-		private Queue<AfterTransactionCompletionProcess> processes = new ConcurrentLinkedQueue<AfterTransactionCompletionProcess>();
 
 		private AfterTransactionCompletionProcessQueue(SessionImplementor session) {
-			this.session = session;
+			super( session );
 		}
 
 		public void addSpacesToInvalidate(String[] spaces) {
@@ -730,34 +757,41 @@ public class ActionQueue {
 			querySpacesToInvalidate.add( space );
 		}
 
-		public void register(AfterTransactionCompletionProcess process) {
-			if ( process == null ) {
-				return;
-			}
-			processes.add( process );
-		}
-
 		public void afterTransactionCompletion(boolean success) {
-			for ( AfterTransactionCompletionProcess process : processes ) {
-				try {
-					process.doAfterTransactionCompletion( success, session );
+			if ( !isTransactionCompletionProcessesShared ) {
+				// Execute completion actions only in transaction owner (aka parent session).
+				while ( !processes.isEmpty() ) {
+					try {
+						processes.poll().doAfterTransactionCompletion( success, session );
+					}
+					catch ( CacheException ce ) {
+						LOG.unableToReleaseCacheLock( ce );
+						// continue loop
+					}
+					catch ( Exception e ) {
+						throw new AssertionFailure( "Exception releasing cache locks", e );
+					}
 				}
-				catch ( CacheException ce ) {
-					LOG.unableToReleaseCacheLock( ce );
-					// continue loop
-				}
-				catch ( Exception e ) {
-					throw new AssertionFailure( "Exception releasing cache locks", e );
-				}
-			}
-			processes.clear();
 
-			if ( session.getFactory().getSettings().isQueryCacheEnabled() ) {
-				session.getFactory().getUpdateTimestampsCache().invalidate(
-						querySpacesToInvalidate.toArray( new String[ querySpacesToInvalidate.size()] )
-				);
+				if ( session.getFactory().getSettings().isQueryCacheEnabled() ) {
+					session.getFactory().getUpdateTimestampsCache().invalidate(
+							querySpacesToInvalidate.toArray( new String[ querySpacesToInvalidate.size()] )
+					);
+				}
+				querySpacesToInvalidate.clear();
 			}
-			querySpacesToInvalidate.clear();
+		}
+	}
+
+	public static class TransactionCompletionProcesses {
+		private final Queue<BeforeTransactionCompletionProcess> beforeTransactionCompletionProcesses;
+		private final Queue<AfterTransactionCompletionProcess> afterTransactionCompletionProcesses;
+
+		public TransactionCompletionProcesses(
+				BeforeTransactionCompletionProcessQueue beforeTransactionCompletionProcessQueue,
+				AfterTransactionCompletionProcessQueue afterTransactionCompletionProcessQueue) {
+			this.beforeTransactionCompletionProcesses = beforeTransactionCompletionProcessQueue.getProcesses();
+			this.afterTransactionCompletionProcesses = afterTransactionCompletionProcessQueue.getProcesses();
 		}
 	}
 

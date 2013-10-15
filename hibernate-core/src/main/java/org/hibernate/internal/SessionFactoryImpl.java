@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -104,6 +103,7 @@ import org.hibernate.engine.profile.Association;
 import org.hibernate.engine.profile.Fetch;
 import org.hibernate.engine.profile.FetchProfile;
 import org.hibernate.engine.query.spi.QueryPlanCache;
+import org.hibernate.engine.spi.ActionQueue;
 import org.hibernate.engine.spi.CacheImplementor;
 import org.hibernate.engine.spi.FilterDefinition;
 import org.hibernate.engine.spi.Mapping;
@@ -1564,6 +1564,10 @@ public final class SessionFactoryImpl
 			return null;
 		}
 
+		protected ActionQueue.TransactionCompletionProcesses getTransactionCompletionProcesses() {
+			return null;
+		}
+
 		@Override
 		public Session openSession() {
 			return new SessionImpl(
@@ -1571,6 +1575,7 @@ public final class SessionFactoryImpl
 					sessionFactory,
 					sessionOwner,
 					getTransactionCoordinator(),
+					getTransactionCompletionProcesses(),
 					autoJoinTransactions,
 					sessionFactory.settings.getRegionFactory().nextTimestamp(),
 					interceptor,

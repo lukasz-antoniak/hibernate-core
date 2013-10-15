@@ -146,7 +146,7 @@ public class AuditProcess implements BeforeTransactionCompletionProcess {
 			Session temporarySession = null;
 			try {
 				temporarySession = ((Session) session).sessionWithOptions().transactionContext().autoClose( false )
-						.connectionReleaseMode( ConnectionReleaseMode.AFTER_TRANSACTION )
+						.connectionReleaseMode( ConnectionReleaseMode.AFTER_TRANSACTION ).transactionCompletionProcesses()
 						.openSession();
 				executeInSession( temporarySession );
 				temporarySession.flush();

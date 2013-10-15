@@ -84,6 +84,14 @@ public interface SharedSessionBuilder extends SessionBuilder {
 	 */
 	public SharedSessionBuilder transactionContext();
 
+	/**
+	 * Signifies that the transaction completion processes registered in new session should be propagated to
+	 * the parent. This option is only valid in conjunction with transaction context sharing.
+	 *
+	 * @return {@code this}, for method chaining
+	 */
+	public SharedSessionBuilder transactionCompletionProcesses();
+
 	@Override
 	SharedSessionBuilder interceptor(Interceptor interceptor);
 

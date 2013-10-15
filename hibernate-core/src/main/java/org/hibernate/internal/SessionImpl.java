@@ -230,6 +230,7 @@ public final class SessionImpl extends AbstractSessionImpl implements EventSourc
 			final SessionFactoryImpl factory,
 			final SessionOwner sessionOwner,
 			final TransactionCoordinatorImpl transactionCoordinator,
+			final ActionQueue.TransactionCompletionProcesses transactionCompletionProcesses,
 			final boolean autoJoinTransactions,
 			final long timestamp,
 			final Interceptor interceptor,
@@ -242,6 +243,12 @@ public final class SessionImpl extends AbstractSessionImpl implements EventSourc
 		this.sessionOwner = sessionOwner;
 		this.interceptor = interceptor == null ? EmptyInterceptor.INSTANCE : interceptor;
 		this.actionQueue = new ActionQueue( this );
+		if ( transactionCompletionProcesses != null ) {
+			if ( transactionCoordinator == null ) {
+				throw new SessionException( "Cannot share transaction completion processes without transaction context" );
+			}
+			actionQueue.setTransactionCompletionProcesses( transactionCompletionProcesses, true );
+		}
 		this.persistenceContext = new StatefulPersistenceContext( this );
 
 		this.autoCloseSessionEnabled = autoCloseSessionEnabled;
@@ -355,8 +362,8 @@ public final class SessionImpl extends AbstractSessionImpl implements EventSourc
 				return transactionCoordinator.close();
 			}
 			else {
-				if ( getActionQueue().hasAfterTransactionActions() ){
-					LOG.warn( "On close, shared Session had after transaction actions that have not yet been processed" );
+				if ( getActionQueue().hasBeforeTransactionActions() || getActionQueue().hasAfterTransactionActions() ) {
+					LOG.warn( "On close, shared Session had before / after transaction actions that have not yet been processed" );
 				}
 				else {
 					transactionCoordinator.removeObserver( transactionObserver );
@@ -2279,6 +2286,7 @@ public final class SessionImpl extends AbstractSessionImpl implements EventSourc
 	private static class SharedSessionBuilderImpl extends SessionFactoryImpl.SessionBuilderImpl implements SharedSessionBuilder {
 		private final SessionImpl session;
 		private boolean shareTransactionContext;
+		private boolean shareTransactionCompletionProcesses;
 
 		private SharedSessionBuilderImpl(SessionImpl session) {
 			super( session.factory );
@@ -2298,6 +2306,12 @@ public final class SessionImpl extends AbstractSessionImpl implements EventSourc
 			return shareTransactionContext ? session.transactionCoordinator : super.getTransactionCoordinator();
 		}
 
+		protected ActionQueue.TransactionCompletionProcesses getTransactionCompletionProcesses() {
+			return shareTransactionCompletionProcesses ?
+					session.getActionQueue().getTransactionCompletionProcesses() :
+					super.getTransactionCompletionProcesses();
+		}
+
 		@Override
 		public SharedSessionBuilder interceptor() {
 			return interceptor( session.interceptor );
@@ -2306,6 +2320,12 @@ public final class SessionImpl extends AbstractSessionImpl implements EventSourc
 		@Override
 		public SharedSessionBuilder connection() {
 			this.shareTransactionContext = true;
+			return this;
+		}
+
+		@Override
+		public SharedSessionBuilder transactionCompletionProcesses() {
+			this.shareTransactionCompletionProcesses = true;
 			return this;
 		}
 
